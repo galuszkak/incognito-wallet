@@ -14,7 +14,7 @@ import {
   GO_POSITION,
   MAX_LAP_REWARD
 } from '../../constants';
-import { Unicorn } from '../Icons';
+import Avatar from '../Icons/Avatar';
 
 function sleep(ms) {
   return new Promise(resolve => {
@@ -90,7 +90,7 @@ function Player(props) {
   let top = 0;
   let left = 0;
   if (cell <= 10) {
-    top = 20;
+    top = 25;
     left = cell * cellWidth;
 
     if (cell > 0) {
@@ -128,13 +128,13 @@ function Player(props) {
   return (
     <View style={[{
       position: 'absolute',
-      width: cellWidth,
-      height: cellWidth,
+      width: cellWidth - 1,
+      height: cellWidth - 1,
       top: 0,
       left: 0,
     }, style]}
     >
-      <Unicorn size="small" />
+      <Avatar type={player.avatar} />
     </View>
   );
 }
@@ -147,6 +147,7 @@ Player.propTypes = {
   player: PropTypes.shape({
     jail: PropTypes.bool,
     lapReward: PropTypes.number,
+    avatar: PropTypes.string,
   }),
 };
 

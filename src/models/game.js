@@ -2,7 +2,7 @@ export class Token {
   constructor(json) {
     this.id = json.ID;
     this.symbol = json.Symbol ? json.Symbol.replace('w', '') : json.Symbol;
-    this.name = json.Name;
+    this.name = json.Name ? json.Name.replace('Whales ', '') : '';
     // this.price = json.Price;
     this.balance = json.Balance;
     this.address = json.Address;
@@ -67,6 +67,8 @@ export class Player {
     this.tokens = (json.Tokens || []).map(token => new PlayerToken(token));
     this.jailRoll = json.Jailroll || 0;
     this.lapReward = json.LapReward || 0;
+    this.money = json.Money || 0;
+    this.avatar = json.Avatar;
   }
 
 }
@@ -127,5 +129,6 @@ export class Notification {
     this.status = json.Status;
     this.message = json.Message;
     this.type = json.Type;
+    this.createdAt = json.CreatedAt;
   }
 }

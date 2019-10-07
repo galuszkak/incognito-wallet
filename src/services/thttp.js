@@ -30,19 +30,16 @@ instance.interceptors.response.use(res => {
   return Promise.resolve(result);
 }, errorData => {
   const errResponse = errorData?.response;
-  
-  if (__DEV__) {
-    console.warn('Request failed', errorData?.response);
-  }
 
   // can not get response, alert to user
   if (!errResponse) {
-    return new ExHandler(new CustomError(ErrorCode.network_make_request_failed)).showErrorToast().throw();
+    return new ExHandler(new CustomError(ErrorCode.network_make_request_failed)).throw();
   }
 
   // get response of error
   // wrap the error with CustomError to custom error message, or logging
   const data = errResponse?.data;
+
   if (data && data.Error) {
     throw new CustomError(data.Error?.Code, { name: CustomError.TYPES.API_ERROR, message: data.Error?.Message });
   }

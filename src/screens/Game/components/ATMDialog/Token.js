@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 function Token(props) {
-  const { cell, onSelect } = props;
-  const { token } = cell;
+  const { playerToken, onSelect } = props;
+  const { token } = playerToken;
   return (
     <TouchableOpacity
       style={styles.token}
-      onPress={() => onSelect(cell)}
+      onPress={() => onSelect(playerToken)}
     >
       <View>
-        <Text style={styles.tokenName}>{cell.name}</Text>
+        <Text style={styles.tokenName}>{token.name}</Text>
         <Text style={styles.tokenSymbol}>{token.symbol}</Text>
       </View>
       <View>
-        <Text style={styles.tokenNumber}>{token.number}</Text>
+        <Text style={styles.tokenNumber}>{playerToken.displayNumber}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
 
 Token.propTypes = {
   onSelect: PropTypes.func.isRequired,
-  cell: PropTypes.shape({
+  playerToken: PropTypes.shape({
     token: PropTypes.shape({
       symbol: PropTypes.string,
       number: PropTypes.number,
-    }),
-    name: PropTypes.string,
+      name: PropTypes.string,
+    }).isRequired,
   }).isRequired,
 };
 

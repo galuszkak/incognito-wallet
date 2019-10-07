@@ -6,7 +6,7 @@ function PlayerToken(props) {
   const { cells, playerToken, onSelect } = props;
   const token = {
     ...playerToken.token,
-    number: Math.min(playerToken.number, playerToken.actualNumber),
+    number: playerToken.displayNumber,
     cell: cells.find(item => item.token?.id === playerToken.tokenId),
   };
 
@@ -63,7 +63,7 @@ PlayerToken.propTypes = {
   playerToken: PropTypes.shape({
     tokenId: PropTypes.string,
     number: PropTypes.number,
-    actualNumber: PropTypes.number,
+    displayNumber: PropTypes.number,
     token: PropTypes.shape({}),
   }).isRequired,
 };

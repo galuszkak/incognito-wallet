@@ -101,7 +101,7 @@ export default class Account {
           account.PrivateKey,
           paymentAddress,
           5,
-          0,
+          1,
           null,
           info || ''
         ],
@@ -171,9 +171,9 @@ export default class Account {
           account.PrivateKey,
           null,
           5,
-          0,
+          1,
           submitParam,
-          0,
+          1,
           info || '',
         ],
       };

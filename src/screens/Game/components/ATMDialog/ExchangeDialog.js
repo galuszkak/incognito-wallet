@@ -4,81 +4,87 @@ import _ from 'lodash';
 import { View, TextInput, Text, StyleSheet } from 'react-native';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import { Button } from '@src/components/core';
-import {ROUND_NUMBER} from "@screens/Game/constants";
 
-function calculatePrice(text, number, token) {
-  if (token) {
-    let price;
-    if (text === 'Buy') {
-      price = token.balance / Math.max(token.number - number, 1) * number;
-    } else {
-      price = token.price * number;
-    }
+function ExchangeDialog(props) {
+  const { visible, onConfirmPrice, onCancel, convertRate, playerToken } = props;
+  const { token } = playerToken;
 
-    return price;
+  let tokenConvertRate = { price: 0, min: 0 };
+
+  if (token?.symbol) {
+    tokenConvertRate = convertRate[token.symbol];
   }
 
-  return 0;
-}
-
-
-function PriceDialog(props) {
-  const { visible, onConfirmPrice, onCancel, cell, confirmText, remaining } = props;
   const [number, setNumber] = React.useState(1);
-  const [isGettingPrice, setIsGettingPrice] = React.useState(false);
+  const [walletAddress, setWalletAddress] = React.useState('');
+  const [contact, setContact] = React.useState('');
   const [isPaying, setIsPaying] = React.useState(false);
-  const [totalPrice, setTotalPrice] = React.useState(calculatePrice(confirmText, 1, cell?.token));
-
+  const [realToken, setRealToken] = React.useState(0);
   const onChangeNumber = async (text) => {
     const number = _.toInteger(text);
     getPrice(number);
   };
+
   const onConfirm = () => {
-    if (!isGettingPrice && totalPrice > 0) {
+    if (realToken > 0) {
       setIsPaying(true);
-      onConfirmPrice(cell.index, number, totalPrice);
+      onConfirmPrice(walletAddress, contact, token, number, realToken);
     }
   };
   const getPrice = number => {
-    const token = cell.token;
-    if (number <= 0 || number > token.number || (remaining > 0 && number > remaining)) {
-      setTotalPrice(0);
+    if (number <= 0) {
+      setRealToken(0);
       setNumber(0);
     } else {
-      const price = calculatePrice(confirmText, number, cell.token);
-      setTotalPrice(price);
+      setRealToken(tokenConvertRate.price * number);
       setNumber(number);
     }
   };
 
   React.useEffect(() => {
-    setTotalPrice(calculatePrice(confirmText, 1, cell?.token));
+    setRealToken(0);
     setNumber(1);
-    setIsGettingPrice(false);
     setIsPaying(false);
   }, [visible]);
 
-  const disabled = totalPrice <= 0 || number <= 0 || number > cell?.token?.number || isPaying;
+  const disabled =
+    realToken <= 0 || number <= 0 || number > token?.number || isPaying || _.trim(walletAddress).length === 0;
 
   return (
     <Dialog visible={visible} style={styles.dialog}>
       <DialogContent style={styles.content}>
-        { cell && cell.token ?
+        { token ?
           <View>
             <Text style={[styles.tokenName, styles.center]}>
-              {cell.name} ({cell.token.symbol})
+              {token.name} ({token.symbol})
             </Text>
             <Text>
-              { confirmText === 'Buy' ? 'Available' : 'Balance'}: {remaining || cell.token.number}
+              {token.symbol} Balance: {playerToken.displayNumber}
             </Text>
             <Text>
-              Current market price: {_.round(totalPrice, ROUND_NUMBER)}
+              Exchange rate: {_.round(tokenConvertRate.price, 5)}
+            </Text>
+            <Text>
+              Minimum game tokens required: {tokenConvertRate.min}
+            </Text>
+            <Text>
+              Real tokens you&apos;ll received: {_.round(realToken, 5)}
             </Text>
             <TextInput
               style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, paddingLeft: 5, paddingRight: 5}}
               onChangeText={onChangeNumber}
-              defaultValue="1"
+              placeholder="Number of game tokens you want to exchange"
               keyboardType="number-pad"
+            />
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, paddingLeft: 5, paddingRight: 5}}
+              onChangeText={setWalletAddress}
+              placeholder="Receiving Address"
+            />
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1, marginTop: 10, paddingLeft: 5, paddingRight: 5}}
+              onChangeText={setContact}
+              placeholder="Your email in case something goes wrong (optional)"
             />
             <View style={[styles.actions, styles.center]}>
               <Button
@@ -93,7 +99,7 @@ function PriceDialog(props) {
                 type="primary"
                 disabled={disabled}
                 onPress={onConfirm}
-                title={confirmText}
+                title="Confirm"
                 titleStyle={styles.buttonText}
               />
             </View>
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   tokenName: {
-    width: 270,
+    width: '100%',
     backgroundColor: '#FF4B47',
     color: 'white',
     fontWeight: 'bold',
@@ -145,26 +151,24 @@ const styles = StyleSheet.create({
   },
 });
 
-PriceDialog.propTypes = {
+ExchangeDialog.propTypes = {
   visible: PropTypes.bool.isRequired,
   onConfirmPrice: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  cell: PropTypes.shape({
-    index: PropTypes.number,
+  playerToken: PropTypes.shape({
     token: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string,
       number: PropTypes.number,
       symbol: PropTypes.string,
       balance: PropTypes.number,
       price: PropTypes.number,
-    })
+    }).isRequired,
   }).isRequired,
-  confirmText: PropTypes.string.isRequired,
-  remaining: PropTypes.number,
 };
 
-PriceDialog.defaultProps = {
+ExchangeDialog.defaultProps = {
   remaining: null,
 };
 
-export default React.memo(PriceDialog);
+export default React.memo(ExchangeDialog);

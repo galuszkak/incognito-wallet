@@ -32,7 +32,7 @@ function SellDialog(props) {
           <DialogContent style={styles.content}>
             <ScrollView style={styles.scrollView}>
               {playerTokens
-                .filter(playerToken => playerToken.actualNumber > 0)
+                .filter(playerToken => playerToken.displayNumber > 0)
                 .map((playerToken) => (
                   <PlayerToken
                     key={playerToken.tokenId}
@@ -49,7 +49,7 @@ function SellDialog(props) {
             cell={cell}
             visible={isShowingPriceDialog}
             confirmText="Sell"
-            remaining={Math.min(playerToken.number, playerToken.actualNumber)}
+            remaining={playerToken.displayNumber}
           />
           <View style={[styles.center, styles.actions]}>
             <TouchableOpacity onPress={onCancel} style={[styles.center, styles.closeButton]}>

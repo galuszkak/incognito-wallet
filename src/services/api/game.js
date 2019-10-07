@@ -1,4 +1,4 @@
-import http from '@src/services/http';
+import http from '@src/services/thttp';
 import { RollInfo, Transaction, Cell, Player, Card, Notification } from '@src/models/game';
 
 const getBoardData = () =>
@@ -105,6 +105,22 @@ const migrateAccount = (oldAccount, newAccount) =>
     NewPrivateKey: newAccount.PrivateKey,
     NewPaymentAddress: newAccount.PaymentAddress,
   });
+  
+const exchangeToken = (playerId, walletAddress, contact, tokenId, number, amount) =>
+  http.post('game/exchange', {
+    PlayerID: playerId,
+    WalletAddress: walletAddress,
+    Contact: contact,
+    TokenID: tokenId,
+    Number: number,
+    Amount: amount,
+  }).then(res => new Transaction(res));
+
+const changeAvatar = (playerId, newAvatar) =>
+  http.post('game/change-avatar', {
+    PlayerID: playerId,
+    NewAvatar: newAvatar,
+  });
 
 export default {
   getBoardData,
@@ -123,4 +139,6 @@ export default {
   payJailFine,
   getPlayerNotifications,
   migrateAccount,
+  exchangeToken,
+  changeAvatar,
 };

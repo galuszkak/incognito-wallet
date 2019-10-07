@@ -2,15 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Unicorn, PRV } from '../Icons';
+import { PRV } from '../Icons';
 import {TOP_BAR_HEIGHT} from '../../constants';
 import Token from '../Icons/Token';
+import Avatar from '../Icons/Avatar';
+import AvatarSelector from './AvatarSelector';
 
 function TopBar(props) {
-  const { account, playerTokens, onSell, onShowNotification } = props;
+  const { account, money, playerTokens, onSell, onShowNotification, onChangeAvatar, avatar } = props;
   const { value } = account;
-
-  let displayValue = (value || 0) / 1e9;
+  
+  let displayValue = Math.min((value || 0) / 1e9, money);
 
   if (displayValue >= 1e9) {
     displayValue = _.round((displayValue / 1e9), 0) + 'M';
@@ -22,8 +24,8 @@ function TopBar(props) {
     displayValue = _.round(displayValue, 2).toLocaleString();
   }
 
-  const total = playerTokens.reduce((total, token) => {
-    return total + Math.min(token.number, token.actualNumber || 0);
+  let total = playerTokens.reduce((total, token) => {
+    return total + token.displayNumber;
   }, 0);
 
   return (
@@ -40,8 +42,11 @@ function TopBar(props) {
           </Text>
         </TouchableOpacity>
       </View>
-      <View>
-        <Unicorn />
+      <View style={{ width: 55, height: 55, position: 'relative' }}>
+        <Avatar type={avatar} />
+        <View style={{ position: 'absolute' }}>
+          <AvatarSelector onChangeAvatar={onChangeAvatar} />
+        </View>
       </View>
       <View style={[styles.button]}>
         <TouchableOpacity style={styles.button} onPress={onSell}>
@@ -51,7 +56,7 @@ function TopBar(props) {
             numberOfLines={1}
             ellipsizeMode="tail"
           >
-            {total}
+            {isNaN(total) ? 'Loading' : total}
           </Text>
         </TouchableOpacity>
       </View>

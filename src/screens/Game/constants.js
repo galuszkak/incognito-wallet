@@ -33,15 +33,16 @@ export const CARD_ACTION = {
 };
 
 export const MAX_LAP_REWARD = 500;
+export const ROUND_NUMBER = 4;
 
 export const MESSAGES = {
   DRAWING_CHANCE: 'Drawing a Chance card...',
   GETTING_CHEST: 'Opening the Community Chest...',
   ROLLING: 'Rolling...',
   MOVING: 'Moving...',
-  RELOADING: 'Reloading...',
+  RELOADING: 'Loading...',
   WELCOME_MESSAGE: 'Welcome you to WHALES. 1000 PRV will be added to your balance in the next 5 minutes',
-  GET_PLAYER: 'Getting your information...',
+  GET_PLAYER: 'Loading...',
   AIRDROP: 'Nice. {prv} PRV has been airdropped to your wallet and will appear in the next 5 minutes.',
   OPEN_AIRDROP: 'Receiving airdrop...',
   OPEN_ATM: 'Opening the atm door',
@@ -53,4 +54,6 @@ export const MESSAGES = {
   PAYING_JAIL: 'Paying 50 PRV to get out of jail...',
   COMPLETE_A_LAP_MESSAGE: 'You passed GO. 20 PRV will be added to your balance in the next 5 minutes',
   MAX_LAP_REWARD: 'You\'ve covered a great distance today. Your GO rewards will resume tomorrow',
+  NOT_ENOUGH_MONEY: 'You don\'t have enough PRV to pay rent fee',
+  EXCHANGE_SUCCESS: 'Your tokens will arrive in 1 business day'
 };

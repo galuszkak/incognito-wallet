@@ -39,7 +39,7 @@ class GetStartedContainer extends Component {
 
   goHome = () => {
     const { navigation } = this.props;
-    navigation.navigate(routeNames.Home);
+    navigation.navigate(routeNames.Game);
   };
 
   getExistedWallet = async () => {

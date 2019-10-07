@@ -1,9 +1,10 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import {View, Text, StyleSheet} from 'react-native';
 import Dialog, { DialogContent } from 'react-native-popup-dialog';
 import { Button } from '@src/components/core';
-import {MAX_TOKEN} from '../../constants';
+import {MAX_TOKEN, ROUND_NUMBER} from '../../constants';
 
 const TIMEOUT = 1000;
 
@@ -50,7 +51,7 @@ function CellDetail(props) {
               Sold: {MAX_TOKEN - (token.number || MAX_TOKEN)}
             </Text>
             <Text>
-              Current market price: {token.price} PRV
+              Current market price: {_.round(token.price, ROUND_NUMBER)} PRV
             </Text>
             <Text style={styles.rentFee}>
               {rentFee ? `Your Rent Fee: ${rentFee}` : ''}
