@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="demo">
+
+	<parameter name="platformName" value="Android"></parameter>
+	<parameter name="appPackage" value=""></parameter>
+	<parameter name="appActivity" value=""></parameter>
+	<parameter name="automationName" value=""></parameter>
+	<parameter name="noReset" value=""></parameter>
+	<parameter name="skipServerInstallation" value=""></parameter>
+	<parameter name="deviceName" value=""></parameter>
+	<!-- <parameter name="udid" value=""></parameter> -->
+
+	<test name="demo1">
+		<classes>
+			<class name="org.incognito.wallet.test.checklist.DemoTest"></class>
+		</classes>
+	</test>
+
+</suite>

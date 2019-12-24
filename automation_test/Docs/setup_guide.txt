@@ -1,0 +1,49 @@
+## Linux 
+	Install nodejs and maven
+		$ sudo apt install nodejs maven 
+		$ npm install -g appium
+		
+	If having problem while eclipse building the project, run this:
+		$ mvn -U clean install 
+		
+	Environment variable
+		JAVA_HOME=[path to JDK - it's the best to use JDK, not JRE]
+		ANDROID_HOME=[path to android sdk]
+		PATH=$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH
+		DISPLAY=:0.0
+							
+	Disable sudo password for your account: add following line to /etc/sudoers
+		[your username]    ALL=(ALL:ALL) NOPASSWD: ALL
+			    
+	    
+### MAC
+	Install maven: (only necessary when running from Jenkins or terminal)
+		1. Download Maven from: https://maven.apache.org/download.cgi
+		2. Extract and install:
+			unzip <maven zip file>
+			ln -s <extracted folder>/bin/mvn /usr/local/bin
+			
+		
+	Install nodejs
+		1. Download pkg file from https://nodejs.org/en/
+		2. Open pkg file and copy it to Applications
+		3. Install appium from nodejs
+			sudo npm install -g appium --unsafe-perm=true --allow-root
+	    
+    Environment variable: edit file /etc/profile and add following line (remove the indentation) to the end of the file:
+		export ANDROID_HOME=/Users/<your username>/Library/Android/sdk
+		export ANDROID_PATH=$ANDROID_HOME/platform-tools:\
+		$ANDROID_HOME/tools:\
+		$ANDROID_HOME/tools/bin:\
+		$ANDROID_HOME/build-tools/29.0.2:\
+		$ANDROID_HOME/emulator
+		export PATH=$PATH:$ANDROID_PATH
+		launchctl setenv PATH $PATH
+		
+### Setup Eclipse
+	Download and install Eclipse for Java EE @ https://www.eclipse.org/downloads/packages/release/mars/r/eclipse-ide-java-ee-developers
+	
+	Install TestNG plugin for Eclipse
+		1. Open Help > Install new software
+		2. Add new Update site: http://beust.com/eclipse/
+		3. Select TestNG and install then reboot Eclipse

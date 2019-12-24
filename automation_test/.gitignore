@@ -1,0 +1,12 @@
+_resources
+target
+test-output
+logs
+.lck
+.DS_Store
+allure-results
+.-output
+auto.log
+dummy.*
+.classpath
+.settings
