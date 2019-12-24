@@ -10,9 +10,9 @@
 	<parameter name="android.appActivity" value="com.incognito.wallet.SplashActivity"/>
 	<parameter name="android.skipServerInstallation" value="true"/>
 
-<!-- 	<listeners> -->
-<!-- 		<listener class-name=""></listener> -->
-<!-- 	</listeners> -->
+	<listeners>
+		<listener class-name="com.auto.core.listeners.TestngFlowListener"/>
+	</listeners>
 	<test name="demo1">
 		<classes>
 			<class name="org.incognito.wallet.test.checklist.DemoTest"></class>
