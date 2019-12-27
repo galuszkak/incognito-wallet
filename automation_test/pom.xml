@@ -16,7 +16,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>AutomationCore</module>
-		<module>aut</module>
+		<module>AUTs</module>
   </modules>
 	<build>
 		<sourceDirectory>./</sourceDirectory>

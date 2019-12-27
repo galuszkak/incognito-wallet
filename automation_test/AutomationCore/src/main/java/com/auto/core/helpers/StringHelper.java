@@ -17,19 +17,20 @@ import com.auto.core.utils.Log;
 
 public class StringHelper {
 
-	private static Logger	log						= LoggerFactory.getLogger(StringHelper.class);
-	private static String	charSampleWithNumber	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	private static String	charSampleNoNumber		= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static Logger log = LoggerFactory.getLogger(StringHelper.class);
+	private static String charSampleWithNumber = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	private static String charSampleNoNumber = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 	public static String cleanInvalidCharacters(String in) {
 
-		StringBuilder	out	= new StringBuilder();
-		char			current;
-		if (in == null || ("".equals(in))) { return ""; }
+		StringBuilder out = new StringBuilder();
+		char current;
+		if (in == null || ("".equals(in))) {
+			return "";
+		}
 		for (int i = 0; i < in.length(); i++) {
 			current = in.charAt(i);
-			if ((current == 0x9) || (current == 0xA) || (current == 0xD)
-					|| ((current >= 0x20) && (current <= 0xD7FF))
+			if ((current == 0x9) || (current == 0xA) || (current == 0xD) || ((current >= 0x20) && (current <= 0xD7FF))
 					|| ((current >= 0xE000) && (current <= 0xFFFD))
 					|| ((current >= 0x10000) && (current <= 0x10FFFF))) {
 				out.append(current);
@@ -41,8 +42,8 @@ public class StringHelper {
 
 	public static String randomString(String prefix, int len) {
 
-		SecureRandom	rnd	= new SecureRandom();
-		StringBuilder	sb	= new StringBuilder(len);
+		SecureRandom rnd = new SecureRandom();
+		StringBuilder sb = new StringBuilder(len);
 		for (int i = 0; i < len; i++)
 			sb.append(charSampleWithNumber.charAt(rnd.nextInt(charSampleWithNumber.length())));
 		return prefix + sb.toString();
@@ -50,8 +51,8 @@ public class StringHelper {
 
 	public static String randomStringNoNumber(String prefix, int len) {
 
-		SecureRandom	rnd	= new SecureRandom();
-		StringBuilder	sb	= new StringBuilder(len);
+		SecureRandom rnd = new SecureRandom();
+		StringBuilder sb = new StringBuilder(len);
 		for (int i = 0; i < len; i++)
 			sb.append(charSampleNoNumber.charAt(rnd.nextInt(charSampleNoNumber.length())));
 		return prefix + sb.toString();
@@ -59,10 +60,10 @@ public class StringHelper {
 
 	public static String randomStringMustHaveNumber(String prefix, int len) {
 
-		SecureRandom	rnd				= new SecureRandom();
-		StringBuilder	sb				= new StringBuilder(len);
-		char			randomChar;
-		boolean			flagHasNumber	= false;
+		SecureRandom rnd = new SecureRandom();
+		StringBuilder sb = new StringBuilder(len);
+		char randomChar;
+		boolean flagHasNumber = false;
 		for (int i = 0; i < len; i++) {
 			randomChar = charSampleWithNumber.charAt(rnd.nextInt(charSampleWithNumber.length()));
 			sb.append(randomChar);
@@ -83,8 +84,8 @@ public class StringHelper {
 
 	public static String randomNumber(String prefix, int len) {
 
-		SecureRandom	rnd	= new SecureRandom();
-		StringBuilder	sb	= new StringBuilder(len);
+		SecureRandom rnd = new SecureRandom();
+		StringBuilder sb = new StringBuilder(len);
 		for (int i = 0; i < len; i++)
 			sb.append(rnd.nextInt(9));
 		return prefix + sb.toString();
@@ -92,8 +93,8 @@ public class StringHelper {
 
 	public static String getStringByString(String input, String start, String end, boolean last) {
 
-		int	indexStart	= 0;
-		int	indexEnd	= input.length();
+		int indexStart = 0;
+		int indexEnd = input.length();
 		if (last) {
 			if (!start.isEmpty())
 				indexStart = input.lastIndexOf(start) + start.length();
@@ -103,7 +104,9 @@ public class StringHelper {
 			if (!start.isEmpty())
 				indexStart = input.indexOf(start) + start.length();
 
-			if (!end.isEmpty()) { indexEnd = input.indexOf(end, indexStart); }
+			if (!end.isEmpty()) {
+				indexEnd = input.indexOf(end, indexStart);
+			}
 		}
 
 		return input.substring(indexStart, indexEnd);
@@ -111,23 +114,25 @@ public class StringHelper {
 
 	public static String subStringByString(String input, String start, String end) {
 
-		int	beginIndex	= input.indexOf(start);
-		int	endIndex	= input.indexOf(end, beginIndex);
+		int beginIndex = input.indexOf(start);
+		int endIndex = input.indexOf(end, beginIndex);
 		return input.substring(beginIndex, endIndex);
 	}
 
 	public static float getBitRateAverage(String input) {
 
-		Pattern					p			= Pattern.compile("((?!bitrate= ))\\d+\\.\\d+\\w+\\/.");
-		java.util.regex.Matcher	m			= p.matcher(input);
-		String					bitrates	= "";
-		while (m.find()) { bitrates += m.group() + " "; }
+		Pattern p = Pattern.compile("((?!bitrate= ))\\d+\\.\\d+\\w+\\/.");
+		java.util.regex.Matcher m = p.matcher(input);
+		String bitrates = "";
+		while (m.find()) {
+			bitrates += m.group() + " ";
+		}
 
 		log.info(bitrates);
-		p	= Pattern.compile("\\d+\\.\\d+");
-		m	= p.matcher(bitrates);
-		float	total	= 0;
-		int		count	= 0;
+		p = Pattern.compile("\\d+\\.\\d+");
+		m = p.matcher(bitrates);
+		float total = 0;
+		int count = 0;
 		while (m.find()) {
 			total += Float.parseFloat(m.group());
 			count++;
@@ -137,14 +142,16 @@ public class StringHelper {
 
 	public static int getP2PDuration(String input) {
 
-		Pattern					p		= Pattern.compile("time \\d+");
-		java.util.regex.Matcher	m		= p.matcher(input);
-		String					times	= "";
-		while (m.find()) { times += m.group() + " "; }
+		Pattern p = Pattern.compile("time \\d+");
+		java.util.regex.Matcher m = p.matcher(input);
+		String times = "";
+		while (m.find()) {
+			times += m.group() + " ";
+		}
 
 		log.info(times);
-		p	= Pattern.compile("\\d+");
-		m	= p.matcher(times);
+		p = Pattern.compile("\\d+");
+		m = p.matcher(times);
 
 		List<Integer> intList = new ArrayList<Integer>();
 		while (m.find()) {
@@ -156,30 +163,36 @@ public class StringHelper {
 
 	public static String getSetupMode(String input) {
 
-		Pattern					p		= Pattern.compile("\\<Setup.*session\\>");
-		java.util.regex.Matcher	m		= p.matcher(input);
-		String					output	= "";
-		while (m.find()) { output = m.group(); }
+		Pattern p = Pattern.compile("\\<Setup.*session\\>");
+		java.util.regex.Matcher m = p.matcher(input);
+		String output = "";
+		while (m.find()) {
+			output = m.group();
+		}
 		System.out.println(output);
 		return output;
 	}
 
 	public static String getCamIp(String input) {
 
-		Pattern					p		= Pattern.compile("inet addr:\\d+.\\d+.\\d+.\\d+");
-		java.util.regex.Matcher	m		= p.matcher(input);
-		String					output	= "";
-		if (m.find()) { output += m.group(); }
+		Pattern p = Pattern.compile("inet addr:\\d+.\\d+.\\d+.\\d+");
+		java.util.regex.Matcher m = p.matcher(input);
+		String output = "";
+		if (m.find()) {
+			output += m.group();
+		}
 
 		return output.replace("inet addr:", "");
 	}
 
 	public static String getVersion(String input) {
 
-		Pattern					p		= Pattern.compile("\\d+.\\d+.\\d+");
-		java.util.regex.Matcher	m		= p.matcher(input);
-		String					output	= "";
-		if (m.find()) { output += m.group(); }
+		Pattern p = Pattern.compile("\\d+.\\d+.\\d+");
+		java.util.regex.Matcher m = p.matcher(input);
+		String output = "";
+		if (m.find()) {
+			output += m.group();
+		}
 
 		return output;
 	}
@@ -202,8 +215,7 @@ public class StringHelper {
 
 	public static String getTimeStamp(String format, int day) {
 
-		return new SimpleDateFormat(format)
-				.format(new Date((new Date()).getTime() + (day * 1000 * 60 * 60 * 24)));
+		return new SimpleDateFormat(format).format(new Date((new Date()).getTime() + (day * 1000 * 60 * 60 * 24)));
 	}
 
 	public static String getCurrentDateTime() {
@@ -216,13 +228,12 @@ public class StringHelper {
 		return new SimpleDateFormat(format).format(new Date());
 	}
 
-	public static long getDuration(String format, String dateStart, String dateEnd)
-			throws ParseException {
+	public static long getDuration(String format, String dateStart, String dateEnd) throws ParseException {
 
 		try {
-			DateFormat	f		= new SimpleDateFormat(format);
-			Date		date1	= f.parse(dateStart);
-			Date		date2	= f.parse(dateEnd);
+			DateFormat f = new SimpleDateFormat(format);
+			Date date1 = f.parse(dateStart);
+			Date date2 = f.parse(dateEnd);
 			return (date2.getTime() - date1.getTime());
 		} catch (Exception ex) {
 			return 0;
@@ -232,9 +243,9 @@ public class StringHelper {
 	public static long getDuration(String dateStart, String dateEnd) throws ParseException {
 
 		try {
-			DateFormat	f		= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-			Date		date1	= f.parse(dateStart);
-			Date		date2	= f.parse(dateEnd);
+			DateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+			Date date1 = f.parse(dateStart);
+			Date date2 = f.parse(dateEnd);
 			return (date2.getTime() - date1.getTime());
 		} catch (Exception ex) {
 			return 0;
@@ -243,13 +254,13 @@ public class StringHelper {
 
 	public static int convertTimeToSeconds(String time) {
 
-		int	hour	= 0;
-		int	minute	= 0;
-		int	second	= 0;
+		int hour = 0;
+		int minute = 0;
+		int second = 0;
 		try {
-			hour	= Integer.parseInt(time.split(":")[0]);
-			minute	= Integer.parseInt(time.split(":")[1]);
-			second	= Integer.parseInt(time.split(":")[2]);
+			hour = Integer.parseInt(time.split(":")[0]);
+			minute = Integer.parseInt(time.split(":")[1]);
+			second = Integer.parseInt(time.split(":")[2]);
 		} catch (Exception ex) {
 			return 0;
 		}
@@ -300,10 +311,12 @@ public class StringHelper {
 	public static List<String> getNumberInString(String value) {
 
 		Log.info("Get numbers in: " + value);
-		Pattern			p		= Pattern.compile("-?\\d+(,\\d+)*?\\.?\\d+?");
-		List<String>	numbers	= new ArrayList<String>();
-		Matcher			m		= p.matcher(value);
-		while (m.find()) { numbers.add(m.group()); }
+		Pattern p = Pattern.compile("-?\\d+(,\\d+)*?\\.?\\d+?");
+		List<String> numbers = new ArrayList<String>();
+		Matcher m = p.matcher(value);
+		while (m.find()) {
+			numbers.add(m.group());
+		}
 		return numbers;
 	}
 
@@ -312,8 +325,8 @@ public class StringHelper {
 	 * 
 	 * @param input  String to be searched.
 	 * @param search what to search for in "input".
-	 * @return True if found 'search' in 'input' only once.
-	 *         False if found more than one or can't find
+	 * @return True if found 'search' in 'input' only once. False if found more than
+	 *         one or can't find
 	 */
 	public static boolean matchOnceOnly(String input, String search) {
 

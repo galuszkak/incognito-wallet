@@ -12,14 +12,14 @@
 	<groupId>com.auto</groupId>
 	<artifactId>aut</artifactId>
 	<version>1.0</version>
-	<name>aut</name>
+	<name>AUTs</name>
 	<packaging>pom</packaging>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<modules>
-		<module>wallet</module>
+		<module>IncognitoWallet</module>
 	</modules>
 	<dependencies>
 		<dependency>

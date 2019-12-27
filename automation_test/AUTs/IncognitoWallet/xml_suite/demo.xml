@@ -1,22 +1,23 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 <suite name="demo">
 
-	<parameter name="appium.platformName" value="Android"/>
-	<parameter name="appium.deviceName" value="ePixel3Xl"/>
+	<parameter name="appium.platformName" value="Android" />
+	<parameter name="appium.deviceName" value="ePixel3Xl" />
 	<!-- <parameter name="appium.udid" value=""></parameter> -->
-	<parameter name="appium.noReset" value="true"/>
+	<parameter name="appium.noReset" value="true" />
 
-	<parameter name="android.appPackage" value="com.incognito.wallet"/>
-	<parameter name="android.appActivity" value="com.incognito.wallet.SplashActivity"/>
-	<parameter name="android.skipServerInstallation" value="true"/>
+	<parameter name="android.appPackage"
+		value="com.incognito.wallet" />
+	<parameter name="android.appActivity"
+		value="com.incognito.wallet.SplashActivity" />
+	<parameter name="android.skipServerInstallation" value="true" />
 
 	<listeners>
-		<listener class-name="com.auto.core.listeners.TestngFlowListener"/>
+		<listener class-name="com.auto.core.listeners.Flow" />
 	</listeners>
 	<test name="demo1">
 		<classes>
-			<class name="org.incognito.wallet.test.checklist.DemoTest"></class>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest"></class>
 		</classes>
 	</test>
-
 </suite>

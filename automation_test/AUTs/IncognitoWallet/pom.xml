@@ -14,7 +14,7 @@
 		<version>1.0</version>
 	</parent>
 	
-	<name>wallet</name>
+	<name>IncognitoWallet</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

@@ -13,26 +13,26 @@ import jssc.SerialPortException;
 
 public class Terminal {
 
-	private String		response	= "";
-	private String		teratermLog;
-	private SerialPort	serialPort;
+	private String response = "";
+	private String teratermLog;
+	private SerialPort serialPort;
 
 	public Terminal(String portName) throws SerialPortException {
 
 		clearTeratermLog();
 		serialPort = new SerialPort(portName);
 		serialPort.openPort();
-		serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				SerialPort.PARITY_NONE);
 		serialPort.addEventListener(new SerialPortEventListener() {
 
 			@Override
 			public void serialEvent(SerialPortEvent serialPortEvent) {
 
 				try {
-					response	= StringHelper.cleanInvalidCharacters(
-							serialPort.readString(serialPortEvent.getEventValue()));
-					teratermLog	+= response;
+					response = StringHelper
+							.cleanInvalidCharacters(serialPort.readString(serialPortEvent.getEventValue()));
+					teratermLog += response;
 				} catch (SerialPortException e) {
 					Log.error(e.getMessage());
 				}
@@ -45,17 +45,17 @@ public class Terminal {
 		clearTeratermLog();
 		serialPort = new SerialPort(portName);
 		serialPort.openPort();
-		serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+		serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				SerialPort.PARITY_NONE);
 		serialPort.addEventListener(new SerialPortEventListener() {
 
 			@Override
 			public void serialEvent(SerialPortEvent serialPortEvent) {
 
 				try {
-					response	= StringHelper.cleanInvalidCharacters(
-							serialPort.readString(serialPortEvent.getEventValue()));
-					teratermLog	+= response;
+					response = StringHelper
+							.cleanInvalidCharacters(serialPort.readString(serialPortEvent.getEventValue()));
+					teratermLog += response;
 					if (printLog) {
 						if (!response.trim().equals(""))
 							System.out.println("Camera_Log ==> " + response);
@@ -74,21 +74,19 @@ public class Terminal {
 
 	}
 
-	public boolean sendCommand(String command, String expectedMessage, int timeout)
-			throws SerialPortException {
+	public boolean sendCommand(String command, String expectedMessage, int timeout) throws SerialPortException {
 
 		clearTeratermLog();
 		serialPort.writeString("\r " + command + " \r");
 		for (int i = 0; i < timeout; i++) {
 			TimeHelper.sleep(1000);
 			if (getTeratermLog().matches(".*" + expectedMessage + ".*")) {
-				Log.info(String.format("Sending \'%s\' to \'%s\' sucess", command,
-						serialPort.getPortName()));
+				Log.info(String.format("Sending \'%s\' to \'%s\' sucess", command, serialPort.getPortName()));
 				return true;
 			}
 		}
-		Log.info(String.format(("Sending \'%s\' to \'%s\' fail: response does not match %s"),
-				command, serialPort.getPortName(), expectedMessage));
+		Log.info(String.format(("Sending \'%s\' to \'%s\' fail: response does not match %s"), command,
+				serialPort.getPortName(), expectedMessage));
 		return false;
 	}
 
@@ -116,9 +114,11 @@ public class Terminal {
 		sendCommand("config");
 		TimeHelper.sleep(2000);
 
-		Pattern	pattern	= Pattern.compile("UDID : \'(.*?)\'");
-		Matcher	matcher	= pattern.matcher(teratermLog);
-		if (matcher.find()) { return (matcher.group(1)); }
+		Pattern pattern = Pattern.compile("UDID : \'(.*?)\'");
+		Matcher matcher = pattern.matcher(teratermLog);
+		if (matcher.find()) {
+			return (matcher.group(1));
+		}
 		return "";
 	}
 

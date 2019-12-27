@@ -24,7 +24,7 @@ public class ImageHelper {
 		String text = "";
 		try {
 			text = instance.doOCR(img);
-		} catch (TesseractException e) {			
+		} catch (TesseractException e) {
 			e.printStackTrace();
 		}
 		return text;

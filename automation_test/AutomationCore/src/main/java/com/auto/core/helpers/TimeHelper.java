@@ -21,10 +21,10 @@ public class TimeHelper {
 
 	public static String getRandomTime(String format) {
 
-		Random				random	= new Random();
-		Date				date	= new Date(random.nextLong());
-		SimpleDateFormat	sdf		= new SimpleDateFormat(format);
-		String				rs		= sdf.format(date);
+		Random random = new Random();
+		Date date = new Date(random.nextLong());
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		String rs = sdf.format(date);
 		Log.info("Random time: " + rs);
 		return rs;
 	}
@@ -33,28 +33,22 @@ public class TimeHelper {
 
 		int hour = 0, min = 0, sec = 0, mili = miliseconds;
 		if (miliseconds >= 1000) {
-			sec		= miliseconds / 1000;
-			mili	= miliseconds % 1000;
+			sec = miliseconds / 1000;
+			mili = miliseconds % 1000;
 
 			if (sec > 60) {
-				min	= sec / 60;
-				sec	= sec % 60;
+				min = sec / 60;
+				sec = sec % 60;
 
 				if (min > 60) {
-					hour	= min / 60;
-					min		= min % 60;
+					hour = min / 60;
+					min = min % 60;
 				}
 			}
 		}
-		String[]	label	= {	"h",
-								"m",
-								"s",
-								"ms" };
-		String[]	num		= {	hour + "",
-								min + "",
-								sec + "",
-								mili + "" };
-		String		ret		= "";
+		String[] label = { "h", "m", "s", "ms" };
+		String[] num = { hour + "", min + "", sec + "", mili + "" };
+		String ret = "";
 		for (int i = 0; i < 4; i++) {
 			if (!num[i].equals("0"))
 				ret += num[i] + label[i] + ' ';
