@@ -15,7 +15,7 @@ public class PageWallet extends PageMain {
 	
 	private MobileElement btnCoinByName(String name) {
 		String xpath = "//android.view.ViewGroup/android.widget.TextView[@text='" + name + "']";
-		return driver.findElement(By.xpath(xpath));
+		return (MobileElement) driver.findElement(By.xpath(xpath));
 	}
 	
 }
