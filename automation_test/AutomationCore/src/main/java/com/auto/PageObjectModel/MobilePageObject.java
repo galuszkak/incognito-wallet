@@ -4,11 +4,13 @@ import java.io.File;
 import java.util.Map;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.PageFactory;
 
 import com.auto.core.helpers.TestHelper;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 
 public class MobilePageObject extends PageObject{
 
@@ -60,4 +62,9 @@ public class MobilePageObject extends PageObject{
 		initPageFactory();
 	}
 
+	@Override
+	public void initPageFactory() {
+
+		PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+	}
 }

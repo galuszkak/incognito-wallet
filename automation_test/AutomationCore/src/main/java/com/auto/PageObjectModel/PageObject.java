@@ -13,8 +13,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.auto.core.utils.Log;
 
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-
 public class PageObject {
 	public static WebDriver driver;
 
@@ -32,7 +30,7 @@ public class PageObject {
 	 */
 	public void initPageFactory() {
 
-		PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+		PageFactory.initElements(driver, this);
 	}
 
 	/**

@@ -43,6 +43,7 @@ public class WebPageObject extends PageObject {
 		default:
 			throw new Exception("not yet support this browser");
 		}
+		initPageFactory();
 	}
 
 	public void openPage() {

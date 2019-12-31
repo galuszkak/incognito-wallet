@@ -21,13 +21,13 @@ public class MobileTestBase extends TestCase {
 	@BeforeSuite
 	public void beforeSuiteBase(ITestContext context) {
 
-		Log.info("=-=-=-=-= Start Appium service =-=-=-=-=");
+		Log.info("!!! Start Appium service !!!");
 		TestHelper.startAppiumService();
 	}
 
 	@BeforeMethod
 	public void beforeMethodBase() throws Exception{
-		Log.info("=-=-=-=-= Start Appium driver =-=-=-=-=");
+		Log.info("!!! Start Appium driver !!!");
 		((MobilePageObject) pageObject).startDriver();
 	}
 
