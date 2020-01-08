@@ -1,11 +1,15 @@
 package org.incognito.wallet.PageObjects;
 
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import io.appium.java_client.MobileElement;
 
-public class PageMain extends PageBase {
+/**
+ * @author rocky
+ * This page show when start up the app 
+ * Contains 4 sub-pages : Wallet, Node, PApp, Pdex and the default page is Wallet
+ */
+public class PageDefault extends PageBase {
 	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[1]")
 	private MobileElement btnWallet;
 
@@ -18,30 +22,33 @@ public class PageMain extends PageBase {
 	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[4]")
 	private MobileElement btnPdex;
 
-	public void waitForDisplay() {
-		waits().until(ExpectedConditions.visibilityOf(btnPdex));
+	public boolean isDisplay() {
+		return waitForAppear(btnNodes) &
+				waitForAppear(btnPapps) &
+				waitForAppear(btnPdex) &
+				waitForAppear(btnWallet);
 	}
 
 	public PagePdex gotoPagePdex() {
-		waitForDisplay();
+		isDisplay();
 		btnPdex.click();
 		return new PagePdex();
 	}
 	
 	public PageNodes gotoPageNode() {
-		waitForDisplay();
+		isDisplay();
 		btnNodes.click();
 		return new PageNodes();
 	}
 	
 	public PagePapps gotoPagePapps() {
-		waitForDisplay();
+		isDisplay();
 		btnPapps.click();
 		return new PagePapps();
 	}
 	
 	public PageWallet gotoPageWallet() {
-		waitForDisplay();
+		isDisplay();
 		btnWallet.click();
 		return new PageWallet();
 	}

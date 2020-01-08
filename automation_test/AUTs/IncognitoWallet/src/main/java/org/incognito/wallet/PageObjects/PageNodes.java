@@ -1,5 +1,5 @@
 package org.incognito.wallet.PageObjects;
 
-public class PageNodes extends PageMain {
+public class PageNodes extends PageDefault {
 
 }

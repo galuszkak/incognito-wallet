@@ -10,9 +10,11 @@ import com.auto.core.helpers.TestHelper;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.clipboard.HasClipboard;
+import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 
-public class MobilePageObject extends PageObject{
+public class MobilePageObject extends PageObject {
 
 	/**
 	 * Start Appium driver base on parameters which is passed to the test
@@ -39,6 +41,11 @@ public class MobilePageObject extends PageObject{
 			cap.setCapability("noSign", true);
 			cap.setCapability("appActivity", androidParam.get("appActivity"));
 			cap.setCapability("appPackage", androidParam.get("appPackage"));
+			if (appiumParam.get("app") != null) {
+				File app = new File(appiumParam.get("app"));
+				cap.setCapability("app", app.getAbsolutePath());
+			}
+			driver = new AndroidDriver<MobileElement>(TestHelper.appiumServiceBuilder, cap);
 			break;
 
 		case "ios":
@@ -48,23 +55,28 @@ public class MobilePageObject extends PageObject{
 			cap.setCapability("showXcodeLog", false);
 			cap.setCapability("showIOSLog", true);
 			cap.setCapability("bundleId", iosParam.get("bundleId"));
+			driver = new IOSDriver<MobileElement>(TestHelper.appiumServiceBuilder, cap);
+
 			break;
 		default:
 			break;
 		}
-
-		if (appiumParam.get("app") != null) {
-			File app = new File(appiumParam.get("app"));
-			cap.setCapability("app", app.getAbsolutePath());
-		}
-
-		driver = new AndroidDriver<MobileElement>(TestHelper.appiumServiceBuilder, cap);
 		initPageFactory();
+
+
 	}
 
 	@Override
 	public void initPageFactory() {
 
 		PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+	}
+
+	public String getClipBoard() {
+		return ((HasClipboard) driver).getClipboardText();
+	}
+
+	public void setClipBoard(String text) {
+		((HasClipboard) driver).setClipboardText(text);
 	}
 }

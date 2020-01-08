@@ -11,6 +11,7 @@
 	<parameter name="android.appActivity"
 		value="com.incognito.wallet.SplashActivity" />
 	<parameter name="android.skipServerInstallation" value="true" />
+	<parameter name="myArg" value="x"></parameter>
 
 	<listeners>
 		<listener class-name="com.auto.core.listeners.Flow" />
