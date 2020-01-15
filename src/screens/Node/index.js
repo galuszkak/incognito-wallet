@@ -25,6 +25,7 @@ import React from 'react';
 import { FlatList, RefreshControl, ScrollView, View } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { connect } from 'react-redux';
+import { FetchingLoader } from './components/Loader';
 import Header from './Header';
 import style from './style';
 
@@ -93,7 +94,7 @@ class Node extends BaseScreen {
       loadedDevices: [],
       balancePRV:0,
       timeToUpdate: Date.now(),
-      isFetching: false,
+      isFetching: undefined,
       loading: false,
       withdrawRequests: {},
     };
@@ -332,7 +333,7 @@ class Node extends BaseScreen {
         listDevice: list,
       }, this.getFullInfo);
     } else {
-      this.setState({ listDevice: list });
+      this.setState({ listDevice: list,isFetching: false });
     }
   };
 
@@ -439,12 +440,20 @@ class Node extends BaseScreen {
       loading,
       loadedDevices,
     } = this.state;
-
-    if (!isFetching && _.isEmpty(listDevice)) {
-      return <WelcomeNodes
-        onAddVNode={this.handleAddVirtualNodePress}
-        onAddPNode={this.handleAddNodePress}
-      />;
+    // let isFetching = null;
+    if(_.isNil(isFetching)){
+      return (
+        <View style={style.containerWaiting}>
+          <FetchingLoader />
+        </View>
+      );
+    }else if (!isFetching && _.isEmpty(listDevice)) {
+      return (
+        <WelcomeNodes
+          onAddVNode={this.handleAddVirtualNodePress}
+          onAddPNode={this.handleAddNodePress}
+        />
+      );
     }
 
     return (

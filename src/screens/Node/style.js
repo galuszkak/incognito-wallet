@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
 import { COLORS, FONT } from '@src/styles';
-import TextStyle, {FontStyle, scaleInApp} from '@src/styles/TextStyle';
+import TextStyle, { FontStyle, scaleInApp } from '@src/styles/TextStyle';
+import { StyleSheet } from 'react-native';
 
 const style = StyleSheet.create({
   row: {
@@ -12,6 +12,11 @@ const style = StyleSheet.create({
   container: {
     paddingTop: 15,
     paddingHorizontal: 5,
+    minHeight: '100%',
+  },
+  containerWaiting: {
+    alignItems:'center',
+    justifyContent:'center',
     minHeight: '100%',
   },
   background: {

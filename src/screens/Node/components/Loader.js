@@ -5,13 +5,22 @@ import { Animated, StyleSheet, View } from 'react-native';
 
 const TAG = 'Loader';
 const SizeItemBox = {
-  width: scaleInApp(2),
-  height: scaleInApp(10),
+  width: scaleInApp(7),
+  height: scaleInApp(20),
 };
 const style = StyleSheet.create({
   container: {
-    height:60,
+    height:scaleInApp(60),
     justifyContent:'center'
+  },
+  earning_container:{
+    flexDirection:'row',
+  },
+  earning_box:{
+    width: SizeItemBox.width,
+    height: SizeItemBox.height,
+    marginHorizontal:scaleInApp(4),
+    borderRadius: scaleInApp(2),
   },
 });
 
@@ -32,12 +41,28 @@ const usePulse = ({start = 1,to=2},startDelay = 500,duration = 300) => {
       clearTimeout(timeout);
     };
   }, []);
-  // useEffect(() => {
-  //   pulse();
-  //   return ()=>scale.stopAnimation(({value})=>console.log(TAG,'usePulse stop ===='));
-  // }, []);
   return scale;
 };
+
+export const FetchingLoader = React.memo(({color = '#25CDD6',isVisible = true, scale = 1 })=>{
+  const startDelay = 0;
+  const duration = 600;
+  const scale1 = usePulse({start:1,to:3},startDelay,duration);
+  const scale2 = usePulse({start: 1,to:3},startDelay+ duration,duration);
+  const scale3 = usePulse({start:1,to:3},startDelay+ duration*2,duration/2);
+
+  return (
+    <View style={[style.earning_container,{display:isVisible?'flex':'none', transform: [{ scale }, { translateX: 0 }]}]}>
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale1}]}]} />
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale2}]}]} />
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale3}]}]} />
+
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale2}]}]} />
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale1}]}]} />
+      <Animated.View style={[style.earning_box,{backgroundColor: color,transform:[{scaleY:scale3}]}]} />
+    </View>
+  );
+});
 
 const MyLoader = () => (
   <ContentLoader
@@ -68,10 +93,6 @@ const MyFacebookLoader = () => <Facebook />;
 class Loader extends Component {
   constructor(props){
     super(props);
-    this.state={
-
-    };
-
   }
   render(){
     return (
