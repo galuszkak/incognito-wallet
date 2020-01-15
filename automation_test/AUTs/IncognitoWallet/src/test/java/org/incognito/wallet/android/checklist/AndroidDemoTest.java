@@ -12,17 +12,10 @@ public class AndroidDemoTest extends MobileTestBase {
 
 	@Test(testName = "Browsing through all tabs")
 	public void test() throws Exception {
-		PageDefault pageMain = new PageWallet();
+		PageWallet pageMain = new PageWallet();
 		pageMain.isDisplay();
 		takeScreenshot("done_test");
-		pageMain.gotoPagePdex();
-		Thread.sleep(1000);
-		pageMain.gotoPageNode();
-		Thread.sleep(1000);
-		pageMain.gotoPagePapps();
-		Thread.sleep(1000);
-		pageMain.gotoPageWallet();
-		takeScreenshot("done_test_2");
+		
 	}
 
 	@Test(testName = "Copy keys")

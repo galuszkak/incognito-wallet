@@ -8,5 +8,4 @@ allure-results
 .-output
 auto.log
 dummy.*
-.classpath
 .settings

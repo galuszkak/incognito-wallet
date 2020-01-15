@@ -1,6 +1,7 @@
 package org.incognito.wallet.PageObjects;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.FindBy;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
@@ -10,13 +11,13 @@ import io.appium.java_client.pagefactory.AndroidFindBy;
  */
 public class PageWallet extends PageDefault {
 
-	@AndroidFindBy(xpath = "//android.widget.TextView[@text='Add coins to your list'")
+	@AndroidFindBy(xpath = "//android.widget.TextView[@text='Privacy']")
 	private MobileElement btnAddCoinToList;
 
-	@AndroidFindBy(xpath = "//android.widget.TextView[@text='Issue a privacy coin'")
+	@AndroidFindBy(xpath = "//android.widget.TextView[@text='Privacy']")
 	private MobileElement btnIssueCoin;
 
-	@AndroidFindBy(xpath = "")
+	@AndroidFindBy(xpath = "//android.widget.TextView[@text='Privacy']")
 	private MobileElement btnSettingGear;
 
 	private MobileElement btnCoinByName(String name) {
@@ -35,7 +36,8 @@ public class PageWallet extends PageDefault {
 	}
 	
 	public boolean isDisplay() {
-		return waitForAppear(btnSettingGear) &
+		return 
+				waitForAppear(btnSettingGear) &
 				waitForAppear(btnIssueCoin) &
 				waitForAppear(btnAddCoinToList) &
 				super.isDisplay();

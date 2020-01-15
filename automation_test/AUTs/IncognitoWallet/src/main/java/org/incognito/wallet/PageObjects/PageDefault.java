@@ -1,8 +1,10 @@
 package org.incognito.wallet.PageObjects;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.pagefactory.AndroidFindBy;
 
 /**
  * @author rocky
@@ -10,20 +12,22 @@ import io.appium.java_client.MobileElement;
  * Contains 4 sub-pages : Wallet, Node, PApp, Pdex and the default page is Wallet
  */
 public class PageDefault extends PageBase {
-	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[1]")
+	@AndroidFindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[1]")
 	private MobileElement btnWallet;
 
-	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[2]")
+	@AndroidFindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[2]")
 	private MobileElement btnNodes;
 
-	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[3]")
+	@AndroidFindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[3]")
 	private MobileElement btnPapps;
 
-	@FindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[4]")
+	@AndroidFindBy(xpath = "//android.widget.HorizontalScrollView//android.widget.Button[4]")
 	private MobileElement btnPdex;
 
+	
 	public boolean isDisplay() {
-		return waitForAppear(btnNodes) &
+		return 
+				waitForAppear(btnNodes) &
 				waitForAppear(btnPapps) &
 				waitForAppear(btnPdex) &
 				waitForAppear(btnWallet);

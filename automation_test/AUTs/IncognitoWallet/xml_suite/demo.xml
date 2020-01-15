@@ -3,7 +3,7 @@
 
 	<parameter name="appium.platformName" value="Android" />
 	<parameter name="appium.deviceName" value="ePixel3Xl" />
-	<!-- <parameter name="appium.udid" value=""></parameter> -->
+	<parameter name="appium.udid" value="ZX1G22PKT9" />
 	<parameter name="appium.noReset" value="true" />
 
 	<parameter name="android.appPackage"
