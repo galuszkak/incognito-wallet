@@ -18,13 +18,16 @@ public class AndroidDemoTest extends MobileTestBase {
 		
 	}
 
-//	@Test(testName = "Copy keys")
-	public void copyKeys() {
-		PageWallet pageWallet = new PageWallet();
-		pageWallet.isDisplay();
-		PageKeys pageKeys = pageWallet.gotoPageAccount().gotoPageKeys();
-		pageKeys.copyPrivateKey();
-		String privateKey = pageKeys.getClipBoard();
-		Log.info(privateKey);
+	@Test(testName = "Copy keys")
+	public void copyKeys() throws Exception {
+		PageWallet pageMain = new PageWallet();
+		pageMain.isDisplay();
+		takeScreenshot("done_test");
+//		PageWallet pageWallet = new PageWallet();
+//		pageWallet.isDisplay();
+//		PageKeys pageKeys = pageWallet.gotoPageAccount().gotoPageKeys();
+//		pageKeys.copyPrivateKey();
+//		String privateKey = pageKeys.getClipBoard();
+//		Log.info(privateKey);
 	}
 }
