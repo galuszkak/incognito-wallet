@@ -18,7 +18,7 @@ public class AndroidDemoTest extends MobileTestBase {
 		
 	}
 
-	@Test(testName = "Copy keys")
+//	@Test(testName = "Copy keys")
 	public void copyKeys() {
 		PageWallet pageWallet = new PageWallet();
 		pageWallet.isDisplay();

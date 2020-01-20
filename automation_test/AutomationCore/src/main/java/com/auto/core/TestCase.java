@@ -2,7 +2,10 @@ package com.auto.core;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 import org.testng.annotations.BeforeMethod;
@@ -21,6 +24,11 @@ public class TestCase {
 	public void loadTestParam(ITestContext context) {
 		this.context = context;
 		Log.info("!!! Load test parameters !!!");
+		Map env = System.getenv();
+		Set<String> envKey = env.keySet();
+		for (String key : envKey) {
+			System.out.println(String.format("!!! %s : %s",key,env.get(key)));
+		}
 		TestHelper.loadTestParams(context);
 	}
 

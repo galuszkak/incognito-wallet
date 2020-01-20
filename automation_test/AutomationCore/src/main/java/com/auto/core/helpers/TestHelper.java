@@ -51,7 +51,7 @@ public class TestHelper {
 
 	public static AppiumServiceBuilder startAppiumService() {
 		appiumServiceBuilder = new AppiumServiceBuilder();
-		appiumServiceBuilder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
+		appiumServiceBuilder.withArgument(GeneralServerFlag.LOG_LEVEL, "info");
 		appiumServiceBuilder.usingAnyFreePort();
 		appiumServiceBuilder.withArgument(GeneralServerFlag.ROBOT_ADDRESS, TestHelper.testParams.get("udid"));
 		return appiumServiceBuilder;
