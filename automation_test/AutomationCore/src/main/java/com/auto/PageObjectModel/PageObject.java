@@ -1,6 +1,9 @@
 package com.auto.PageObjectModel;
 
+import org.openqa.selenium.Dimension;
 import java.io.File;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -13,8 +16,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.auto.core.utils.Log;
 
+import io.appium.java_client.PerformsTouchActions;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidTouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
+
+
+
 public class PageObject {
 	public static WebDriver driver;
+	public static PerformsTouchActions performsTouchActions;
 
 	/**
 	 * Start driver base on parameters which is passed to the test
@@ -74,6 +86,7 @@ public class PageObject {
 	 */
 	public boolean waitForAppear(WebElement element) {
 		try {
+			scrollToElement(element);
 			WebElement e = waits().until(ExpectedConditions.visibilityOf(element));
 			if (e != null)
 				return true;
@@ -101,5 +114,44 @@ public class PageObject {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public boolean enter(WebElement element, String key) {
+		try {
+			WebElement e = waits().until(ExpectedConditions.visibilityOf(element));
+			if (e != null)
+				e.click();
+				e.clear();
+				e.sendKeys(key);
+			return false;
+		} catch (Exception e2) {
+			return false;
+		}
+	}
+	
+	public void verticalSwipe() {
+		Dimension dim = driver.manage().window().getSize();
+		int height = dim.getHeight();
+		int width = dim.getWidth();
+		int x = width/2;
+		int starty = (int)(height*0.80);
+		int endy = (int)(height*0.20);
+		TouchAction action = new TouchAction((PerformsTouchActions) driver);
+		action.press(PointOption.point(x, starty)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1300))).moveTo(PointOption.point(x, endy)).release().perform();
+	}
+	
+	public void scrollToElement(WebElement e) {
+		boolean flg = false;
+		for (int i = 0; i <= 20; i++) {
+			try {
+					driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+					e.isDisplayed();
+					flg = true;
+					break;
+			} catch (Exception err) {
+				verticalSwipe();
+			}
+		}
+		
 	}
 }
