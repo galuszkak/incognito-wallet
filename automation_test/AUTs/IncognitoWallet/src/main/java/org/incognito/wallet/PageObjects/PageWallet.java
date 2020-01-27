@@ -37,7 +37,7 @@ public class PageWallet extends PageDefault {
 	}
 	
 	public PageAccount gotoPageAccount () {
-		btnSettingGear.click();
+		tap(btnSettingGear);
 		return new PageAccount();
 	}
 	
@@ -45,8 +45,8 @@ public class PageWallet extends PageDefault {
 	public boolean isDisplay() {
 		return 
 				waitForAppear(btnSettingGear) &
-				waitForAppear(btnIssueCoin) &
-				waitForAppear(btnAddCoinToList) &
+				scrollToElement(btnIssueCoin) &
+				scrollToElement(btnAddCoinToList) &
 				super.isDisplay();
 	}
 	

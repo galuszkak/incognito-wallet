@@ -28,7 +28,7 @@ public class AndroidDemoTest extends MobileTestBase {
 		pageImport.importPrivacyKey();
 		pageImport.isImportSuccess();
 		
-		pageMain.isAccountNameUpdated(accountName);
+//		pageMain.isAccountNameUpdated(accountName);
 		pageAccount.isAccountNameDisplayed(accountName);
 		
 		takeScreenshot("done_test");

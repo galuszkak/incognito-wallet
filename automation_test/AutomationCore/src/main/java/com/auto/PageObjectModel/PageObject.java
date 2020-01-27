@@ -86,7 +86,6 @@ public class PageObject {
 	 */
 	public boolean waitForAppear(WebElement element) {
 		try {
-			scrollToElement(element);
 			WebElement e = waits().until(ExpectedConditions.visibilityOf(element));
 			if (e != null)
 				return true;
@@ -129,6 +128,18 @@ public class PageObject {
 		}
 	}
 	
+	public boolean tap(WebElement element) {
+		try {
+			WebElement e = waits().until(ExpectedConditions.visibilityOf(element));
+			if (e != null)
+				e.click();
+				
+			return false;
+		} catch (Exception e2) {
+			return false;
+		}
+	}
+	
 	public void verticalSwipe() {
 		Dimension dim = driver.manage().window().getSize();
 		int height = dim.getHeight();
@@ -137,10 +148,10 @@ public class PageObject {
 		int starty = (int)(height*0.80);
 		int endy = (int)(height*0.20);
 		TouchAction action = new TouchAction((PerformsTouchActions) driver);
-		action.press(PointOption.point(x, starty)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1300))).moveTo(PointOption.point(x, endy)).release().perform();
+		action.press(PointOption.point(x, starty)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1300))).moveTo(PointOption.point(x, endy)).release().perform();	
 	}
 	
-	public void scrollToElement(WebElement e) {
+	public boolean scrollToElement(WebElement e) {
 		boolean flg = false;
 		for (int i = 0; i <= 20; i++) {
 			try {
@@ -152,6 +163,23 @@ public class PageObject {
 				verticalSwipe();
 			}
 		}
+		return flg;
+		
+	}
+	
+	public boolean isElementPresent(WebElement e) {
+		boolean flg = false;
+		for (int i = 0; i <= 20; i++) {
+			try {
+					driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+					e.isDisplayed();
+					flg = true;
+					break;
+			} catch (Exception err) {
+				System.out.println(err);
+			}
+		}
+		return flg;
 		
 	}
 }
