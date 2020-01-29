@@ -20,6 +20,9 @@ public class PageAccount extends PageBase {
 	
 	@AndroidFindBy(xpath = "//*[@text='Import']")
 	private MobileElement txtImportAccn;
+	
+	@AndroidFindBy(xpath = "//*[@text='Create']")
+	private MobileElement txtCreateAccn;
 
 //	@AndroidFindBy(xpath = "")
 //	private MobileElement btnCreate;
@@ -45,6 +48,10 @@ public class PageAccount extends PageBase {
 	
 	public void tapImportAccount() {
 		tap(txtImportAccn);
+	}
+	
+	public void tapCreateAccount() {
+		tap(txtCreateAccn);
 	}
 	
 	public void isAccountNameDisplayed(String accName) {

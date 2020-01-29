@@ -1,6 +1,8 @@
 package com.auto.PageObjectModel;
 
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+
 import java.io.File;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.auto.core.utils.Log;
+import com.auto.core.utils.RandomCharacter;
 
 import io.appium.java_client.PerformsTouchActions;
 import io.appium.java_client.TouchAction;
@@ -141,6 +144,20 @@ public class PageObject {
 	}
 	
 	public void verticalSwipe() {
+		Dimension dim = driver.manage().window().getSize();
+		int height = dim.getHeight();
+		int width = dim.getWidth();
+		int x = width/2;
+		int starty = (int)(height*0.80);
+		int endy = (int)(height*0.20);
+		TouchAction action = new TouchAction((PerformsTouchActions) driver);
+		action.press(PointOption.point(x, starty)).waitAction(WaitOptions.waitOptions(Duration.ofMillis(1300))).moveTo(PointOption.point(x, endy)).release().perform();	
+	}
+	
+	public void horizontalSwipe(WebElement element) {
+		Point location = element.getLocation();
+
+
 		Dimension dim = driver.manage().window().getSize();
 		int height = dim.getHeight();
 		int width = dim.getWidth();

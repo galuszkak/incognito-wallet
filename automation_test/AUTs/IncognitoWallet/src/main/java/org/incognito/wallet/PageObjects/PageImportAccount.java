@@ -16,6 +16,8 @@ public class PageImportAccount extends PageBase {
 	@AndroidFindBy(xpath = "//*[@class='android.view.ViewGroup' and ./*[@text='Import']]")
 	private MobileElement btnImport;
 	
+	@AndroidFindBy(xpath = "//*[@class='android.view.ViewGroup' and ./*[./*[@text]] and ./*[@text] and ./*[./*[./*[@text]]]]")
+	private MobileElement errPopup;
 	
 	
 	
@@ -27,8 +29,8 @@ public class PageImportAccount extends PageBase {
 		
 	}
 	
-	public void importPrivacyKey() {
-		txtPrivateKey.sendKeys("112t8rnX3532sCMkBxSStrswQ6JGGdJtvQfVca1fNBwKHhtc23oCjqNULYVm7qCQADckz52N4E1h4YVNGSekp3HdFzAZ9De6zbwwUkRwJXbi");
+	public void importPrivacyKey(String value) {
+		txtPrivateKey.sendKeys(value);
 		btnImport.click();
 	}
 	
@@ -36,5 +38,8 @@ public class PageImportAccount extends PageBase {
 		
 	}
 	
+	public void isErrPopupShown() {
+		isElementPresent(errPopup);
+	}
 	
 }
