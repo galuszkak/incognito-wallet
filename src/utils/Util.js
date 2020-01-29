@@ -5,6 +5,7 @@ import { CustomError } from '@src/services/exception';
 import knownCode from '@src/services/exception/customError/code/knownCode';
 import _ from 'lodash';
 import { Linking } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { NavigationActions, StackActions } from 'react-navigation';
 // import timer from 'react-native-timer';
 const timer = require('react-native-timer');
@@ -32,6 +33,14 @@ export default class Util {
           ((prevHash << 5) - prevHash + currVal.charCodeAt(0)) | 0,
         0
       );
+  };
+
+  static phoneInfo = () => {
+    try {
+      return `${DeviceInfo.getBrand()}-${DeviceInfo.getSystemVersion()}`;
+    } catch (error) {
+      return'';
+    }
   };
 
   static openSetting = async (
@@ -118,7 +127,7 @@ export default class Util {
          if(_.isNumber(delayToTry)){
            await Util.delay(delayToTry);
          }
-         return await Util.tryAtMost(promiseFunc, count - 1); 
+         return await Util.tryAtMost(promiseFunc, count - 1);
        }
        return result;
      }
@@ -126,26 +135,35 @@ export default class Util {
    };
 
   static createRandomString= (length) =>{
-    
+
     let pwd = _.sampleSize(chars, length || 12) ; // lodash v4: use _.sampleSize
     return pwd.join('');
   }
 
   /**
-   * @param {Promise} promiseObj - promiseObj will be retried when return Error object.
-   * @param {Int} count  = 6
-   * @param {Int} delayToTry  = 1 second
+   * @param {Promise} promiseObj
+   * @param {Int} timeSecond  = 1
    */
   static excuteWithTimeout = (promiseObj, timeSecond = 1) => {
     return new Promise(function(resolve, reject) {
       const ss = Util.createRandomString(10);
       console.log(TAG,'excuteWithTimeout random string = ',ss);
       timer.setTimeout(ss,function() {
-        
+        console.log(TAG,'excuteWithTimeout FAILLLLLLLLL random string = ',ss);
         reject(new CustomError(knownCode.timeout_promise,{message:'timeout '+ ss}));
         timer.clearTimeout(ss);
       }, timeSecond * 1000);
-      promiseObj.then(resolve, reject);
+      const resolveWrap = (data?)=>{
+        timer?.clearTimeout(ss);
+        console.log(TAG,'excuteWithTimeout resolveWrap clear = ',ss);
+        resolve(data);
+      };
+      const rejectWrap = (error?)=>{
+        timer?.clearTimeout(ss);
+        console.log(TAG,'excuteWithTimeout rejectWrap clear = ',ss);
+        reject(error);
+      };
+      promiseObj.then(resolveWrap, rejectWrap);
     });
   };
 }

@@ -62,6 +62,8 @@ const node = {
   node_verify_code_fail:knownError(-33),
   node_create_account_fail: knownError(-34),
   node_can_not_connect_hotspot: knownError(-35),
+  node_pending_withdrawal: knownError(-36),
+  node_can_not_get_wifi_name: knownError(-37),
 };
 
 const validator = {
@@ -88,6 +90,7 @@ const addErc20Token = {
 
 const dex = {
   WITHDRAW_FAIL: knownError(-40),
+  NOT_ENOUGH_NETWORK_FEE_ADD: (-41),
 };
 
 

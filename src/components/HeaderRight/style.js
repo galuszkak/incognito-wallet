@@ -21,16 +21,41 @@ export const sendReceiveGroupStyle = StyleSheet.create({
 
 export const tokenInfoStyle = StyleSheet.create({
   container: {
-
   },
-  updateBtn: {
-    backgroundColor: COLORS.transparent,
-    borderColor: COLORS.primary,
-    height: 30
+  infoItemValueContainer: {
+    flexDirection: 'row',
+    flex: 1
   },
-  updateBtnText: {
-    color: COLORS.primary,
+  infoItemValue: {
+    flex: 1
+  },
+  link: {
+    flex: 1,
+    borderBottomWidth: 0.5,
+    borderStyle: 'dashed',
+    borderColor: COLORS.green,
+    alignSelf: 'flex-start'
+  },
+  linkText: {
+    color: COLORS.green
+  },
+  descContainer: {
+    marginBottom: 40,
+  },
+  verifyText: {
+    color: COLORS.green,
     ...FONT.STYLE.medium
+  },
+  desc: {
+    fontSize: 16,
+    letterSpacing: 0,
+    lineHeight: 23,
+  },
+  iconContainer: {
+    height: 70,
+    width: 70,
+    bottom: -20,
+    marginLeft: 20
   },
   icon: {
     marginHorizontal: 10
@@ -39,26 +64,40 @@ export const tokenInfoStyle = StyleSheet.create({
     backgroundColor: COLORS.white
   },
   infoContainer: {
-    padding: 35,
+    flex: 1
+  },
+  contentContainer: {
+    flex: 1,
+  },
+  content: {
+    flex: 1
+  },
+  updateBtnContainer: {
+    marginTop: 30,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center' ,
     marginBottom: 35,
+    backgroundColor: COLORS.blue1,
+    top: -1
   },
   headerTextContainer: {
     marginLeft: 20,
     flex: 1
   },
   headerText: {
-    fontSize: 24,
-    color: COLORS.dark1
+    fontSize: 18,
+    color: COLORS.white
   },
   headerSubText: {
-    color: COLORS.lightGrey1,
+    color: COLORS.white,
+    textTransform: 'uppercase',
+    fontSize: 14,
+    lineHeight: 32
   },
   infoItems: {
-
+    marginBottom: 200
   },
   infoItem: {
     flexDirection: 'row',
@@ -68,8 +107,8 @@ export const tokenInfoStyle = StyleSheet.create({
     width: 150,
     color: COLORS.lightGrey1,
   },
-  infoItemValue: {
-    flex: 1,
+  infoItemValueCopy: {
+    flexBasis: 60,
     paddingHorizontal: 4
   },
   row: {
@@ -103,5 +142,21 @@ export const tokenInfoStyle = StyleSheet.create({
   copiedMessage: {
     color: COLORS.white,
     fontSize: 14,
+  },
+});
+
+
+export const backupStyle = StyleSheet.create({
+  container: {
+    paddingHorizontal: 15,
+  },
+  button: {
+    backgroundColor: COLORS.transparent,
+    borderColor: COLORS.white,
+    width: 80,
+    height: 30
+  },
+  buttonText: {
+    color: COLORS.white
   },
 });

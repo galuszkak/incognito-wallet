@@ -18,6 +18,8 @@ import DexHistory from '@screens/DexHistory';
 import DexHistoryDetail from '@screens/DexHistoryDetail';
 import HeaderBar from '@src/components/HeaderBar';
 import pApp from '@src/screens/PappView';
+import AddPIN from '@src/screens/AddPIN';
+import BackupKeys from '@src/screens/BackupKeys';
 import { navigationOptionsHandler } from '@src/utils/router';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
@@ -42,6 +44,8 @@ const AppNavigator = createStackNavigator(
     [ROUTE_NAMES.DexHistory]: navigationOptionsHandler(DexHistory, { header: () => null }),
     [ROUTE_NAMES.DexHistoryDetail]: navigationOptionsHandler(DexHistoryDetail, { header: () => null }),
     [ROUTE_NAMES.pApp]: navigationOptionsHandler(pApp),
+    [ROUTE_NAMES.AddPin]: navigationOptionsHandler(AddPIN, { header: () => null }),
+    [ROUTE_NAMES.BackupKeys]: navigationOptionsHandler(BackupKeys, { title: 'Back up private keys' }),
   },
   {
     initialRouteName: ROUTE_NAMES.RootTab,

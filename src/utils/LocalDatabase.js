@@ -7,9 +7,13 @@ const TAG = 'LocalDatabase';
 export const KEY_SAVE = {
   USER: CONSTANT_KEYS.USER,
   LIST_DEVICE:CONSTANT_KEYS.LIST_DEVICE,
+  LIST_TOKEN:CONSTANT_KEYS.LIST_TOKEN,
   DEX: CONSTANT_KEYS.DEX,
   DEX_HISTORY: CONSTANT_KEYS.DEX_HISTORY,
   SEEN_DEPOSIT_GUIDE: CONSTANT_KEYS.SEEN_DEPOSIT_GUIDE,
+  WITHDRAW_REQUESTS: CONSTANT_KEYS.WITHDRAW_REQUESTS,
+  PIN: CONSTANT_KEYS.PIN,
+  DECIMAL_SEPARATOR: '$decimal_separator',
 };
 export default class LocalDatabase {
   static async getValue(key: String): String {
@@ -34,13 +38,12 @@ export default class LocalDatabase {
     );
   };
 
-  static removeDevice = async (device)=>{
-    let list = await LocalDatabase.getListDevices();
-    _.remove(list,item=>{
-      return item.product_id == device.product_id;
-    });
+  static removeDevice = async (device, list) => {
+    list = list.filter(item => item.ProductId !== device.ProductId);
     await LocalDatabase.saveListDevices(list);
-  }
+    return list;
+  };
+
   static updateDevice = async (deviceJson)=>{
     let list = await LocalDatabase.getListDevices();
     const index = _.findIndex(list,['product_id',deviceJson.product_id]);
@@ -63,11 +66,17 @@ export default class LocalDatabase {
     let list = await LocalDatabase.getListDevices();
     const index = _.findIndex(list,['product_id',product_id]);
     return list[index];
-  }
+  };
   static saveListDevices = async (jsonListDevice: []) => {
     const listDevices = JSON.stringify(jsonListDevice);
-    // console.log(TAG, ' saveListDevices begin ', listDevices);
     await LocalDatabase.saveValue(KEY_SAVE.LIST_DEVICE, listDevices);
+  };
+  static getListToken = async () => {
+    let list = await LocalDatabase.getValue(KEY_SAVE.LIST_TOKEN);
+    return JSON.parse(list || '[]');
+  };
+  static saveListToken = (listToken) => {
+    return LocalDatabase.saveValue(KEY_SAVE.LIST_TOKEN, JSON.stringify(listToken));
   };
   static saveDeviceKeyInfo = async (product_id,keyInfo) => {
     if(!_.isEmpty(product_id) && !_.isEmpty(keyInfo)){
@@ -138,5 +147,32 @@ export default class LocalDatabase {
   static async getSeenDepositGuide() {
     const seenDepositGuide = (await LocalDatabase.getValue(KEY_SAVE.SEEN_DEPOSIT_GUIDE)) || '';
     return _.isEmpty(seenDepositGuide) ? false : JSON.parse(seenDepositGuide);
+  }
+
+  static async getWithdrawRequests() {
+    const requests = (await LocalDatabase.getValue(KEY_SAVE.WITHDRAW_REQUESTS)) || '';
+    return _.isEmpty(requests) ? {} : JSON.parse(requests);
+  }
+
+  static async saveWithdrawRequests(requests) {
+    await LocalDatabase.saveValue(KEY_SAVE.WITHDRAW_REQUESTS, JSON.stringify(requests));
+  }
+
+  static async getPIN() {
+    const pin = await LocalDatabase.getValue(KEY_SAVE.PIN);
+    return pin || '';
+  }
+
+  static async savePIN(newPin) {
+    const pin = await LocalDatabase.saveValue(KEY_SAVE.PIN, newPin);
+    return pin || '';
+  }
+
+  static saveDecimalSeparator(separator) {
+    return LocalDatabase.saveValue(KEY_SAVE.DECIMAL_SEPARATOR, separator);
+  }
+
+  static getDecimalSeparator() {
+    return LocalDatabase.getValue(KEY_SAVE.DECIMAL_SEPARATOR);
   }
 }

@@ -3,7 +3,7 @@ import { createForm, InputMaxValueField, InputQRField, validator } from '@src/co
 import CurrentBalance from '@src/components/CurrentBalance';
 import EstimateFee from '@src/components/EstimateFee';
 import LoadingTx from '@src/components/LoadingTx';
-import { CONSTANT_COMMONS } from '@src/constants';
+import {CONSTANT_COMMONS, CONSTANT_EVENTS} from '@src/constants';
 import { ExHandler } from '@src/services/exception';
 import convertUtil from '@src/utils/convert';
 import formatUtil from '@src/utils/format';
@@ -12,7 +12,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { isExchangeRatePToken } from '@src/services/wallet/RpcClientService';
 import { connect } from 'react-redux';
+import { detectToken } from '@src/utils/misc';
 import { change, Field, formValueSelector, isValid } from 'redux-form';
+import {logEvent} from '@services/firebase';
 import style from './style';
 
 const formName = 'withdraw';
@@ -26,6 +28,9 @@ const Form = createForm(formName, {
   initialValues: initialFormValues
 });
 
+const memoMaxLength = validator.maxLength(125, {
+  message: 'The memo is too long'
+});
 
 class Withdraw extends React.Component {
   constructor(props) {
@@ -54,7 +59,6 @@ class Withdraw extends React.Component {
     this.getSupportedFeeTypes();
   }
 
-  
   componentDidUpdate(prevProps, prevState) {
     const { selectedPrivacy } = this.props;
     const { selectedPrivacy: oldSelectedPrivacy } = prevProps;
@@ -92,7 +96,7 @@ class Withdraw extends React.Component {
     if (!isUsedPRVFee) {
       amount-= (fee + feeForBurn) || 0;
     }
-    
+
     max = convertUtil.toHumanAmount(amount, selectedPrivacy?.pDecimals);
 
     return maxAmount ? Math.min(maxAmount, max) : max;
@@ -104,7 +108,7 @@ class Withdraw extends React.Component {
     if (maxAmount) {
       this.setState({
         maxAmountValidator: validator.maxValue(maxAmount, {
-          message: maxAmount > 0 
+          message: maxAmount > 0
             ? `Max amount you can withdraw is ${formatUtil.number(maxAmount)} ${selectedPrivacy?.symbol}`
             : 'Your balance is not enough to withdraw'
         }),
@@ -121,15 +125,21 @@ class Withdraw extends React.Component {
   }
 
   handleSubmit = async values => {
+    const { selectedPrivacy } = this.props;
     try {
       let res;
       const { estimateFeeData: { fee }, isUsedPRVFee, feeForBurn } = this.state;
-      const {  handleCentralizedWithdraw, handleDecentralizedWithdraw, navigation, selectedPrivacy } = this.props;
-      const { amount, toAddress } = values;
+      const {  handleCentralizedWithdraw, handleDecentralizedWithdraw, navigation } = this.props;
+      const { amount, toAddress, memo } = values;
+      const convertedAmount = convertUtil.toNumber(amount);
 
+      await logEvent(CONSTANT_EVENTS.WITHDRAW, {
+        tokenId: selectedPrivacy?.tokenId,
+        tokenSymbol: selectedPrivacy?.symbol,
+      });
       if (selectedPrivacy?.isDecentralized) {
         res = await handleDecentralizedWithdraw({
-          amount,
+          amount: convertedAmount,
           remoteAddress: toAddress,
           fee,
           isUsedPRVFee,
@@ -137,23 +147,35 @@ class Withdraw extends React.Component {
         });
       } else {
         res = await handleCentralizedWithdraw({
-          amount,
+          amount: convertedAmount,
           remoteAddress: toAddress,
           fee,
           isUsedPRVFee,
-          feeForBurn
+          feeForBurn,
+          memo
         });
       }
 
       if (res) {
         Toast.showSuccess('Success! You withdrew funds.');
+
+        await logEvent(CONSTANT_EVENTS.WITHDRAW_SUCCESS, {
+          tokenId: selectedPrivacy?.tokenId,
+          tokenSymbol: selectedPrivacy?.symbol,
+        });
+
         navigation.goBack();
         return res;
       }
 
       throw new Error('Withdraw failed');
     } catch (e) {
-      new ExHandler(e, 'Something went wrong. Please try again.').showErrorToast();
+      await logEvent(CONSTANT_EVENTS.WITHDRAW, {
+        tokenId: selectedPrivacy?.tokenId,
+        tokenSymbol: selectedPrivacy?.symbol,
+      });
+
+      new ExHandler(e, 'Something went wrong. Please try again.').showErrorToast(true);
     }
   }
 
@@ -209,9 +231,10 @@ class Withdraw extends React.Component {
     const { maxAmountValidator, minAmountValidator, supportedFeeTypes, estimateFeeData, feeForBurn, isUsedPRVFee } = this.state;
     const { fee, feeUnit } = estimateFeeData;
     const { selectedPrivacy, isFormValid, amount, account } = this.props;
-    const addressValidator = this.getAddressValidator(selectedPrivacy?.externalSymbol, selectedPrivacy?.isErc20Token);
+    const { externalSymbol, isErc20Token, name: tokenName } = selectedPrivacy || {};
+    const addressValidator = this.getAddressValidator(externalSymbol, isErc20Token);
     const maxAmount = this.getMaxAmount();
-    
+
 
     return (
       <ScrollView style={style.container}>
@@ -226,13 +249,14 @@ class Withdraw extends React.Component {
                   component={InputQRField}
                   name='toAddress'
                   label='To'
-                  placeholder='Enter wallet address'
+                  placeholder={`Enter your ${tokenName}  address`}
                   style={style.input}
                   validate={addressValidator}
                 />
                 <Field
                   component={InputMaxValueField}
                   name='amount'
+                  label='Amount'
                   placeholder='Amount'
                   style={style.input}
                   maxValue={maxAmount}
@@ -245,6 +269,21 @@ class Withdraw extends React.Component {
                     ...minAmountValidator ? [minAmountValidator] : []
                   ]}
                 />
+                {
+                  detectToken.ispBNB(selectedPrivacy?.tokenId) && (
+                    <View style={style.memoContainer}>
+                      <Field
+                        component={InputQRField}
+                        name='memo'
+                        label='Memo (ontional)'
+                        placeholder='Enter a memo (max 125 characters)'
+                        style={style.input}
+                        validate={memoMaxLength}
+                      />
+                      <Text style={style.memoText}>* For withdrawals to wallets on exchanges (e.g. Binance, etc.), enter your memo to avoid loss of funds.</Text>
+                    </View>
+                  )
+                }
                 <EstimateFee
                   accountName={account?.name}
                   estimateFeeData={estimateFeeData}
@@ -276,7 +315,7 @@ class Withdraw extends React.Component {
                           </Text>
                         )
                       }
-                      
+
                     </View>
                   )}
                 />

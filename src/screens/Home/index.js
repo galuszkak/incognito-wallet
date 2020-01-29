@@ -1,3 +1,4 @@
+import codePush from 'react-native-code-push';
 import LoadingContainer from '@src/components/LoadingContainer';
 import { getBalance as getAccountBalance, reloadAccountFollowingToken, /** loadAllPTokenHasBalance */ } from '@src/redux/actions/account';
 import { clearSelectedPrivacy, setSelectedPrivacy } from '@src/redux/actions/selectedPrivacy';
@@ -8,20 +9,26 @@ import { accountSeleclor, tokenSeleclor } from '@src/redux/selectors';
 import routeNames from '@src/router/routeNames';
 import { CustomError, ErrorCode, ExHandler } from '@src/services/exception';
 import APIService from '@src/services/api/miner/APIService';
+import { countFollowToken } from '@src/services/api/token';
+import storageService from '@src/services/storage';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { AppState } from 'react-native';
 import { connect } from 'react-redux';
 import { DEX } from '@src/utils/dex';
+import { CONSTANT_KEYS } from '@src/constants';
+import AppUpdater from '@components/AppUpdater/index';
 import { DialogUpgradeToMainnet } from './ChildViews';
 import Home from './Home';
 
 class HomeContainer extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       isReloading: false,
-      isReceivedPRV: false
+      isReceivedPRV: false,
+      appState: '',
     };
   }
 
@@ -29,12 +36,15 @@ class HomeContainer extends Component {
     const { navigation, clearSelectedPrivacy } = this.props;
     try {
       await this.reload();
+      this.handleCountFollowedToken();
     } catch (e) {
       new ExHandler(e).showErrorToast();
     }
 
     // airdrop program
-    this.airdrop();
+    // this.airdrop();
+
+    AppState.addEventListener('change', this.handleLogin);
 
     navigation.addListener(
       'didFocus',
@@ -52,6 +62,37 @@ class HomeContainer extends Component {
       this.getFollowingToken();
     }
   }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleLogin);
+  }
+
+  handleCountFollowedToken = async () => {
+    try {
+      const { tokens, account } = this.props;
+      const isChecked = !!JSON.parse(await storageService.getItem(CONSTANT_KEYS.IS_CHECK_FOLLOWED_TOKEN));
+      const tokenIds = tokens.map(t => t.id);
+
+      if (!isChecked) {
+        countFollowToken(tokenIds, account?.PublicKey).catch(null);
+        storageService.setItem(CONSTANT_KEYS.IS_CHECK_FOLLOWED_TOKEN, JSON.stringify(true));
+      }
+    } catch (e) {
+      new ExHandler(e);
+    }
+  };
+
+  handleLogin = (nextAppState) => {
+    const { appState } = this.state;
+    if (appState.match(/background/) && nextAppState === 'active') {
+      const { navigation, pin } = this.props;
+      AppUpdater.update();
+      if (pin) {
+        navigation.navigate(routeNames.AddPin, {action: 'login'});
+      }
+    }
+    this.setState({ appState: nextAppState });
+  };
 
   airdrop = async () => {
     try {
@@ -198,6 +239,7 @@ class HomeContainer extends Component {
 
 const mapState = state => ({
   account: accountSeleclor.defaultAccount(state),
+  pin: state.pin.pin,
   wallet: state.wallet,
   tokens: tokenSeleclor.followed(state),
   getAccountByName: accountSeleclor.getAccountByName(state)
@@ -230,6 +272,7 @@ HomeContainer.propTypes = {
   getInternalTokenList: PropTypes.func.isRequired,
   setWallet: PropTypes.func.isRequired,
   getAccountByName: PropTypes.func.isRequired,
+  pin: PropTypes.string.isRequired,
   // loadAllPTokenHasBalance: PropTypes.func.isRequired,
 };
 

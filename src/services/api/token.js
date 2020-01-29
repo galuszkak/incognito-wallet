@@ -8,9 +8,37 @@ import axios from 'axios';
 
 let BEP2Tokens = [];
 
-export const getTokenList = () =>
-  http.get('ptoken/list')
-    .then(res => res.map(token => new PToken(token)));
+let getTokenPromise;
+let getChainTokenPromise;
+
+export const getTokenList = () => {
+  if (!getTokenPromise) {
+    getTokenPromise = http.get('ptoken/list')
+      .then(res => {
+        getTokenPromise = null;
+        return res.map(token => new PToken(token));
+      })
+      .finally(() => {
+        getTokenPromise = null;
+      });
+  }
+
+  return getTokenPromise;
+};
+
+export const getChainTokenList = () => {
+  if (!getChainTokenPromise) {
+    getChainTokenPromise = http.get('/pcustomtoken/list-from-chain')
+      .then(res => {
+        return res.Tokens;
+      })
+      .finally(() => {
+        getChainTokenPromise = null;
+      });
+  }
+
+  return getChainTokenPromise;
+};
 
 export const detectERC20Token = erc20Address => {
   if (!erc20Address) throw new Error('Missing erc20Address to detect');
@@ -60,25 +88,29 @@ export const addBEP2Token = ({ symbol, name, originalSymbol }) => {
   }).then(res => new PToken(res));
 };
 
-export const addTokenInfo = ({ tokenId, symbol, name, logoFile, description = '', showOwnerAddress = false, ownerAddress }) => {
+export const addTokenInfo = ({ tokenId, symbol, name, logoFile, description = '', showOwnerAddress = false, ownerAddress, ownerName, ownerEmail, ownerWebsite, txId }) => {
   if (!symbol) throw new Error('Missing symbol');
   if (!name) throw new Error('Missing name');
   if (!tokenId) throw new Error('Missing tokenId');
-
+  
   const form = new FormData();
   form.append('File', logoFile ? {
     name: logoFile.name,
     uri: logoFile.uri,
     type: 'image/png'
-  } : undefined);
+  } : null);
 
   form.append('TokenID', tokenId);
-  form.append('Name', name);
-  form.append('Description', description);
-  form.append('Symbol', symbol);
+  form.append('Name', name ?? '');
+  form.append('Description', description ?? '');
+  form.append('Symbol', symbol ?? '');
   form.append('IsPrivacy', 'true');
+  form.append('OwnerName', ownerName ?? '');
+  form.append('OwnerEmail', ownerEmail ?? '');
+  form.append('OwnerWebsite', ownerWebsite ?? '');
   form.append('ShowOwnerAddress', Number(showOwnerAddress) || 0);
-  ownerAddress && form.append('OwnerAddress', ownerAddress);
+  form.append('TxID', txId);
+  ownerAddress && form.append('OwnerAddress', ownerAddress ?? '');
 
   return http.post('storage/upload/token-info', form, {
     headers: {
@@ -89,11 +121,39 @@ export const addTokenInfo = ({ tokenId, symbol, name, logoFile, description = ''
 
 /**
  * get incognito token info from backend, if `tokenId` is not passed in then get info for all tokens
- * @param {string} tokenId 
+ * @param {string} tokenId
  */
 export const getTokenInfo = ({ tokenId }) => {
   const endpoint = tokenId ? 'pcustomtoken/get' : 'pcustomtoken/list';
 
   return http.get(endpoint, tokenId ? { params: { TokenID: tokenId } } : undefined )
     .then(res => new IncognitoCoinInfo(res));
+};
+
+/**
+ * 
+ * @param {array} tokenIds is array of token id (string)
+ */
+export const countFollowToken = (tokenIds, accountPublicKey) => {
+  if (!tokenIds) throw new Error('Missing tokenIds');
+  if (!accountPublicKey) throw new Error('Missing accountPublicKey');
+
+  return http.post('pcustomtoken/follow/add', {
+    TokenIDs: tokenIds,
+    PublicKey: accountPublicKey
+  });
+};
+
+/**
+ * 
+ * @param {string} tokenId 
+ */
+export const countUnfollowToken = (tokenId, accountPublicKey) => {
+  if (!tokenId) throw new Error('Missing tokenId');
+  if (!accountPublicKey) throw new Error('Missing accountPublicKey');
+
+  return http.post('pcustomtoken/follow/remove', {
+    TokenID: tokenId,
+    PublicKey: accountPublicKey
+  });
 };

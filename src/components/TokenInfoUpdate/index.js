@@ -18,10 +18,10 @@ class TokenInfoUpdateContainer extends Component {
       isUpdating: false
     };
 
-    this.handleUpdateInfo = debounce(this.handleUpdateInfo, 1000);
+    this.handleUpdateInfo = debounce(this.handleUpdateInfo, 300);
   }
 
-  handleUpdateInfo = async ({ description, showOwnerAddress, logo } = {}) => {
+  handleUpdateInfo = async ({ description, showOwnerAddress, logo, ownerName, ownerEmail, ownerWebsite } = {}) => {
     try {
       this.setState({ isUpdating: true });
       const { incognitoInfo, onUpdated, onClose } = this.props;
@@ -29,9 +29,13 @@ class TokenInfoUpdateContainer extends Component {
         tokenId: incognitoInfo?.tokenID,
         symbol: incognitoInfo?.symbol,
         name: incognitoInfo?.name,
+        txId: incognitoInfo?.txId,
         ...isNotEmpty(description) ? { description } : {},
         ...isNotEmpty(showOwnerAddress) ? { showOwnerAddress } : {},
-        ...isNotEmpty(logo) ? { logoFile: logo } : {}
+        ...isNotEmpty(logo) ? { logoFile: logo } : {},
+        ...isNotEmpty(ownerName) ? { ownerName } : {},
+        ...isNotEmpty(ownerEmail) ? { ownerEmail } : {},
+        ...isNotEmpty(ownerWebsite) ? { ownerWebsite } : {},
       });
 
       if (typeof onUpdated === 'function') {

@@ -3,12 +3,15 @@
  */
 import User from '@models/user';
 import NetInfo from '@react-native-community/netinfo';
-import { CONSTANT_MINER } from '@src/constants';
-import { ExHandler } from '@src/services/exception';
+import { CONSTANT_CONFIGS, CONSTANT_MINER } from '@src/constants';
+import { CustomError, ErrorCode, ExHandler } from '@src/services/exception';
 import http from '@src/services/http';
+import Util from '@src/utils/Util';
 import LocalDatabase from '@utils/LocalDatabase';
 import _ from 'lodash';
+import { Platform } from 'react-native';
 import API from './api';
+
 
 let AUTHORIZATION_FORMAT = 'Autonomous';
 export const METHOD = {
@@ -48,6 +51,7 @@ export default class APIService {
     if (isLogin){
       const userObject:User = await LocalDatabase.getUserInfo();
       user = userObject?.data||{};
+      // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjFENUVBQUMzLUQzMTUtNEIxQy1CNEI1LTZBQkFEMUM2MzBDREBtaW5lclguY29tIiwiZXhwIjoxNTc1MjA5ODI2LCJpZCI6MTU5MzI2fQ.GChhKLlRC9IVzr7HwwBbo41JllOBH8gX2PuyWO6UVpM';
       const token = user.token;
       console.log(TAG,'getURL token',token);
       header= {
@@ -79,7 +83,7 @@ export default class APIService {
           // console.log(TAG,'getURL Response data:', resJson);
           return resJson;
         }else if (res.status == 401){
-
+          console.log(TAG,'getURL 401 -----');
           let response = await APIService.handleRefreshToken(method, url, params, isLogin, user);
           return response;
         }else {
@@ -200,7 +204,7 @@ export default class APIService {
   }
   static async handleRefreshToken(method, url, params, isLogin, user){
     console.log('handleRefreshToken');
-    console.log('User:', user);
+    console.log('User---------:', user);
     const header= {
       'Authorization': `${AUTHORIZATION_FORMAT} ${user.refresh_token}`
     };
@@ -224,6 +228,11 @@ export default class APIService {
         if (status){
           const {token} = data;
           user.token = token;
+          if(!_.isEmpty(token)){
+            console.log(TAG,'handleRefreshToken save local');
+            await LocalDatabase.saveUserInfo(JSON.stringify(user));
+          }
+         
 
           let response =  await APIService.getURL(method, url, params, isLogin);
 
@@ -232,9 +241,10 @@ export default class APIService {
           return null;
         }
 
-      }else if (res.status == 401){
-        return APIService.handleRefreshToken(user);
       }
+      // else if (res.status == 401){
+      //   return APIService.handleRefreshToken(user);
+      // }
     }catch(error){
       console.log('Error:', error);
       return null;
@@ -268,6 +278,19 @@ export default class APIService {
       return response;
     }
     return null;
+  }
+
+  static async pingHotspot() {
+    try {
+      const ipAdrress = '10.42.0.1';
+      const url = `http://${ipAdrress}:5000`;
+      const response = await Util.excuteWithTimeout(APIService.getURL(METHOD.GET, url, {}),3);
+      console.log(TAG,'pingHotspot:', response);
+      return !_.isEmpty(response);
+    } catch (error) {
+      return null;
+    }
+
   }
 
   static async sendInfoStakeToSlack({productId, qrcodeDevice,miningKey='',publicKey,privateKey,paymentAddress,uid=''}) {
@@ -347,7 +370,7 @@ export default class APIService {
     const response = await APIService.getURL(METHOD.GET, url, params, true);
     return response;
   }
-  
+
   static async removeProduct(params) {
     const url = API.REMOVE_PRODUCT_API;
 
@@ -402,30 +425,25 @@ export default class APIService {
       data:response
     };
   }
-  static async fetchInfoNodeStake({
+
+  static fetchInfoNodeStake({
     PaymentAddress
   }) {
-    if (!PaymentAddress) return throw new Error('Missing paymentAddress');
-   
-    const response = await http.get('pool/request-stake',
+    return http.get('pool/request-stake',
       {
         params: {
           PaymentAddress:PaymentAddress
         }
-      }).catch(console.log);
-    console.log(TAG,'fetchInfoNodeStake end = ',response);
-    return {
-      status:!_.isEmpty(response) ?1:0,
-      data:response
-    };
+      });
   }
+
   static async airdrop1({
     WalletAddress,
     pDexWalletAddress
   }) {
     if (!WalletAddress) return throw new Error('Missing WalletAddress');
     if (!pDexWalletAddress) return throw new Error('Missing pDexWalletAddress');
-    
+
     const response = await http.post('auth/airdrop1', {
       WalletAddress: WalletAddress,
       pDexWalletAddress
@@ -456,12 +474,41 @@ export default class APIService {
         data:message
       };
     }
-    
+
+  }
+
+  static async trackLog({action='',message='',rawData='',status=1}) {
+    if (!action) return null;
+    try {
+      const phoneInfo = Util.phoneInfo();
+      const url = API.TRACK_LOG;
+      const buildParams = {
+        'os': `${Platform.OS}-${CONSTANT_CONFIGS.BUILD_VERSION}-${phoneInfo}`,
+        'action': `${CONSTANT_CONFIGS.isMainnet?'':'TEST-'}${action}`,
+        'message':message,
+        'rawData': rawData,
+        'status':status
+      };
+      const response = await Util.excuteWithTimeout(APIService.getURL(METHOD.POST, url,buildParams,false,false),3);
+
+      const status = _.isEmpty(response) ?0:1;
+      console.log(TAG,'trackLog end = ',response);
+      return {
+        status:status,
+        data:response
+      };
+    } catch (error) {
+      return {
+        status:0,
+        data:null
+      };
+    }
+
   }
 
   /**
-   * 
-   * @param {*} QRCode 
+   *
+   * @param {*} QRCode
    * @returns {
         status:0,
         data: {WifiName ='', Status = false}
@@ -488,30 +535,38 @@ export default class APIService {
         data:message
       };
     }
-    
+
   }
 
   static async requestWithdraw({
     ProductID,
-    ValidatorKey,
-    qrCodeDeviceId,
+    QRCode,
     PaymentAddress
   }) {
-    if (!PaymentAddress) return throw new Error('Missing paymentAddress');
-    if (!ProductID) return throw new Error('Missing ProductID');
-    if (!qrCodeDeviceId) return throw new Error('Missing qrCodeDeviceId');
-    if (!ValidatorKey) return throw new Error('Missing ValidatorKey');
+    return http.post('pool/request-withdraw', {
+      ProductID,
+      ValidatorKey: '1234',
+      QRCode,
+      PaymentAddress
+    }).catch(error => {
+      if (error.message === 'Unknown error') {
+        new ExHandler(new CustomError(ErrorCode.node_pending_withdrawal)).throw();
+      }
+    });
+  }
 
-    const response = await http.post('stake/withdraw', {
-      ProductID:ProductID,
-      ValidatorKey:ValidatorKey ,
-      QRCode: qrCodeDeviceId,
-      PaymentAddress:PaymentAddress
-    }).catch(console.log);
-    console.log(TAG,'requestWithdraw end = ',response);
-    return {
-      status:!_.isEmpty(response) ?1:0,
-      data:response
-    };
+  static async getRequestWithdraw(paymentAddress) {
+    return http.get(`pool/request-withdraw?PaymentAddress=${paymentAddress}`);
+  }
+
+  static getInfoByQrCode(QRCode) {
+    return http.post('pool/qr-code-get', {
+      QRCode,
+    });
+  }
+
+  static getLog(qrCode) {
+    const url = `${API.GET_LOG}?qrcode=${qrCode}`;
+    return APIService.getURL(METHOD.GET, url,false,false);
   }
 }

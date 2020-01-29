@@ -41,24 +41,28 @@ const getStatusText = (status, currencyType, isDecentralized) => {
  
 class History {
   static parsePrivateTokenFromApi(data = {}) {
+    const statusText = getStatusText(data.Status, data.CurrencyType, data.Decentralized);
     return {
       id: data?.ID,
-      address: data.Address,
       updatedAt: data.UpdatedAt,
+      expiredAt: data.ExpiredAt,
       addressType: data.AddressType,
       status: data.Status,
       decentralized: data.Decentralized === 1,
-      statusText: getStatusText(data.Status, data.CurrencyType, data.Decentralized),
+      statusText,
       currencyType: data.CurrencyType,
       userPaymentAddress: data.UserPaymentAddress,
       erc20TokenAddress: data.Erc20TokenAddress,
+      privacyTokenAddress: data.PrivacyTokenAddress,
       requestedAmount: data.RequestedAmount,
       receivedAmount: data.ReceivedAmount,
       incognitoAmount: data.IncognitoAmount,
-      incognitoTx: data.IncognitoTx,
-      ethereumTx: data.EthereumTx,
-      erc20TokenTx: data.Erc20TokenTx,
-      cancelable: data.Status === 0,
+      outchainTx: data.OutChainTx,
+      inchainTx: data.InChainTx,
+      cancelable: data.AddressType === CONSTANT_COMMONS.HISTORY.TYPE.DEPOSIT && [CONSTANT_COMMONS.HISTORY.STATUS_TEXT.EXPIRED,CONSTANT_COMMONS.HISTORY.STATUS_TEXT.PENDING].includes(statusText),
+      walletAddress: data.WalletAddress,
+      canRetryExpiredDeposit: data.AddressType === CONSTANT_COMMONS.HISTORY.TYPE.DEPOSIT && statusText === CONSTANT_COMMONS.HISTORY.STATUS_TEXT.EXPIRED,
+      depositTmpAddress: data.AddressType === CONSTANT_COMMONS.HISTORY.TYPE.DEPOSIT && data.Address
     };
   }
 }

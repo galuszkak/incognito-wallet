@@ -1,10 +1,12 @@
 /* eslint-disable import/no-cycle */
+import APIService, { METHOD } from '@services/api/miner/APIService';
+import DeviceLog from '@src/components/DeviceLog';
 import Action from '@src/models/Action';
 import Device from '@src/models/device';
 import LocalDatabase from '@src/utils/LocalDatabase';
 import Util from '@src/utils/Util';
 import _ from 'lodash';
-import APIService from './api/miner/APIService';
+import ZMQService from 'react-native-zmq-service';
 import { CustomError, ExHandler } from './exception';
 import knownCode from './exception/customError/code/knownCode';
 import FirebaseService, { DEVICE_CHANNEL_FORMAT, FIREBASE_PASS, MAIL_UID_FORMAT, PHONE_CHANNEL_FORMAT } from './FirebaseService';
@@ -46,6 +48,15 @@ export const LIST_ACTION={
     key:'stop',
     data:undefined
   },
+  GET_PUBLIC_KEY_MINING:{
+    key:'getpublickeymining',
+    data:{
+      'jsonrpc': '1.0',
+      'method': 'getpublickeymining',
+      'params': [],
+      'id': 1
+    }
+  },
 };
 export default class NodeService {
   static getAName = async ()=>{
@@ -74,34 +85,34 @@ export default class NodeService {
       }).catch(e=>{
         reject(new CustomError(knownCode.node_auth_firebase_fail,{rawCode:e}));
       });
-      
-    }); 
+
+    });
     return Util.excuteWithTimeout(pros,12);
   }
   static verifyProductCode = async(verifyCode)=> {
     // console.log(TAG,' verifyProductCode begin');
-    
+
     const errorObj = new CustomError(knownCode.node_verify_code_fail);
-    
+
     const params = {
       verify_code: verifyCode
     };
     console.log(TAG,' verifyProductCode begin 02');
     try {
-      const response = await Util.excuteWithTimeout(APIService.verifyCode(params),timeout);
+      const response = await Util.excuteWithTimeout(APIService.verifyCode(params),8);
       // console.log(TAG, 'callVerifyCode Verify Code Response: ', response);
-      const { status } = response;
+      const { status, data = {}} = response;
       if (status == 1) {
         console.log(TAG,'verifyProductCode successfully');
-        const { product } = response.data;
+        const { product } = data;
         return product;
       }
     } catch (error) {
       console.log('Error try catch:', error);
       return error;
-      
+
     }
-    
+
     return errorObj;
   }
   static send = (product, actionExcute = templateAction, chain = 'incognito',type = 'incognito',dataToSend={},timeout = 5) => {
@@ -133,13 +144,13 @@ export default class NodeService {
       }
     });
 
-   
-    
+
+
   };
   static buildAction =(product,actionExcute = templateAction,data, chain = 'incognito',type = 'incognito')=>{
     const productId = product.product_id || '';
     if (productId) {
-      console.log(TAG, 'ProductId: ', product.product_id);  
+      console.log(TAG, 'ProductId: ', product.product_id);
       const phoneChannel = `${productId}${PHONE_CHANNEL_FORMAT}`;
       const deviceChannel = `${productId}${DEVICE_CHANNEL_FORMAT}`;
       const dataToSend = data||{};
@@ -156,7 +167,7 @@ export default class NodeService {
   };
 
   static reset = async(device:Device,chain='incognito')=>{
-    
+
     try {
       if(!_.isEmpty(device)){
         const actionReset = LIST_ACTION.RESET;
@@ -173,7 +184,7 @@ export default class NodeService {
   }
 
   static updateFirware = async(device:Device,chain='incognito')=>{
-    
+
     try {
       if(!_.isEmpty(device)){
         const actionReset = LIST_ACTION.UPDATE_FIRMWARE;
@@ -189,9 +200,9 @@ export default class NodeService {
 
     return null;
   }
-  
+
   static checkVersion = async(device:Device,chain='incognito')=>{
-    
+
     try {
       if(!_.isEmpty(device)){
         const action = LIST_ACTION.CHECK_VERSION;
@@ -210,7 +221,7 @@ export default class NodeService {
   }
 
   static pingGetIP = async(device:Device,chain='incognito')=>{
-    
+
     try {
       if(!_.isEmpty(device)){
         const action = LIST_ACTION.GET_IP;
@@ -228,37 +239,8 @@ export default class NodeService {
     return null;
   }
 
-  // static sendPrivateKey = async(device:Device,privateKey:String,chain='incognito')=>{
-    
-  //   try {
-  //     if(!_.isEmpty(device) && !_.isEmpty(privateKey)){
-  //       const actionPrivateKey = LIST_ACTION.GET_IP;
-  //       const dataResult = await Util.excuteWithTimeout(NodeService.send(device.data,actionPrivateKey,chain,Action.TYPE.PRODUCT_CONTROL),8);
-  //       console.log(TAG,'sendPrivateKey send dataResult = ',dataResult);
-  //       const { status = -1, data, message= ''} = dataResult;
-  //       if(status === 1){
-  //         const action:Action = NodeService.buildAction(device.data,LIST_ACTION.START,{product_id:device.data.product_id, privateKey:privateKey},chain,'incognito');
-  //         const params = {
-  //           type:action?.type||'',
-  //           data:action?.data||{}
-  //         };
-  //         console.log(TAG,'sendPrivateKey send init data = ',params);
-  //         const response = await APIService.sendValidatorKey(data,params);
-  //         const uid = dataResult?.uid||'';
-        
-  //         console.log(TAG,'sendPrivateKey send post data = ',response);
-  //         return {...response,uid:uid};
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(TAG,'sendPrivateKey error = ',error);
-  //   }
-
-  //   return null;
-  // }
-
   static sendValidatorKey = async(device:Device,validatorKey:String,chain='incognito')=>{
-    
+
     try {
       if(!_.isEmpty(device) && !_.isEmpty(validatorKey)){
         // send to firebase
@@ -267,7 +249,7 @@ export default class NodeService {
         ////
 
         const dataResult = await Util.excuteWithTimeout(NodeService.send(device.data,LIST_ACTION.GET_IP,chain,Action.TYPE.PRODUCT_CONTROL),8);
-                
+
         console.log(TAG,'sendValidatorKey send dataResult = ',dataResult);
         const { status = -1, data, message= ''} = dataResult;
         if(status === 1){
@@ -278,7 +260,7 @@ export default class NodeService {
             data:action?.data||{}
           });
           const uid = dataResult?.uid||'';
-        
+
           console.log(TAG,'sendValidatorKey send post data = ',response);
           return {...response,uid:uid};
         }
@@ -290,43 +272,19 @@ export default class NodeService {
     return null;
   }
 
-  /***
-   * return : {"PaymentAddress","Commission","StakerAddress"}
-   */
-  static fetchAndSavingInfoNodeStake = async(device:Device,isNeedSaving=false)=>{
-    
+  static fetchAndSavingInfoNodeStake = async (device)=>{
     try {
-      let fetchProductInfo = device.toJSON()??{};
       const paymentAddress =  device.PaymentAddressFromServer;
-      
-      const resultRequest =  await Util.excuteWithTimeout(APIService.fetchInfoNodeStake({
-        PaymentAddress:paymentAddress
-      }),5).catch(console.log);
-      const dataRequestStake = resultRequest.data||{};
-      if( !_.isEmpty(dataRequestStake)){
-        const {StakerAddress = ''} = dataRequestStake??{};
-
-        device.isCallStaked = !_.isEmpty(StakerAddress);
-        
-        fetchProductInfo = device.toJSON()??{};
-
-        fetchProductInfo['minerInfo'] = {
-          ...fetchProductInfo.minerInfo,
-          ...dataRequestStake
-        };
-      }
-      if(isNeedSaving && !_.isEmpty(fetchProductInfo)){
-        await LocalDatabase.updateDevice(fetchProductInfo);
-      }
-
-      return fetchProductInfo['minerInfo'];
-      
+      const data = await APIService.fetchInfoNodeStake({ PaymentAddress:paymentAddress });
+      const fetchProductInfo = device.toJSON()??{};
+      fetchProductInfo['minerInfo'] = {
+        ...fetchProductInfo.minerInfo,
+        ...data
+      };
     } catch (error) {
       console.log(TAG,'fetchAndSavingInfoNodeStake error = ',error);
     }
-
-    return null;
-  }
+  };
 
   /**
    * {isHave:false,current:0.0,node:0.0}
@@ -361,11 +319,63 @@ export default class NodeService {
     }
     return dataResult;
   }
+  static sendZMQ = async (params)=> {
+    if(!_.isEmpty(params)){
+      console.log(TAG,' connectZMQ sendZMQ ----- begin ');
+      const result = await Util.excuteWithTimeout(ZMQService.sendData(JSON.stringify(params)),4).catch(e=>console.log(TAG,' connectZMQ sendZMQ ----- catch error = ',e));
+      return result;
+    }
+    return '';
+  };
 
   static cleanOldDataForSetup = async ()=>{
-    const result = await SSHService.run('10.42.0.1','sudo rm -r /home/nuc/aos/inco-data/ && sudo rm -r /home/nuc/aos/inco-eth-kovan-data/ && sudo docker rm -f inc_miner && sudo docker rm -f inc_kovan').catch(console.log);
-    console.log(TAG,'cleanOldDataForSetup data = ',result);
-    return !_.isEmpty(result) ;
+    try {
+      const pathData = '/home/nuc/aos/data';
+      const rmConfigFile = `sudo rm ${pathData}/os_config.json ${pathData}/product_key.json ${pathData}/user.json ${pathData}/product_id.json`;
+      const result = await SSHService.run('10.42.0.1',`sudo rm -r /home/nuc/aos/inco-data/;sudo rm -r /home/nuc/aos/inco-eth-kovan-data/;sudo docker rm -f inc_miner;sudo docker rm -f inc_kovan;${rmConfigFile}`);
+      console.log(TAG,'cleanOldDataForSetup data = ',result);
+      DeviceLog.logInfo('cleanOldDataForSetup result = ' + _.toString(result));
+      return true ;
+    } catch (error) {
+      return false;
+    }
+
   }
 
+  static getBLSKey = async (device:Device, chain = 'incognito') => {
+    try {
+      const action = LIST_ACTION.GET_IP;
+      const res = await Util.excuteWithTimeout(NodeService.send(device.data,action,chain,Action.TYPE.PRODUCT_CONTROL),5);
+      const ip = res.data;
+      device.Host = ip;
+      const port = 9334;
+      const url = `http://${ip}:${port}/`;
+      const buildParams = LIST_ACTION.GET_PUBLIC_KEY_MINING.data;
+      const response = await Util.excuteWithTimeout(APIService.getURL(METHOD.POST, url, buildParams, false,false), timeout);
+      return _.split(response.Result, ':')[1];
+    } catch (error) {
+      console.debug(TAG,'getBLSKey error = ',error);
+    }
+
+    return null;
+  };
+
+  static isWithdrawable = async (device:Device) => {
+    try {
+      const response = await APIService.getRequestWithdraw(device.PaymentAddress);
+      const status = response.Status;
+      return status !== 1;
+    } catch (error) {
+      console.debug('isWithdrawable', error);
+      return true;
+    }
+  };
+
+  static getInfoByQrCode = (qrCode) => {
+    return Util.excuteWithTimeout(APIService.getInfoByQrCode(qrCode), timeout);
+  };
+
+  static getLog = (device) => {
+    return APIService.getLog(device.qrCodeDeviceId);
+  };
 }

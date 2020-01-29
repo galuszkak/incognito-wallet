@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Platform } from 'react-native';
 import picker from 'react-native-image-picker';
+import fileType from 'react-native-file-type';
 import rnfs from 'react-native-fs';
 import { ExHandler, CustomError, ErrorCode } from '@src/services/exception';
 import { debounce } from 'lodash';
@@ -26,42 +28,57 @@ class ImagePickerContainer extends Component {
           mediaType: 'photo',
         };
 
-        picker.showImagePicker(options, (response) => {
-          if (response.didCancel) {
-            // console.log('User cancelled image picker');
-          } else if (response.error) {
-            return reject(response.error);
-          } else {
-            // You can also display the image using data:
-            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-            if (!response.uri) {
-              return reject(new Error('File is not selected'));
-            }
-
-            const file = {
-              name: response.fileName,
-              type: response.type,
-              size: response.fileSize,
-              uri: response.uri,
-            };
-
-            const realPath = this.getRealPath(file);
+        picker.launchImageLibrary(options, async (response) => {
+          try {
+            if (response.didCancel) {
+              // console.log('User cancelled image picker');
+            } else if (response.error) {
+              return reject(response.error);
+            } else {
+              // You can also display the image using data:
+              // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+              if (!response.uri) {
+                return reject(new Error('File is not selected'));
+              }
   
-            file.realPath = realPath;
+              if (!response.type) {
+                const typeInfo = await fileType(response.path);
+                response.type = typeInfo?.mime;
+              }
 
-            if (!/\.png$/.test(String(file?.name).toLowerCase())) {
-              return reject(new CustomError(ErrorCode.document_picker_must_be_png));
-            }
+              /**
+               * this lib "react-native-image-picker" is not working well on iOS, can only detect jpg format, otherwise format will fallback to jpg too!
+               */
+              if (Platform.OS === 'ios') {
+                const dotIndex = response?.fileName?.lastIndexOf('.') || 0;
+                const mime = response?.fileName?.substring(dotIndex+1);
 
-            if (maxSize && file.size > maxSize) {
-              return reject(new CustomError(ErrorCode.document_picker_oversize));
+                response.type = mime ? `image/${mime}` : 'image/jpeg';
+              }
+              
+              const file = {
+                name: response.fileName,
+                type: response.type,
+                size: response.fileSize,
+                uri: response.uri,
+              };
+  
+              const realPath = this.getRealPath(file);
+    
+              file.realPath = realPath;
+  
+              if (maxSize && file.size > maxSize) {
+                return reject(new CustomError(ErrorCode.document_picker_oversize));
+              }
+        
+              if (typeof onPick === 'function') {
+                onPick(file);
+              }
+             
+              resolve(file);
             }
-      
-            if (typeof onPick === 'function') {
-              onPick(file);
-            }
-           
-            resolve(file);
+          } catch (e) {
+            reject(e);
           }
         });
   

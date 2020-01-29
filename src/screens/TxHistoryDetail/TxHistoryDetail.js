@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import {View, Text, Image} from 'react-native';
 import PropTypes from 'prop-types';
-import { TouchableOpacity, Container, ScrollView } from '@src/components/core';
+import { TouchableOpacity, Container, ScrollView, Button } from '@src/components/core';
 import { CONSTANT_CONFIGS, CONSTANT_COMMONS } from '@src/constants';
 import formatUtil from '@src/utils/format';
 import linkingService from '@src/services/linking';
 import external from '@src/assets/images/icons/external.png';
 import CopiableText from '@components/CopiableText/index';
 import {Icon} from 'react-native-elements';
+import QrCodeAddress from '@src/components/QrCodeAddress';
 import styleSheet from './styles';
 
 export default class TxHistoryDetail extends Component {
@@ -26,7 +27,7 @@ export default class TxHistoryDetail extends Component {
       <Text numberOfLines={1} ellipsizeMode="middle" style={style}>
         {text}
       </Text>
-      <View style={styleSheet.rightBlock}>
+      <View style={styleSheet.copyBlock}>
         <Icon name="copy" type="font-awesome" size={18} />
       </View>
     </CopiableText>
@@ -46,10 +47,10 @@ export default class TxHistoryDetail extends Component {
     );
   };
 
-  renderTxId = txID => {
+  renderTxId = (txLink) => {
     return (
-      <TouchableOpacity style={styleSheet.txButton} onPress={() => { linkingService.openUrl(`${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${txID}`); }}>
-        {this.renderText({ text: txID, style: [styleSheet.valueText, { paddingRight: 20 }], textProps: { ellipsizeMode: 'middle' } })}
+      <TouchableOpacity style={styleSheet.txButton} onPress={() => { linkingService.openUrl(txLink); }}>
+        {this.renderText({ text: txLink, style: [styleSheet.valueText, { paddingRight: 20 }], textProps: { ellipsizeMode: 'middle' } })}
         <Image
           source={external}
           resizeMode="contain"
@@ -57,6 +58,31 @@ export default class TxHistoryDetail extends Component {
           style={{position: 'absolute', top: 9, right: 0, width: 14, height: 14 }}
         />
       </TouchableOpacity>
+    );
+  }
+
+  handleRetryExpiredDeposit = ({ id, decentralized, walletAddress, currencyType, userPaymentAddress, privacyTokenAddress, erc20TokenAddress, type }) => {
+    const { onRetryExpiredDeposit } = this.props;
+
+    return onRetryExpiredDeposit({ id, decentralized, walletAddress, currencyType, userPaymentAddress, privacyTokenAddress, erc20TokenAddress, type });
+  }
+
+  renderStatusValue = (statusText, statusColor, statusNumber, canRetryExpiredDeposit, history) => {
+    const text = (
+      <Text style={[styleSheet.statusText, { color: statusColor }]}>{`${statusText} ${(!!statusNumber || statusNumber === 0) ? `[${statusNumber}]` : ''}`}</Text>
+    );
+
+    return (
+      <View style={styleSheet.statusValueContainer}>
+        {text}
+        { canRetryExpiredDeposit && <Button style={styleSheet.statusRetryBtn} title='Retry' onPress={() => this.handleRetryExpiredDeposit(history)} /> }
+      </View>
+    );
+  }
+
+  renderQrCode = (data) => {
+    return (
+      <QrCodeAddress data={data} />
     );
   }
 
@@ -68,6 +94,7 @@ export default class TxHistoryDetail extends Component {
     const feeUnit = isUseTokenFee ? history?.symbol : CONSTANT_COMMONS.CRYPTO_SYMBOL.PRV;
     const formatFee = fee && formatUtil.amountFull(fee, isUseTokenFee ? history?.pDecimals : CONSTANT_COMMONS.DECIMALS.MAIN_CRYPTO_CURRENCY);
     const amountStr = (history.amount && formatUtil.amount(history.amount, history.pDecimals)) || formatUtil.number(history.requestedAmount);
+    const canRetryExpiredDeposit = history?.canRetryExpiredDeposit;
 
     return (
       <ScrollView>
@@ -80,10 +107,20 @@ export default class TxHistoryDetail extends Component {
             })
           }
           {!!fee && this.renderRow({ label: 'Fee', valueText: `${formatFee} ${feeUnit}` })}
-          {!!statusText && this.renderRow({ label: 'Status', valueText: `${statusText} ${(!!statusNumber || statusNumber === 0) ? `[${statusNumber}]` : ''}`, valueTextStyle: { color: statusColor } })}
+          {!!statusText && this.renderRow({ label: 'Status', valueComponent: this.renderStatusValue(statusText, statusColor, statusNumber, canRetryExpiredDeposit, history) })}
+          {!!history?.id && this.renderRow({ label: 'ID', valueText: `#${history?.id}` }) }
           {!!history?.time && this.renderRow({ label: 'Time', valueText: formatUtil.formatDateTime(history?.time) })}
-          {!!history?.incognitoTx && this.renderRow({ label: 'TxID', valueComponent: this.renderTxId(history?.incognitoTx) })}
+          {!!history?.expiredAt && this.renderRow({ label: 'Expired at', valueText: formatUtil.formatDateTime(history?.expiredAt) })}
+          {!!history?.incognitoTxID && this.renderRow({ label: 'TxID', valueComponent: this.renderTxId(`${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${history.incognitoTxID}`) })}
+          {!!history?.inchainTx && this.renderRow({ label: 'Inchain TxID', valueComponent: this.renderTxId(history?.inchainTx) })}
+          {!!history?.outchainTx && this.renderRow({ label: 'Outchain TxID', valueComponent: this.renderTxId(history?.outchainTx) })}
           {!!history?.toAddress && this.renderRow({ label: 'To address', valueText: history?.toAddress, valueTextProps: { ellipsizeMode: 'middle' }, copyable: true })}
+          {!!history?.depositAddress && (
+            <View style={styleSheet.depositAddressContainer}>
+              <Text>Deposit address</Text>
+              {this.renderQrCode(history?.depositAddress)}
+            </View>
+          )}
         </Container>
       </ScrollView>
     );
@@ -99,5 +136,6 @@ TxHistoryDetail.propTypes = {
     statusColor: PropTypes.string,
     statusNumber: PropTypes.string,
     history: PropTypes.object
-  }).isRequired
+  }).isRequired,
+  onRetryExpiredDeposit: PropTypes.func.isRequired
 };

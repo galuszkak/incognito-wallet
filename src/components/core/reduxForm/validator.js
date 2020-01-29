@@ -1,6 +1,7 @@
 import walletValidator from 'wallet-address-validator';
 import accountService from '@src/services/wallet/accountService';
 import formatUtils from '@src/utils/format';
+import convert from '@utils/convert';
 
 const isSafeInteger = number => {
   const n = Number(n);
@@ -36,10 +37,10 @@ const maxLength = (max, { message } = {}) => value =>
 const minLength = (min, { message } = {}) => value =>
   value && value.length < min ? messageHanlder(message, value, min) ?? `Must be at least ${min} characters` : undefined;
 
-const isInteger = ({ message } = {}) => value => value && !Number.isInteger(Number(value)) ? messageHanlder(message, value) ?? 'Must be a integer number' : undefined;
+const isInteger = ({ message } = {}) => value => value && !Number.isInteger(convert.toNumber(value)) ? messageHanlder(message, value) ?? 'Must be a integer number' : undefined;
 
 const number = ({ message } = {}) => value => {
-  const number = Number(value);
+  const number = convert.toNumber(value);
   if (value && isNaN(number)) {
     return messageHanlder(message, value) ?? 'Must be a number';
   }
@@ -60,7 +61,7 @@ const maxValue = (max, { message } = {}) => value =>
 const largerThan = (min, { message } = {}) => value =>
   value && value <= min ? messageHanlder(message, value, min) ?? `Must be larger than ${formatUtils.number(min)}` : undefined;
 
-const email = (value, { message } = {}) =>
+const email = ({ message } = {}) => value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ?
     messageHanlder(message, value) ?? 'Invalid email address' : undefined;
 
@@ -90,6 +91,35 @@ const bnbAddress = (value, { message } = {}) => value => {
 
 // the same as ETH
 const tomoAddress = (value, { message } = {}) => value => !walletValidator.validate(value, 'ETH', 'both') ? messageHanlder(message, value) ?? 'Invalid TOMO address' : undefined;
+
+/**
+ *
+ * image/png, image/jpg, image/jpeg,...
+ */
+const fileTypes = (typeList, { message } = {}) => value => {
+  if (!value) return;
+
+  const fileType = value?.type;
+  const found = typeList.find(type => {
+    if (!type) return false;
+    const pattern = new RegExp(`${type}$`, 'i');
+    return pattern.test(fileType);
+  });
+  return !found ? messageHanlder(message, value, typeList) ?? `Please use a valid type (${typeList?.join(', ')})` : undefined;
+};
+
+const maxFileSize = (sizeInKBytes, { message } = {}) => value => {
+  if (!value) return;
+  const fileSize = Math.ceil(Number(value?.size / 1024) || 0);
+  
+  if (fileSize <= 0) {
+    return 'Invalid file, please choose another file';
+  }
+
+  return fileSize > sizeInKBytes ? messageHanlder(message, value, sizeInKBytes) ?? `Please use a file smaller than ${sizeInKBytes}kb` : undefined;
+};
+
+
 
 const combinedAmount = [
   required(),
@@ -139,5 +169,7 @@ export default {
   notInList,
   combinedTokenName,
   combinedTokenSymbol,
-  combinedAccountName
+  combinedAccountName,
+  fileTypes,
+  maxFileSize,
 };

@@ -1,10 +1,12 @@
 import NetInfo from '@react-native-community/netinfo';
+import APIService from '@src/services/api/miner/APIService';
 import Util from '@utils/Util';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { Platform, View } from 'react-native';
+import { View } from 'react-native';
 import BaseConnection, { ObjConnection } from './BaseConnection';
+// import IOTWifiConnection from './IOTWifiConnection';
 import style from './style';
 import WifiConnection from './WifiConnection';
 
@@ -57,6 +59,7 @@ class DeviceConnection extends Component {
   }
 
   init = () => {
+    // const connection: BaseConnection = Platform.OS == 'android'?new IOTWifiConnection() : new WifiConnection();
     const connection: BaseConnection = new WifiConnection();
     this.connection = connection;
   };
@@ -68,7 +71,10 @@ class DeviceConnection extends Component {
       const wifiCurrent = await this.getCurrentConnect();
       const isConnected = _.isEqual(wifiName,wifiCurrent?.name);
       console.log(TAG, 'connectAWifi begin  = ',wifiName);
-      result = isConnected? true : await this.connection.connectDevice(device).catch(console.log);
+      result = isConnected? true : await this.connection.connectDevice(device).catch(async e=>{
+        console.log(TAG, 'connectAWifi ERRRORRR  = ',wifiName);
+        await this.connection.connectLastConnection(wifiName);
+      });
     }
     return result??false;
   };
@@ -80,14 +86,19 @@ class DeviceConnection extends Component {
     if(result){
       // console.log(TAG, 'connectDevice begin true ---- ');
       const checkConnectWifi = async ()=>{
-        const state = await NetInfo.fetch().catch(console.log);
-        const {isConnected = false, isInternetReachable = false, details: 
-          { ipAddress= '',
-            subnet= '',
-            ssid='',
-            isConnectionExpensive= false }} = state ??{};
-        console.log(TAG, 'connectDevice begin 0000 ---- ',state);
-        const isConnectedCombined  = isHOTPOST?(isConnected && await this.isConnectedWithNodeHotspot()):isConnected;
+        let isConnectedCombined = false;
+        if(isHOTPOST){
+          isConnectedCombined  = await this.isConnectedWithNodeHotspot();
+        }else{
+          const state = await NetInfo.fetch().catch(console.log);
+          const {isConnected = false, isInternetReachable = false, details: 
+            { ipAddress= '',
+              subnet= '',
+              ssid='',
+              isConnectionExpensive= false }} = state ??{};
+          console.log(TAG, 'connectDevice begin 0000 ---- ',state);
+          isConnectedCombined  = isConnected;
+        }
         
         console.log(TAG, 'connectDevice begin 111---- ',isConnectedCombined);
         return isConnectedCombined?isConnectedCombined : new Error('have not connected ');
@@ -98,13 +109,17 @@ class DeviceConnection extends Component {
     }
     return result;
   };
-  isConnectedWithNodeHotspot = ():Promise<Boolean>=>{
-    return this.connection.isConnectedWithNodeHotspot();
+  isConnectedWithNodeHotspot = async ():Promise<Boolean>=>{
+    try {
+      return await APIService.pingHotspot();
+    } catch (error) {
+      return null;
+    }
   }
   removeConnectionDevice = async (objConnection: ObjConnection) => {
     // console.log(TAG, 'removeConnectionDevice begin result = ',JSON.stringify(device)||'');
-    let result = Platform.OS =='android'? await this.connection.removeConnection(objConnection):true;
-    // let result = await this.connection.removeConnection(device);
+    // let result = Platform.OS =='android'? await this.connection.removeConnection(objConnection):true;
+    let result = await Util.excuteWithTimeout(this.connection.removeConnection(objConnection),4).catch(console.log);
     console.log(TAG, 'removeConnectionDevice begin result = ',result);
     return result;
   };

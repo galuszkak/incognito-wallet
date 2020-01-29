@@ -6,8 +6,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 pod 'Firebase/Analytics'
 pod 'Firebase/Core', '~> 6.3.0'
 pod 'Firebase/Messaging', '~> 6.3.0'
-pod 'Firebase/Auth'
-pod 'Firebase/Database'
+pod 'Firebase/Auth', '~> 6.3.0'
+pod 'Firebase/Database', '~> 6.3.0'
 pod 'Fabric', '~> 1.10.2'
 pod 'Crashlytics', '~> 3.13.2'
 pod 'GoogleIDFASupport', '~> 3.14.0'
@@ -76,35 +76,24 @@ target 'constantWalletMobile' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
   pod 'RNLocalize', :path => '../node_modules/react-native-localize'
-  pod 'react-native-iot-wifi', :path => '../node_modules/react-native-iot-wifi'
   pod 'react-native-network-info', :path => '../node_modules/react-native-network-info'
   pod 'RNWifi', :path => '../node_modules/react-native-wifi-reborn'
   pod 'RNOS', :path => '../node_modules/react-native-os'
   pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
-
+  pod 'react-native-iot-wifi', :path => '../node_modules/@josectobar/react-native-iot-wifi'
 #  pod 'RNZmqService', :path => '../node_modules/react-native-zmq-service'
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase/ios'
   pod 'RNSensors', :path => '../node_modules/react-native-sensors'
   pod 'react-native-camera', :path => '../node_modules/react-native-camera'
   pod 'RCTRestart', :path => '../node_modules/react-native-restart/ios'
+  pod 'TouchID', :path => "../node_modules/react-native-touch-id"
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
-  
-  # Pods for constantWalletMobile
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
 
-  target 'constantWalletMobile-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-    # pod 'react-native-udp', :path => '../node_modules/react-native-udp'
 
-  end
-
-  target 'constantWalletMobileTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
   # React-Native is not great about React double-including from the Podfile
   post_install do |installer|
@@ -120,19 +109,27 @@ target 'constantWalletMobile' do
       end
     end
 
+    installer.pods_project.build_configurations.each do |config|
+      if config.name == 'Staging'
+          config.build_settings['CONFIGURATION_TEMP_DIR'] = '$(PROJECT_TEMP_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)'
+          config.build_settings['CONFIGURATION_BUILD_DIR'] = '$(BUILD_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)'
+      end
+    end
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+          if config.name == 'Staging'
+              config.build_settings['CONFIGURATION_TEMP_DIR'] = '$(PROJECT_TEMP_DIR)/Release$(EFFECTIVE_PLATFORM_NAME)'
+              config.build_settings['PODS_CONFIGURATION_BUILD_DIR'] = '${PODS_BUILD_DIR}/Release$(EFFECTIVE_PLATFORM_NAME)'
+          end
+      end
+    end
+
 #    rnfirebase = installer.pods_project.targets.find { |target| target.name == 'RNFirebase' }
 #    rnfirebase.build_configurations.each do |config|
 #      config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) ${PODS_ROOT}/Headers/Public/**'
 #    end
   end
   # use_native_modules!
-end
-
-target 'constantWalletMobile-tvOS' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for constantWalletMobile-tvOS
 end
 
 #post_install do |installer|

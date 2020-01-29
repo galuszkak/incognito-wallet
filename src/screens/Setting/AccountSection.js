@@ -32,6 +32,10 @@ function isDev(account) {
   }
 }
 
+function isNodeAccount(name, devices) {
+  return devices.find(device => device.IsPNode && device.AccountName === name);
+}
+
 const createItem = (account, onSwitch, onExport, onDelete, isActive) => (
   <Swipeout
     style={accountSection.swipeoutButton}
@@ -52,8 +56,7 @@ const createItem = (account, onSwitch, onExport, onDelete, isActive) => (
   </Swipeout>
 );
 
-
-const AccountSection = ({ navigation, defaultAccount, listAccount, removeAccount, switchAccount }) => {
+const AccountSection = ({ navigation, defaultAccount, listAccount, removeAccount, switchAccount, devices }) => {
   const onHandleSwitchAccount = onClickView(async account => {
     try {
       if (defaultAccount?.name === account?.name) {
@@ -79,6 +82,10 @@ const AccountSection = ({ navigation, defaultAccount, listAccount, removeAccount
 
   const handleCreate = () => {
     navigation.navigate(ROUTE_NAMES.CreateAccount, { onSwitchAccount: onHandleSwitchAccount });
+  };
+
+  const handleBackup = () => {
+    navigation.navigate(ROUTE_NAMES.BackupKeys);
   };
 
   const handleDelete = account => {
@@ -120,10 +127,17 @@ const AccountSection = ({ navigation, defaultAccount, listAccount, removeAccount
       desc: 'Create a new account',
       label: 'Create',
       handlePress: handleCreate
+    },
+    {
+      id: 'backup',
+      icon: <Icon type='material' name="backup" size={25} />,
+      desc: 'Backup your account keys',
+      label: 'Backup',
+      handlePress: handleBackup
     }
   ];
 
-  const isDeletable = (account) => listAccount.length > 1 && !dexUtils.isDEXAccount(account?.name);
+  const isDeletable = (account) => listAccount.length > 1 && !dexUtils.isDEXAccount(account?.name) && !isNodeAccount(account?.name, devices);
 
   return (
     <Section
@@ -158,6 +172,7 @@ AccountSection.propTypes = {
   listAccount: PropTypes.arrayOf(PropTypes.object).isRequired,
   switchAccount: PropTypes.func.isRequired,
   removeAccount: PropTypes.func.isRequired,
+  devices: PropTypes.array.isRequired,
 };
 
 const mapState = state => ({

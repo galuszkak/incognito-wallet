@@ -32,7 +32,7 @@ const ViewInput = React.forwardRef((props,ref)=>{
       return text;
     }
   }));
-  
+
   return (
     <Input
       ref={inputView}
@@ -48,6 +48,7 @@ const ViewInput = React.forwardRef((props,ref)=>{
       placeholder="192.168.1.1:1002 or node.example.com"
       label='IP address or domain'
       defaultValue={text}
+      autoCapitalize="none"
       clearable
     />
   );
@@ -183,12 +184,12 @@ class AddSelfNode extends BaseScreen {
       console.log(TAG,'handleSetUpPress host = ',host);
       if (userJson && !_.isEmpty(host)) {
         await this.validateHost(host);
-        const listLocalDevice = await LocalDatabase.getListDevices();
+        let listLocalDevice = await LocalDatabase.getListDevices();
         // const isImportPrivateKey = _.isEmpty(selectedAccount?.PrivateKey);
         const deviceJSON = await this.parseHost(host);
-        listLocalDevice.push(deviceJSON);
+        listLocalDevice = [deviceJSON, ...listLocalDevice];
         await LocalDatabase.saveListDevices(listLocalDevice);
-        this.goToScreen(routeNames.HomeMine);
+        this.goToScreen(routeNames.Node);
         return true;
       }
     } catch (error) {
@@ -203,7 +204,7 @@ class AddSelfNode extends BaseScreen {
       <ScrollView keyboardShouldPersistTaps="handled">
         <Loader loading={loading} />
         <KeyboardAvoidingView contentContainerStyle={{flex:1}} keyboardVerticalOffset={50} behavior="padding" style={[container]}>
-          
+
           <ViewInput ref={this.inputView} />
           <Button
             titleStyle={styles.textTitleButton}

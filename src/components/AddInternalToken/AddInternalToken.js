@@ -17,6 +17,8 @@ import { setWallet } from '@src/redux/actions/wallet';
 import { ExHandler } from '@src/services/exception';
 import styleSheet from './style';
 import CopiableText from '../CopiableText';
+import Help from '../Help';
+import VerifiedText from '../VerifiedText';
 
 const formName = 'addInternalToken';
 const selector = formValueSelector(formName);
@@ -25,6 +27,11 @@ const initialValues = {
 };
 const Form = createForm(formName, { initialValues });
 const descriptionMaxLength = validator.maxLength(255);
+const isEmail = validator.email();
+const imageValidate = [
+  validator.fileTypes(['image/png']),
+  validator.maxFileSize(50),
+];
 
 class AddInternalToken extends Component {
   constructor(props) {
@@ -60,9 +67,9 @@ class AddInternalToken extends Component {
     navigation?.popToTop();
   };
 
-  handleSaveCoinInfo = async ({ logoFile, tokenId, name, symbol, showOwnerAddress, description, ownerAddress }) => {
+  handleSaveCoinInfo = async (data) => {
     try {
-      return await addTokenInfo({ logoFile, tokenId, name, symbol, showOwnerAddress, description, ownerAddress });
+      return await addTokenInfo(data);
     } catch (e) {
       new ExHandler(e, 'Your coin logo has been not saved yet, but you can update it again in Coin Detail screen.').showWarningToast();
     }
@@ -95,7 +102,7 @@ class AddInternalToken extends Component {
       // update fee
       this.setState({ fee });
     } catch(e){
-      new ExHandler(e).showErrorToast();
+      new ExHandler(e).showErrorToast(true);
     } finally {
       this.setState({ isGettingFee: false });
     }
@@ -104,7 +111,7 @@ class AddInternalToken extends Component {
   handleCreateSendToken = async (values) => {
     const { account, wallet, setWallet } = this.props;
 
-    const { name, symbol, amount, logo, showOwnerAddress, description } = values;
+    const { name, symbol, amount, logo, showOwnerAddress, description, ownerName, ownerEmail, ownerWebsite } = values;
     const { fee } = this.state;
 
     const tokenObject = {
@@ -134,7 +141,11 @@ class AddInternalToken extends Component {
           logoFile: logo,
           ownerAddress: account?.PaymentAddress,
           showOwnerAddress,
-          description
+          description,
+          ownerName,
+          ownerEmail,
+          ownerWebsite,
+          txId: res.txId
         }).catch(() => {
           // err is no matter, the user can update their token info later in Coin Detail screen
           // so just let them pass this process
@@ -148,7 +159,7 @@ class AddInternalToken extends Component {
         throw new Error('Something went wrong. Please refresh the screen.');
       }
     } catch (e) {
-      new ExHandler(e).showErrorToast();
+      new ExHandler(e).showErrorToast(true);
     } finally {
       this.setState({ isCreatingOrSending: false });
     }
@@ -231,6 +242,48 @@ class AddInternalToken extends Component {
                     style={[styleSheet.input, styleSheet.descriptionInput, { marginBottom: 25 }]}
                     validate={descriptionMaxLength}
                   />
+                  <View style={styleSheet.verifyInfoContainer}>
+                    <View style={styleSheet.verifyInfoHeader}>
+                      <Help
+                        marginLeft={0}
+                        title={<VerifiedText text='Verification badge' isVerified style={{ fontWeight: '500' }} />}
+                        content='A verification badge shows the community that your coin is legitimate, and is part of a genuine project.'
+                      />
+                      <Text style={styleSheet.verifyInfoLabel}>To earn a verified badge, please fill in these fields (optional):</Text>
+                    </View>
+                    <Field
+                      component={InputField}
+                      name='ownerName'
+                      placeholder='Enter creator name'
+                      label='Creator'
+                      maxLength={100}
+                      style={styleSheet.input}
+                    />
+                    <Field
+                      component={InputField}
+                      name='ownerWebsite'
+                      componentProps={{
+                        autoCapitalize: 'none'
+                      }}
+                      maxLength={100}
+                      placeholder='Enter project or coin URL'
+                      label='Website'
+                      style={styleSheet.input}
+                    />
+                    <Field
+                      component={InputField}
+                      name='ownerEmail'
+                      componentProps={{
+                        keyboardType: 'email-address',
+                        autoCapitalize: 'none'
+                      }}
+                      maxLength={100}
+                      placeholder='Enter the official email address for your coin or project'
+                      label='Email address'
+                      style={styleSheet.input}
+                      validate={isEmail}
+                    />
+                  </View>
                 </View>
                 <View style={styleSheet.block}>
                   <View>
@@ -248,18 +301,18 @@ class AddInternalToken extends Component {
                     />
                   </View>
                 </View>
-                
+
                 <View style={styleSheet.block}>
                   <Field
                     component={ImagePickerField}
                     name='logo'
                     text={'Upload your coin\'s icon (optional, PNG and less than 50kb)'}
                     textButton='Upload'
-                    maxSize={1024 * 50 * 8} // 50kb
                     style={styleSheet.input}
+                    validate={imageValidate}
                   />
                 </View>
-                
+
                 {
                   isGettingFee
                     ? <Text>Calculating fee...</Text>
