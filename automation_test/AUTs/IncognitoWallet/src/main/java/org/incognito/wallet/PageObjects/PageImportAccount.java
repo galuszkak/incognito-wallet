@@ -23,15 +23,15 @@ public class PageImportAccount extends PageBase {
 	
 	public String editAccountName() {
 		String accountName = "Phat_test";
-		btnEdit.click();
+		tap(btnEdit);
 		enter(txtAccountName, accountName);
 		return accountName;
 		
 	}
 	
 	public void importPrivacyKey(String value) {
-		txtPrivateKey.sendKeys(value);
-		btnImport.click();
+		enter(txtPrivateKey,value);
+		tap(btnImport);
 	}
 	
 	public void isImportSuccess() {

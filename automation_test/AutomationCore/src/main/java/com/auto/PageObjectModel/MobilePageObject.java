@@ -41,6 +41,8 @@ public class MobilePageObject extends PageObject {
 			cap.setCapability("noSign", true);
 			cap.setCapability("appActivity", androidParam.get("appActivity"));
 			cap.setCapability("appPackage", androidParam.get("appPackage"));
+//			cap.setCapability("unicodeKeyboard", true);
+//			cap.setCapability("resetKeyboard", true);
 			if (appiumParam.get("app") != null) {
 				File app = new File(appiumParam.get("app"));
 				cap.setCapability("app", app.getAbsolutePath());
