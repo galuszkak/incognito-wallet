@@ -96,6 +96,8 @@ target 'constantWalletMobile' do
 
 
   # React-Native is not great about React double-including from the Podfile
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+
   post_install do |installer|
     installer.pods_project.targets.each do |target|
       if target.name == "React"
