@@ -1,3 +1,11 @@
-import Setting from './Setting';
+import React from 'react';
+import {View} from 'react-native';
+import {Styled} from './template.styled';
 
-export default Setting;
+const Template = props => {
+  return <View style={Styled.container} />;
+};
+
+Template.propTypes = {};
+
+export default Template;

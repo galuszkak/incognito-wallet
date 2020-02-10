@@ -32,7 +32,7 @@ module.exports = {
   rules: {
     'no-console': 0,
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-    indent: ['error', 2],
+    // indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     semi: ['error', 'always'],

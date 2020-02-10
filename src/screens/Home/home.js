@@ -75,7 +75,7 @@ const Navs = () => {
   );
 };
 
-const Home = props => {
+const Home = () => {
   return (
     <View style={styled.container}>
       <Banner />

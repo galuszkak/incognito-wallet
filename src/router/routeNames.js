@@ -42,5 +42,6 @@ export default {
   pApp: 'pApp',
   pApps: 'pApps',
   AddPin: 'AddPin',
-  BackupKeys: 'BackupKeys'
+  BackupKeys: 'BackupKeys',
+  Wallet: 'Wallet'
 };
