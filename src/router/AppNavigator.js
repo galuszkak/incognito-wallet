@@ -13,7 +13,7 @@ import SendCrypto from '@src/screens/SendCrypto';
 import Deposit from '@src/screens/Deposit';
 import Withdraw from '@src/screens/Withdraw';
 import TxHistoryDetail from '@src/screens/TxHistoryDetail';
-import Setting from '@screens/Setting';
+import Wallet from '@screens/Wallet';
 import DexHistory from '@screens/DexHistory';
 import DexHistoryDetail from '@screens/DexHistoryDetail';
 import HeaderBar from '@src/components/HeaderBar';
@@ -21,6 +21,8 @@ import pApp from '@src/screens/PappView';
 import AddPIN from '@src/screens/AddPIN';
 import BackupKeys from '@src/screens/BackupKeys';
 import { navigationOptionsHandler } from '@src/utils/router';
+import Setting from '@src/routes/home/features/setting';
+// import Setting from '@src/screens/Setting';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
@@ -40,12 +42,17 @@ const AppNavigator = createStackNavigator(
     [ROUTE_NAMES.Deposit]: navigationOptionsHandler(Deposit),
     [ROUTE_NAMES.Withdraw]: navigationOptionsHandler(Withdraw),
     [ROUTE_NAMES.TxHistoryDetail]: navigationOptionsHandler(TxHistoryDetail, { title: 'History Detail' }),
-    [ROUTE_NAMES.Setting]: navigationOptionsHandler(Setting, { title: 'You' }),
     [ROUTE_NAMES.DexHistory]: navigationOptionsHandler(DexHistory, { header: () => null }),
     [ROUTE_NAMES.DexHistoryDetail]: navigationOptionsHandler(DexHistoryDetail, { header: () => null }),
     [ROUTE_NAMES.pApp]: navigationOptionsHandler(pApp),
     [ROUTE_NAMES.AddPin]: navigationOptionsHandler(AddPIN, { header: () => null }),
     [ROUTE_NAMES.BackupKeys]: navigationOptionsHandler(BackupKeys, { title: 'Back up private keys' }),
+    [ROUTE_NAMES.Setting]: navigationOptionsHandler(Setting, {
+      header: () => null
+    }),
+    [ROUTE_NAMES.Wallet]: navigationOptionsHandler(Wallet, {
+      header: () => null
+    }),
   },
   {
     initialRouteName: ROUTE_NAMES.RootTab,

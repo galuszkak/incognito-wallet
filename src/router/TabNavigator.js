@@ -4,13 +4,19 @@ import {Text} from '@components/core';
 import {getActiveChildNavigationOptions} from 'react-navigation';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 import {navigationOptionsHandler} from '@src/utils/router';
-import Home from '@src/screens/Home';
+import Home from '@src/routes/home';
 import {COLORS, FONT} from '@src/styles';
 import TabBarIcon from '@src/components/TabBarIcon';
 import HeaderBar from '@src/components/HeaderBar';
 import Dex from '@src/screens/Dex';
 import {FontStyle} from '@src/styles/TextStyle';
-import Wallet from '@src/screens/Wallet';
+import ROUTE_NAMES from '@src/router/routeNames';
+import MinerNavigator from '@src/router/MinerNavigator';
+
+// import Wallet from '@src/screens/Wallet';
+import Wallet from '@src/routes/wallet';
+
+//assets
 import srcHomeActive from '@src/assets/images/rootTabs/ac_home.png';
 import srcHome from '@src/assets/images/rootTabs/home.png';
 import srcNodesActive from '@src/assets/images/rootTabs/ac_nodes.png';
@@ -20,14 +26,11 @@ import srcWallet from '@src/assets/images/rootTabs/wallet.png';
 import srcComActive from '@src/assets/images/rootTabs/ac_com.png';
 import srcCom from '@src/assets/images/rootTabs/com.png';
 
-import ROUTE_NAMES from '@src/router/routeNames';
-import MinerNavigator from '@src/router/MinerNavigator';
-
 const TabIcon = (type, title, {focused}) => {
   let active = null;
   let inactive = null;
   switch (type) {
-    case 'wallet':{
+    case 'wallet': {
       active = srcWalletActive;
       inactive = srcWallet;
       break;
