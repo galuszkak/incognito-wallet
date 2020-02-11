@@ -1,5 +1,6 @@
 package org.incognito.wallet;
 
+import org.incognito.wallet.PageObjects.PageWallet;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
@@ -29,6 +30,8 @@ public class MobileTestBase extends TestCase {
 	public void beforeMethodBase() throws Exception{
 		Log.info("!!! Start Appium driver !!!");
 		((MobilePageObject) pageObject).startDriver();
+		PageWallet pWallet = new PageWallet();
+		pWallet.waitForMainPageDisplayed();
 	}
 
 	@AfterMethod

@@ -1,15 +1,17 @@
 package org.incognito.wallet.PageObjects;
 
+import static org.testng.Assert.assertTrue;
+
 import org.openqa.selenium.By;
 
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 
 public class PageCreateAccount extends PageBase {
-	@AndroidFindBy(xpath = "//*[@text='Edit']")
+	@AndroidFindBy(xpath = "//*[@class='android.view.ViewGroup' and ./*[@text='Create account']]")
 	private MobileElement btnCreateAccount;
 	
-	@AndroidFindBy(xpath = "//*[@class='android.widget.EditText' and (./preceding-sibling::* | ./following-sibling::*)[@class='android.view.ViewGroup']]")
+	@AndroidFindBy(xpath = "//*[@class='android.widget.EditText']")
 	private MobileElement txtAccountName;
 	
 	@AndroidFindBy(xpath = "(//*[@class='android.view.ViewGroup' and ./parent::*[@class='android.view.ViewGroup' and ./parent::*[@class='android.view.ViewGroup' and ./parent::*[@class='android.view.ViewGroup' and ./parent::*[@class='android.view.ViewGroup' and ./parent::*[@class='android.view.ViewGroup']]]]]]/*[@text and @class='android.widget.TextView'])[3]")
@@ -19,22 +21,25 @@ public class PageCreateAccount extends PageBase {
 		return (MobileElement) driver.findElement(By.xpath("//*[@text='"+name+"']"));
 	}
 	
-	public String inputAccountName(String accnName) {
+	public String inputAccountName(String accnName) throws Exception {
+		waitUntilElementPresent(txtAccountName, 20);
 		enter(txtAccountName, accnName);
 		return accnName;
 		
 	}
 	
-	public void tapCreateAccount() {
+	public void tapCreateAccount() throws Exception {
 		tap(btnCreateAccount);
+		waitUntilElementIsNotVisible(btnCreateAccount, 20);
 	}
 	
 	public void isCreateSuccess(String val) {
-		isElementPresent(entryAccount(val));
+		assertTrue(isElementPresent(entryAccount(val)));
+		
 	}
 	
 	public void isErrPopupShown() {
-		isElementPresent(errMes);
+		assertTrue(isElementPresent(errMes));
 	}
 	
 }

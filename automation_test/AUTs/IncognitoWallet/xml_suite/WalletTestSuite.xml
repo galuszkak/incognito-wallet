@@ -4,10 +4,12 @@
 	<parameter name="appium.platformName" value="Android" />
 	<parameter name="appium.deviceName" value="ePixel3Xl" />
 	<parameter name="appium.udid" value="ZX1G22PKT9" />
+	<!-- <parameter name="appium.udid" value="AHW00035653" /> -->
+	
 	<parameter name="appium.noReset" value="true" />
 
 	<parameter name="android.appPackage"
-		value="com.incognito.wallet" />
+		value="com.incognito.wallet.debug" />
 	<parameter name="android.appActivity"
 		value="com.incognito.wallet.SplashActivity" />
 	<parameter name="android.skipServerInstallation" value="true" />
@@ -16,9 +18,106 @@
 	<listeners>
 		<listener class-name="com.auto.core.listeners.Flow" />
 	</listeners>
-	<test name="demo1">
+	<!-- <test name="Verify that user can import and rename an account">
 		<classes>
-			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest"></class>
+			<class
+				name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS002">
+						<parameter name="email" value="qatester@xifin.com" /> <parameter 
+							name="password" value="qatester123" />
+					</include>
+				</methods>
+			</class>
 		</classes>
 	</test>
+
+	<test name="Verify that user can not import a duplicated account">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS004">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	
+	<test name="Verify that user can create an account with a valid name">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS005">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	
+	<test name="Verify that user can not create an account with blank character or special character only">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS006">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	
+	<test name="Verify that user can create an account with 50 character">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS007">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	
+	<test name="Verify that can not create a duplicated account name">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS008">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	 -->
+	
+	<!-- <test name="Verify that when sending min PRV, user can send success.">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS010">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	
+	<test name="Verify that when sending normal PRV, user can send success.">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS011">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test> -->
+	<test name="Verify that when sending max PRV, user can send success.">
+		<classes>
+			<class name="org.incognito.wallet.android.checklist.AndroidDemoTest">
+				<methods>
+					<include name="WS012">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+
 </suite>

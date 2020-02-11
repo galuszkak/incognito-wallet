@@ -5,6 +5,7 @@ import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
 
 import java.io.File;
 import java.time.Duration;
@@ -13,6 +14,7 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.paho.client.mqttv3.logging.Logger;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -105,17 +107,29 @@ public class PageObject {
 		}
 	}
 
-	public boolean waitUntilElementPresent(WebElement element, int timeToWait) throws InterruptedException {
+	public boolean waitUntilElementPresent(WebElement element, int timeToWait) throws Exception {
 		int i = 0;
 		while (true) {
 			try {
 				Log.info("        Finding" + element);
-				if (element != null && element.isDisplayed())
+				if (isElementPresent(element))
 					return true;
+			} catch (NoSuchElementException e) {
+				Log.info("        No Such Element: " + element);
+				sleep(1000);
+			} catch (ElementNotVisibleException e) {
+				Log.info("        Element Not Visible: " + element);
+				sleep(1000);
+			} catch (StaleElementReferenceException e) {
+				Log.info("        Stale Element Reference Exception: " + e);
+				sleep(1000);
 			} catch (Exception e) {
-				Thread.sleep(1000);
+				Log.info("        Exception: " + e);
+				sleep(1000);
+			} catch (Error e) {
+				Log.info("        Error: " + e);
+				sleep(1000);
 			}
-
 			i++;
 			if (i >= timeToWait) {
 				Log.warn("       Time out for waiting element visible");
@@ -146,12 +160,14 @@ public class PageObject {
 
 	public boolean enter(WebElement element, String key) {
 		try {
+			Log.info("       Enter " + key + " to " + element);
 			WebElement e = waits().until(ExpectedConditions.visibilityOf(element));
 			if (e != null)
 				e.click();
 			e.clear();
-			Log.info("       Enter:"+key+" to Element:"+ element);
+			Log.info("       Enter:" + key + " to Element:" + element);
 			e.sendKeys(key);
+			sleep(1000);
 			driver.navigate().back();
 			return false;
 		} catch (Exception e2) {
@@ -176,7 +192,7 @@ public class PageObject {
 			if (e != null)
 				for (int i = 0; i <= time; i++) {
 					e.click();
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				}
 
 			return false;
@@ -243,9 +259,14 @@ public class PageObject {
 				driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
 				e.isDisplayed();
 				flg = true;
+				Log.info("       Element " + e + " IS present.");
 				break;
+			} catch (NoSuchElementException err) {
+				Log.info("       Element " + e + " IS NOT present.");
 			} catch (Exception err) {
-				System.out.println(err);
+				Log.info("       Element " + e + " IS NOT present.");
+			} catch (Error err) {
+				Log.info("       " + err);
 			}
 		}
 		return flg;
@@ -281,6 +302,7 @@ public class PageObject {
 			action.press(PointOption.point(startX, startY))
 					.waitAction(WaitOptions.waitOptions(Duration.ofMillis(duration)))
 					.moveTo(PointOption.point(endX, startY)).release().perform();
+			Log.info("        Swiping right.");
 			break;
 
 		case "left":
@@ -291,7 +313,7 @@ public class PageObject {
 			actionl.press(PointOption.point(startX, startY))
 					.waitAction(WaitOptions.waitOptions(Duration.ofMillis(duration)))
 					.moveTo(PointOption.point(endX, startY)).release().perform();
-
+			Log.info("        Swiping left.");
 			break;
 
 		case "up":
@@ -302,6 +324,7 @@ public class PageObject {
 			actionu.press(PointOption.point(startX, startY))
 					.waitAction(WaitOptions.waitOptions(Duration.ofMillis(duration)))
 					.moveTo(PointOption.point(startX, endY)).release().perform();
+			Log.info("        Swiping up.");
 			break;
 
 		case "down":
@@ -312,17 +335,19 @@ public class PageObject {
 			actiond.press(PointOption.point(startX, startY))
 					.waitAction(WaitOptions.waitOptions(Duration.ofMillis(duration)))
 					.moveTo(PointOption.point(startX, endY)).release().perform();
-
+			Log.info("        Swiping down.");
 			break;
 		}
 	}
 
 	public String splitPrice(String val) {
 		String[] arrOfStr = val.split(" ");
+		Log.info("        Swiping right.");
 		return arrOfStr[0];
 	}
 
-	public static void sleep(long val) throws InterruptedException {
+	public static void sleep(long val) throws Exception {
+		Log.info("       Sleeping :" + val);
 		Thread.sleep(val);
 	}
 
@@ -335,16 +360,58 @@ public class PageObject {
 		for (int i = 0; i < waitTime; i++) {
 			try {
 				if (!element.isDisplayed()) {
+					Log.info("       Element disapeared.");
 					flag = true;
 					break;
 				} else {
-
+					Log.info("       Element appear.");
 				}
-			} catch (ElementNotVisibleException e) {
 				Thread.sleep(1000);
+			} catch (Exception e) {
+				flag = true;
+				break;
 			}
 		}
 		return flag;
+	}
+
+	public boolean isElementNotPresent(WebElement element, int time) throws Exception {
+		boolean flag = false;
+		int i = 0;
+
+		while (i < time) {
+			try {
+				if ((element.isDisplayed() || element.isEnabled())) {
+
+				}
+			} catch (Exception e) {
+				flag = true;
+
+				break;
+			}
+			Thread.sleep(1000);
+			i++;
+		}
+		return flag;
+	}
+
+	public String getText(WebElement e) throws Exception {
+		String temp = "";
+		try {
+			waitUntilElementPresent(e, 20);
+			temp = e.getText();
+
+		} catch (StaleElementReferenceException e1) {
+
+			e1.printStackTrace();
+		} catch (NoSuchElementException e1) {
+
+			e1.printStackTrace();
+		} catch (Exception e1) {
+
+			e1.printStackTrace();
+		}
+		return temp;
 	}
 
 }
