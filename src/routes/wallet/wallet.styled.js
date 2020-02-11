@@ -5,6 +5,8 @@ export const styled = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(127, 127, 127, 0.3)',
     flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
 
@@ -18,6 +20,7 @@ export const headingStyled = StyleSheet.create({
     paddingBottom: 50,
     paddingLeft: 10,
     paddingRight: 10,
+
   },
   title: {
     fontFamily: FONT.NAME.bold,

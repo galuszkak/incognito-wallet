@@ -5,7 +5,9 @@ export const styled = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    marginVertical: 20,
+    padding: 20,
+    // borderBottomWidth: 1,
+    // borderBottomColor: `rgba(0,0,0,0.1)`
   },
   logoContainer: {},
   cryptoNameContainer: {

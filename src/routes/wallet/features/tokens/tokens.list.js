@@ -6,7 +6,9 @@ import Token from '@src/routes/wallet/features/token';
 import {CONSTANT_COMMONS} from '@src/constants';
 
 const styled = StyleSheet.create({
-  container: {},
+  container: {
+    marginTop: 20
+  },
 });
 
 const TokenList = props => {
