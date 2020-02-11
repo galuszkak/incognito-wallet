@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  getBalance,
-  getInternalTokenList,
-  getPTokenList,
-  setListToken,
-} from '@src/redux/actions/token';
+import {getInternalTokenList, getPTokenList} from '@src/redux/actions/token';
 import {
   getBalance as getAccountBalance,
   reloadAccountFollowingToken,
@@ -23,7 +18,7 @@ import {
 import {defaultAccount} from '@src/redux/selectors/account';
 import {tokenSeleclor} from '@src/redux/selectors';
 import AppUpdater from '@src/components/AppUpdater';
-import { AppState } from 'react-native';
+import {AppState} from 'react-native';
 import routeNames from '@src/router/routeNames';
 
 const enhance = WrappedComp => props => {
@@ -145,7 +140,7 @@ const enhance = WrappedComp => props => {
 
   if (!wallet) return <LoadingContainer />;
 
-  return <WrappedComp {...props} />;
+  return <WrappedComp {...{...props, isReloading, reload}} />;
 };
 
 export default enhance;

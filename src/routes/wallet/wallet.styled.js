@@ -2,7 +2,10 @@ import {StyleSheet} from 'react-native';
 import {FONT} from '@src/styles';
 
 export const styled = StyleSheet.create({
-  container: {},
+  container: {
+    backgroundColor: 'rgba(127, 127, 127, 0.3)',
+    flex: 1,
+  },
 });
 
 export const headingStyled = StyleSheet.create({

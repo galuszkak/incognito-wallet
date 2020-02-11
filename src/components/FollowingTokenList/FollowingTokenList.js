@@ -8,7 +8,6 @@ import CryptoItemCard from '../CryptoItemCard';
 class FollowingTokenList extends Component {
   render() {
     const { onSelectToken, account, tokens, excludeTokenIds } = this.props;
-
     return (
       <View>
         {
