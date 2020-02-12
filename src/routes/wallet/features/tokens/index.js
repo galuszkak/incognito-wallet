@@ -22,17 +22,17 @@ const Extra = () => {
     navigation.navigate(routeNames.FollowToken, {isPrivacy: true});
   };
   return (
-    <TouchableWithoutFeedback onPress={handleOnPress}>
-      <View style={styledExtra.container}>
-        <Text style={styledExtra.title}>Looking for a privacy coin?</Text>
+    <View style={styledExtra.container}>
+      <Text style={styledExtra.title}>Looking for a privacy coin?</Text>
+      <TouchableWithoutFeedback onPress={handleOnPress}>
         <View style={styledExtra.hook}>
           <Text style={styledExtra.nav}>Add coin to your list</Text>
           <View style={styledExtra.arrow}>
             <Image source={srcArrowRight} />
           </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </View>
   );
 };
 

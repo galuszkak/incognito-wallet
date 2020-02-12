@@ -1,2 +1,6 @@
-import { createSelector } from 'reselect';
-import { selectedPrivacySeleclor, sharedSeleclor } from '@src/redux/selectors';
+import {createSelector} from 'reselect';
+
+export const tokenStateSelector = createSelector(
+  state => state.tokenState,
+  token => token,
+);

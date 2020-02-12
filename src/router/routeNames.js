@@ -13,7 +13,6 @@ export default {
   AddToken: 'AddToken',
   CreateToken: 'CreateToken',
   GetStarted: 'GetStarted',
-  WalletDetail: 'WalletDetail',
   AddDevice: 'AddDevice',
   AddSelfNode: 'AddSelfNode',
   MineStack: 'MineStack',
@@ -43,5 +42,6 @@ export default {
   pApps: 'pApps',
   AddPin: 'AddPin',
   BackupKeys: 'BackupKeys',
-  Wallet: 'Wallet'
+  Wallet: 'Wallet',
+  WalletDetail: 'WalletDetail',
 };

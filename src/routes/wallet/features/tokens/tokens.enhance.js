@@ -11,10 +11,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import LoadingContainer from '@src/components/LoadingContainer';
 import {CustomError, ErrorCode, ExHandler} from '@src/services/exception';
 import {useNavigation} from 'react-navigation-hooks';
-import {
-  clearSelectedPrivacy,
-  setSelectedPrivacy,
-} from '@src/redux/actions/selectedPrivacy';
+import {clearSelectedPrivacy} from '@src/redux/actions/selectedPrivacy';
 import {defaultAccount} from '@src/redux/selectors/account';
 import {tokenSeleclor} from '@src/redux/selectors';
 import AppUpdater from '@src/components/AppUpdater';
@@ -27,12 +24,13 @@ const enhance = WrappedComp => props => {
   const account = useSelector(defaultAccount);
   const wallet = useSelector(state => state.wallet);
   const navigation = useNavigation();
+  const pin = useSelector(state => state.pin.pin);
   const [state, setState] = React.useState({
     isReloading: false,
     isReceivedPRV: false,
     appState: '',
   });
-  const {isReloading, isReceivedPRV} = state;
+  const {isReloading, isReceivedPRV, appState} = state;
   const handleGetTokens = async () => {
     try {
       await dispatch(getPTokenList());
@@ -84,15 +82,13 @@ const enhance = WrappedComp => props => {
   };
 
   const handleLogin = nextAppState => {
-    const {appState} = this.state;
     if (appState.match(/background/) && nextAppState === 'active') {
-      const {navigation, pin} = this.props;
       AppUpdater.update();
       if (pin) {
         navigation.navigate(routeNames.AddPin, {action: 'login'});
       }
     }
-    this.setState({appState: nextAppState});
+    setState({appState: nextAppState});
   };
 
   const handleClearSelectedPrivacy = async () => {

@@ -1,10 +1,14 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import PropTypes from 'prop-types';
 import CryptoIcon from '@src/components/CryptoIcon';
 import VerifiedText from '@src/components/VerifiedText';
 import formatUtil from '@src/utils/format';
 import {ActivityIndicator} from '@src/components/core';
+import {useNavigation} from 'react-navigation-hooks';
+import {useDispatch} from 'react-redux';
+import {setSelectedPrivacy} from '@src/redux/actions/selectedPrivacy';
+import routeNames from '@src/router/routeNames';
 import {styled} from './token.styled';
 import withToken from './token.enhance';
 
@@ -13,7 +17,7 @@ const AmountToken = ({isGettingBalance, amount, pDecimals, symbol}) => {
     return <ActivityIndicator size="small" />;
   }
   if (amount === null) {
-    return <Text>---</Text>;
+    return <Text>-</Text>;
   }
   return (
     <Text style={styled.amountText} numberOfLines={1} ellipsizeMode="tail">
@@ -24,27 +28,40 @@ const AmountToken = ({isGettingBalance, amount, pDecimals, symbol}) => {
 
 const Token = props => {
   const {tokenId, iconUrl, displayName, networkName, isVerified} = props;
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const handleOnPress = async () => {
+    if (!tokenId) return;
+    dispatch(setSelectedPrivacy(tokenId));
+    await navigation.navigate(routeNames.WalletDetail);
+  };
   return (
-    <View style={styled.container}>
-      <View style={styled.logoContainer}>
-        <CryptoIcon uri={iconUrl} tokenId={tokenId} />
+    <TouchableWithoutFeedback onPress={handleOnPress}>
+      <View style={styled.container}>
+        <View style={styled.logoContainer}>
+          <CryptoIcon uri={iconUrl} tokenId={tokenId} />
+        </View>
+        <View style={styled.cryptoNameContainer}>
+          <VerifiedText
+            text={displayName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={styled.displayName}
+            isVerified={isVerified}
+          />
+          <Text
+            style={styled.networkName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {networkName}
+          </Text>
+        </View>
+        <View style={styled.amountContainer}>
+          <AmountToken {...props} />
+        </View>
       </View>
-      <View style={styled.cryptoNameContainer}>
-        <VerifiedText
-          text={displayName}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          style={styled.displayName}
-          isVerified={isVerified}
-        />
-        <Text style={styled.networkName} numberOfLines={1} ellipsizeMode="tail">
-          {networkName}
-        </Text>
-      </View>
-      <View style={styled.amountContainer}>
-        <AmountToken {...props} />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

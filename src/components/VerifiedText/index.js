@@ -1,27 +1,30 @@
-import { View, Text } from '@src/components/core';
+import {View, Text, Image} from '@src/components/core';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, {Component} from 'react';
+// import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
+import srcChecked from '@src/assets/images/icons/checked.png';
 import styleSheet from './style';
 
 class VerifiedText extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
-    const { text, isVerified, containerStyle, style, ...textProps } = this.props;
+    const {text, isVerified, containerStyle, style, ...textProps} = this.props;
 
     return (
       <View style={[styleSheet.container, containerStyle]}>
-        <Text {...textProps} style={[styleSheet.text, style]}>{text}</Text>
-        { isVerified && (
+        <Text {...textProps} style={[styleSheet.text, style]}>
+          {text}
+        </Text>
+        {isVerified && (
           <View style={styleSheet.verifiedFlagContainer}>
-            <Icons style={styleSheet.verifiedFlag} name='check-circle' size={14} />
+            <Image source={srcChecked} />
+            {/* <Icons style={styleSheet.verifiedFlag} name='check-circle' size={14} /> */}
           </View>
-        ) }
+        )}
       </View>
     );
   }
@@ -40,6 +43,5 @@ VerifiedText.propTypes = {
   containerStyle: PropTypes.object,
   style: PropTypes.object,
 };
-
 
 export default VerifiedText;

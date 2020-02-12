@@ -60,32 +60,4 @@ export const navsStyled = StyleSheet.create({
     alignContent: 'center',
     padding: '6%',
   },
-  navItem: {
-    textAlign: 'center',
-    alignItems: 'center',
-    padding: '2%',
-    width: `${100 / 3}%`,
-    marginTop: 20
-  },
-  icon: {
-    width: 48,
-    height: 48,
-    resizeMode: 'contain',
-  },
-  title: {
-    fontFamily: FONT.NAME.regular,
-    color: '#000',
-    fontSize: FONT.SIZE.regular,
-    lineHeight: FONT.SIZE.regular + 10,
-    textAlign: 'center',
-    marginTop: 2,
-    marginBottom: 2,
-  },
-  desc: {
-    fontFamily: FONT.NAME.regular,
-    color: 'rgba(0,0,0,0.8)',
-    fontSize: FONT.SIZE.small,
-    lineHeight: FONT.SIZE.small + 6,
-    textAlign: 'center',
-  },
 });

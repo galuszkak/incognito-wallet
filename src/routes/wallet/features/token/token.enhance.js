@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
-import {selectedPrivacySeleclor, sharedSeleclor} from '@src/redux/selectors';
+import { sharedSeleclor, selectedPrivacySeleclor } from '@src/redux/selectors';
 
 const enhance = WrappedComp => props => {
   const {tokenId} = props;
   const data = useSelector(state =>
     selectedPrivacySeleclor.getPrivacyDataByTokenID(state)(tokenId),
   );
-  const isGettingBalance = useSelector(
-    sharedSeleclor.isGettingBalance,
+  const isGettingBalance = useSelector(state =>
+    sharedSeleclor.isGettingBalance(state),
   ).includes(tokenId);
 
   if (!data) {
@@ -18,6 +18,7 @@ const enhance = WrappedComp => props => {
 
   return (
     <WrappedComp
+      props={props}
       {...{
         ...data,
         isGettingBalance,

@@ -11,6 +11,7 @@ import sendSrc from '@src/assets/images/home/send.png';
 import receiveSrc from '@src/assets/images/home/receive.png';
 import tradeSrc from '@src/assets/images/home/trade.png';
 import inventSrc from '@src/assets/images/home/invent.png';
+import {BtnActionToken} from '@src/shared/components/button';
 import {styled, bannerStyled, navsStyled} from './home.styled';
 
 const Banner = () => {
@@ -65,11 +66,7 @@ const Navs = () => {
   return (
     <View style={navsStyled.container}>
       {navFactories.map((item, key) => (
-        <View style={navsStyled.navItem} key={key}>
-          <Image source={item.src} style={navsStyled.icon} />
-          <Text style={navsStyled.title}>{item.title}</Text>
-          <Text style={navsStyled.desc}>{item.desc}</Text>
-        </View>
+        <BtnActionToken key={key} item={item} />
       ))}
     </View>
   );
