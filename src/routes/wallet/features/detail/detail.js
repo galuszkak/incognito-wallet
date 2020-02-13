@@ -4,12 +4,11 @@ import PropTypes from 'prop-types';
 import shieldSrc from '@src/assets/images/home/shield.png';
 import sendSrc from '@src/assets/images/home/send.png';
 import receiveSrc from '@src/assets/images/home/receive.png';
-import {BtnActionToken,BtnLinear} from '@src/shared/components/button';
+import {BtnActionToken, BtnLinear} from '@src/shared/components/button';
+import History from '@src/routes/wallet/features/history';
 import Header from './detail.header';
 import {styled, actionsStyled} from './detail.styled';
 import withDetail from './detail.enhance';
-import History from './details.history';
-
 
 const Actions = () => {
   const actionFactories = [
@@ -49,7 +48,7 @@ const Detail = props => {
       <Header {...props} />
       <Actions />
       <History />
-      <BtnLinear title="Shield your crypto" style={styled.btnLinear} />
+      {/* <BtnLinear title="Shield your crypto" style={styled.btnLinear} /> */}
     </View>
   );
 };

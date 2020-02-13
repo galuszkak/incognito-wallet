@@ -4,16 +4,12 @@ import srcNoTx from '@src/assets/images/icons/no_tx_yet.png';
 import {FONT} from '@src/styles';
 
 const styled = StyleSheet.create({
-  // container: {
-  //   backgroundColor: 'red',
-  // },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
   },
-  // noTx: {},
   noTxDesc: {
     marginTop: 10,
     fontFamily: FONT.NAME.regular,
@@ -23,7 +19,7 @@ const styled = StyleSheet.create({
   },
 });
 
-const EmptyHistory = props => {
+const EmptyHistory = () => {
   return (
     <View style={styled.emptyContainer}>
       <View style={styled.noTx}>
@@ -36,11 +32,6 @@ const EmptyHistory = props => {
   );
 };
 
-const History = props => {
-  return <EmptyHistory />;
-  // return <View style={styled.container} />;
-};
+EmptyHistory.propTypes = {};
 
-History.propTypes = {};
-
-export default History;
+export default EmptyHistory;

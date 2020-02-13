@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useSelector} from 'react-redux';
-import { sharedSeleclor, selectedPrivacySeleclor } from '@src/redux/selectors';
+import {sharedSeleclor, selectedPrivacySeleclor} from '@src/redux/selectors';
 
 const enhance = WrappedComp => props => {
   const {tokenId} = props;

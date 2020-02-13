@@ -11,9 +11,9 @@ const enhance = WrappedComp => props => {
     sharedSeleclor.isGettingBalance(state),
   ).includes(selectedPrivacy.tokenId);
 
-  // if (!selectedPrivacy) {
-  //   return <LoadingContainer />;
-  // }
+  if (!selectedPrivacy) {
+    return <LoadingContainer />;
+  }
   return (
     <WrappedComp
       props={props}
