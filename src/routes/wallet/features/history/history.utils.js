@@ -1,4 +1,4 @@
-import {CONSTANT_COMMONS} from '@src/constants';
+import {CONSTANT_COMMONS, CONSTANT_CONFIGS} from '@src/constants';
 import formatUtil from '@src/utils/format';
 import {COLORS} from '@src/styles';
 import tokenService from '@src/services/wallet/tokenService';
@@ -82,39 +82,6 @@ export const getTypeData = type => {
     balanceColor,
     balanceDirection,
   };
-};
-
-export const mappingData = data => {
-  try {
-    const {
-      status,
-      statusCode,
-      type,
-      amount,
-      pDecimals,
-      requestedAmount,
-      time,
-      symbol,
-    } = data;
-    const statusData = getStatusData(status, statusCode);
-    const typeData = getTypeData(type);
-    const amountData =
-      (amount && formatUtil.amount(amount, pDecimals)) ||
-      formatUtil.number(requestedAmount);
-    const timeFormat = formatUtil.formatDateTime(time);
-    const result = {
-      ...data,
-      ...statusData,
-      ...typeData,
-      time: timeFormat,
-      amount: amountData
-        ? `${typeData.balanceDirection}${amount} ${symbol}`
-        : '',
-    };
-    return result;
-  } catch (error) {
-    return {};
-  }
 };
 
 export const combineHistory = ({
@@ -209,4 +176,86 @@ export const getHistoryFromApi = async tokenSelected => {
   } catch (e) {
     throw e;
   }
+};
+
+const standarlizeHistoryItem = data => {
+  for (const key in defaultHistoryItem) {
+    if (!data.hasOwnProperty(key)) {
+      data[key] = defaultHistoryItem[key];
+    }
+  }
+  return {...data};
+};
+
+export const mappingData = data => {
+  try {
+    const dataStandarlize = standarlizeHistoryItem(data);
+    const {
+      status,
+      statusCode,
+      type,
+      amount,
+      pDecimals,
+      requestedAmount,
+      time,
+      symbol,
+      expiredAt,
+      incognitoTxID,
+      inchainTx,
+      outchainTx,
+      toAddress,
+      depositAddress,
+    } = dataStandarlize;
+    const statusData = getStatusData(status, statusCode);
+    const typeData = getTypeData(type);
+    const amountData =
+      (amount && formatUtil.amount(amount, pDecimals)) ||
+      formatUtil.number(requestedAmount);
+    const timeFormat = formatUtil.formatDateTime(time);
+    const result = {
+      ...dataStandarlize,
+      ...statusData,
+      ...typeData,
+      time: timeFormat,
+      amount: amountData
+        ? `${typeData.balanceDirection}${amount} ${symbol}`
+        : '',
+      expiredAt: expiredAt ? formatUtil.formatDateTime(expiredAt) : '',
+      incognitoTxID: incognitoTxID
+        ? `${CONSTANT_CONFIGS.EXPLORER_CONSTANT_CHAIN_URL}/tx/${incognitoTxID}`
+        : '',
+      inchainTx: inchainTx ? inchainTx : '',
+      outchainTx: outchainTx ? outchainTx : '',
+      toAddress: toAddress ? toAddress : '',
+      depositAddress: depositAddress ? depositAddress : '',
+    };
+    return result;
+  } catch (error) {
+    console.log('error', error);
+    return {...defaultHistoryItem};
+  }
+};
+
+export const defaultHistoryItem = {
+  id: null,
+  time: '',
+  type: '',
+  amount: 0,
+  symbol: '',
+  fromAddress: '',
+  toAddress: '',
+  statusCode: '',
+  cancelable: false,
+  canRetryExpiredDeposit: false,
+  pDecimals: 0,
+  requestedAmount: 0,
+  status: '',
+  expiredAt: '',
+  depositAddress: '',
+  erc20TokenAddress: '',
+  privacyTokenAddress: '',
+  walletAddress: '',
+  incognitoTxID: '',
+  inchainTx: '',
+  outchainTx: '',
 };

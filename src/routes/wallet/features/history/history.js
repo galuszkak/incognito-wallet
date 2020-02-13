@@ -20,6 +20,10 @@ const History = props => {
     amount: Math.floor(Math.random() * 1000),
     statusCode: 0,
     requestedAmount: 0,
+    incognitoTxID: '0x32be343b94f860124dc4fee278fdcbd38c102d88',
+    inchainTx: '0x32be343b94f860124dc4fee278fdcbd38c102d88',
+    outchainTx: '0x32be343b94f860124dc4fee278fdcbd38c102d88',
+    depositAddress: '0x32be343b94f860124dc4fee278fdcbd38c102d88',
   }));
   return (
     <ScrollView style={styled.container}>

@@ -11,7 +11,6 @@ import ReceiveCrypto from '@src/screens/ReceiveCrypto';
 import SendCrypto from '@src/screens/SendCrypto';
 import Deposit from '@src/screens/Deposit';
 import Withdraw from '@src/screens/Withdraw';
-import TxHistoryDetail from '@src/screens/TxHistoryDetail';
 import DexHistory from '@screens/DexHistory';
 import DexHistoryDetail from '@screens/DexHistoryDetail';
 import HeaderBar from '@src/components/HeaderBar';
@@ -20,13 +19,15 @@ import AddPIN from '@src/screens/AddPIN';
 import BackupKeys from '@src/screens/BackupKeys';
 import {navigationOptionsHandler} from '@src/utils/router';
 import Setting from '@src/routes/home/features/setting';
-// import Wallet from '@screens/Wallet';
-// import Setting from '@src/screens/Setting';
 import WalletDetail from '@src/routes/wallet/features/detail';
+import TxHistoryDetail from '@src/routes/wallet/features/txHistory';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
+// import Wallet from '@screens/Wallet';
+// import Setting from '@src/screens/Setting';
 // import WalletDetail from '@src/screens/WalletDetail';
+// import TxHistoryDetail from '@src/screens/TxHistoryDetail';
 
 const AppNavigator = createStackNavigator(
   {
@@ -59,9 +60,7 @@ const AppNavigator = createStackNavigator(
     }),
     [ROUTE_NAMES.Deposit]: navigationOptionsHandler(Deposit),
     [ROUTE_NAMES.Withdraw]: navigationOptionsHandler(Withdraw),
-    [ROUTE_NAMES.TxHistoryDetail]: navigationOptionsHandler(TxHistoryDetail, {
-      title: 'History Detail',
-    }),
+
     [ROUTE_NAMES.DexHistory]: navigationOptionsHandler(DexHistory, {
       header: () => null,
     }),
@@ -79,6 +78,9 @@ const AppNavigator = createStackNavigator(
       header: () => null,
     }),
     [ROUTE_NAMES.WalletDetail]: navigationOptionsHandler(WalletDetail, {
+      header: () => null,
+    }),
+    [ROUTE_NAMES.TxHistoryDetail]: navigationOptionsHandler(TxHistoryDetail, {
       header: () => null,
     }),
     // [ROUTE_NAMES.Wallet]: navigationOptionsHandler(Wallet, {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {useNavigation} from 'react-navigation-hooks';
 import routeNames from '@src/router/routeNames';
 import {itemStyled as styled} from './history.styled';
-import {mappingData} from './history.utils';
+import {mappingData, defaultHistoryItem} from './history.utils';
 
 const HistoryItem = props => {
   const navigation = useNavigation();
@@ -19,7 +19,7 @@ const HistoryItem = props => {
     time,
   } = dataMapping;
   const handleOnPress = () => {
-    navigation.navigate(routeNames.TxHistoryDetail, dataMapping);
+    navigation.navigate(routeNames.TxHistoryDetail, {data: dataMapping});
   };
   if (!data) {
     return null;
@@ -51,18 +51,7 @@ const HistoryItem = props => {
 };
 
 HistoryItem.defaultProps = {
-  data: {
-    id: null,
-    time: '',
-    type: '',
-    amount: 0,
-    requestedAmount: 0,
-    symbol: '',
-    fromAddress: '',
-    toAddress: '',
-    statusCode: '',
-    status: '',
-  },
+  data: defaultHistoryItem,
   isLastChild: false,
 };
 
