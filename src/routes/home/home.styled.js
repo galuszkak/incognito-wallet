@@ -22,7 +22,7 @@ export const bannerStyled = StyleSheet.create({
   },
   settingsIcon: {
     position: 'absolute',
-    right: 20,
+    left: 20,
     top: 20,
     zIndex: 2,
   },

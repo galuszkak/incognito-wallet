@@ -18,16 +18,17 @@ import pApp from '@src/screens/PappView';
 import AddPIN from '@src/screens/AddPIN';
 import BackupKeys from '@src/screens/BackupKeys';
 import {navigationOptionsHandler} from '@src/utils/router';
-import Setting from '@src/routes/home/features/setting';
 import WalletDetail from '@src/routes/wallet/features/detail';
 import TxHistoryDetail from '@src/routes/wallet/features/txHistory';
+import Setting from '@src/routes/home/features/setting';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
 // import Wallet from '@screens/Wallet';
-// import Setting from '@src/screens/Setting';
 // import WalletDetail from '@src/screens/WalletDetail';
 // import TxHistoryDetail from '@src/screens/TxHistoryDetail';
+
+// import Setting from '@src/screens/Setting';
 
 const AppNavigator = createStackNavigator(
   {

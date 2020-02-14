@@ -1,10 +1,10 @@
-import { COLORS, DECOR, SPACING, UTILS, THEME } from '@src/styles';
-import { StyleSheet } from 'react-native';
+import {COLORS, DECOR, SPACING, UTILS, THEME} from '@src/styles';
+import {StyleSheet} from 'react-native';
 
 const style = StyleSheet.create({
   container: {
     position: 'relative',
-    height: THEME.header.headerHeight
+    height: THEME.header.headerHeight,
   },
   toggleBtn: {
     display: 'flex',
@@ -20,7 +20,7 @@ const style = StyleSheet.create({
     borderTopRightRadius: DECOR.borderRadiusBorder,
     paddingTop: SPACING.small,
     paddingBottom: 50,
-    width: UTILS.deviceWidth()
+    width: UTILS.deviceWidth(),
   },
   barIcon: {
     backgroundColor: COLORS.white,
@@ -29,14 +29,14 @@ const style = StyleSheet.create({
     borderRadius: 3,
     position: 'relative',
     top: -28,
-    left: UTILS.deviceWidth()/2,
-    transform: [{ translateX: -25}]
+    left: UTILS.deviceWidth() / 2,
+    transform: [{translateX: -25}],
   },
   contentContainer: {
     alignItems: 'center',
-    backgroundColor: COLORS.overlayBlack,
+    backgroundColor: 'red',
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   icon: {
     flexBasis: 45,
@@ -68,12 +68,12 @@ const style = StyleSheet.create({
   },
   itemDivider: {
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGrey6
+    borderBottomColor: COLORS.lightGrey6,
   },
   title: {
     fontWeight: '500',
-    marginBottom: SPACING.small
-  }
+    marginBottom: SPACING.small,
+  },
 });
 
 export default style;

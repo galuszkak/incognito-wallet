@@ -7,9 +7,6 @@
       "./src/assets/fonts/"
     ]
   },
-  "resolutions": {
-    "react-native-svg": "9.6.4"
-  },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "start:reset": "react-native start --reset-cache",
@@ -119,6 +116,7 @@
     "react-native-splash-screen": "^3.2.0",
     "react-native-ssh": "https://github.com/0xwendigo/react-native-ssh.git",
     "react-native-step-indicator": "^0.0.11",
+    "react-native-svg": "^11.0.1",
     "react-native-swipeout": "^2.3.6",
     "react-native-swiper": "^1.6.0-nightly.5",
     "react-native-switch-toggle": "^1.1.4",
