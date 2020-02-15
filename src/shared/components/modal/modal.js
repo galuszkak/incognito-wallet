@@ -1,36 +1,37 @@
-// import React from 'react';
-// import {View, StyleSheet} from 'react-native';
-// import {useSelector} from 'react-redux';
-
-// const styled = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: 'rgba(0,0,0,0.1)',
-//   },
-// });
-
-// const Modal = ({}) => {
-//   const {visible, data} = useSelector(state => state.modal);
-//   return (
-//     <Modal style={styled.container} animationType="slide" visible={visible}>
-//       {data}
-//     </Modal>
-//   );
-// };
-
-// Modal.propTypes = {};
-
-// export default Modal;
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Modal, TouchableWithoutFeedback} from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {modalSelector} from './modal.selector';
+import { actionToggleModal } from './modal.actions';
 
 const styled = StyleSheet.create({
-  container: {},
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    position: 'relative',
+  },
 });
-const Template = props => {
-  return <View style={styled.container} />;
+
+const ModalComponent = props => {
+  const {visible, data} = useSelector(modalSelector);
+  const dispatch = useDispatch();
+  const handleToggle = () =>
+    dispatch(
+      actionToggleModal({
+        visible: false,
+        data: null,
+      }),
+    );
+  return (
+    <Modal animationType="slide" transparent visible={visible}>
+      {data}
+      <TouchableWithoutFeedback onPress={handleToggle}>
+        <View style={styled.overlay} />
+      </TouchableWithoutFeedback>
+    </Modal>
+  );
 };
 
-Template.propTypes = {};
+ModalComponent.propTypes = {};
 
-export default Template;
+export default ModalComponent;

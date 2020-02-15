@@ -1,12 +1,11 @@
 import React from 'react';
 import {
   View,
-  StyleSheet,
   Image,
-  Modal,
+  // Modal,
   Text,
   TouchableWithoutFeedback,
-  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {useNavigation} from 'react-navigation-hooks';
 import routeNames from '@src/router/routeNames';
@@ -14,59 +13,40 @@ import srcImport from '@src/assets/images/icons/import.png';
 import srcCreate from '@src/assets/images/icons/create.png';
 import srcBackup from '@src/assets/images/icons/backup.png';
 import srcThreeDots from '@src/assets/images/icons/three_dots.png';
-import {FONT} from '@src/styles';
-import {useSelector, useDispatch} from 'react-redux';
-import {modalSelector} from '@src/shared/components/modal/modal.selector';
-import {TouchableOpacity} from '@src/components/core';
 import srcClose from '@src/assets/images/icons/close.png';
+import {useSelector, useDispatch} from 'react-redux';
+import Modal from '@src/shared/components/modal/modal';
+import {modalSelector} from '@src/shared/components/modal/modal.selector';
+import {actionToggleModal} from '@src/shared/components/modal/modal.actions';
+import {styledOptionMenu as styled} from './accounts.styled';
 
-const styled = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    width: '100%',
-    height: '50%',
-    backgroundColor: '#fff',
-    bottom: 0,
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  label: {
-    fontFamily: FONT.NAME.bold,
-    fontSize: FONT.SIZE.regular,
-    lineHeight: FONT.SIZE.regular + 6,
-    color: '#000',
-    flex: 1,
-  },
-  desc: {
-    flex: 3,
-    color: 'rgba(127, 127, 127, 0.2)',
-    fontFamily: FONT.NAME.regular,
-    fontSize: FONT.SIZE.regular,
-    lineHeight: FONT.SIZE.regular + 6,
-  },
-  btnMore: {
-    width: 20,
-    height: 20,
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  menuContainer: {},
-  modalContent: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    position: 'relative',
-  },
-});
-
-const MenuItem = ({icon, label, desc, handlePress}) => {
+const MenuItem = ({
+  srcIcon,
+  label,
+  desc,
+  isLastChild = false,
+  onPress = null,
+  ...rest
+}) => {
+  const dispatch = useDispatch();
+  const handleOnPress = () => {
+    if (typeof onPress === 'function') {
+      onPress();
+    }
+    dispatch(
+      actionToggleModal({
+        visible: false,
+        data: null,
+      }),
+    );
+  };
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <View style={styled.itemContainer}>
-        {icon}
-        <View>
+    <TouchableOpacity {...rest} onPress={handleOnPress}>
+      <View
+        style={[styled.itemContainer, isLastChild ? styled.lastItem : null]}
+      >
+        <Image source={srcIcon} style={styled.icon} />
+        <View style={styled.infoContainer}>
           <Text style={styled.label}>{label}</Text>
           <Text style={styled.desc}>{desc}</Text>
         </View>
@@ -77,8 +57,6 @@ const MenuItem = ({icon, label, desc, handlePress}) => {
 
 const Menu = () => {
   const navigation = useNavigation();
-  const {toggle} = useSelector(modalSelector);
-  const dispatch = useDispatch();
   const handleImport = () => {
     navigation.navigate(routeNames.ImportAccount);
   };
@@ -94,39 +72,72 @@ const Menu = () => {
   const data = [
     {
       id: 'import',
-      icon: <Image source={srcImport} />,
+      srcIcon: srcImport,
       desc: 'Import an existing account',
       label: 'Import',
-      handlePress: handleImport,
+      onPress: handleImport,
     },
     {
       id: 'create',
-      icon: <Image source={srcCreate} />,
+      srcIcon: srcCreate,
       desc: 'Create a new account',
       label: 'Create',
-      handlePress: handleCreate,
+      onPress: handleCreate,
     },
     {
       id: 'backup',
-      icon: <Image source={srcBackup} />,
+      srcIcon: srcBackup,
       desc: 'Backup your account keys',
       label: 'Backup',
-      handlePress: handleBackup,
+      onPress: handleBackup,
     },
   ];
 
   return (
     <View style={styled.menuContainer}>
-      {data.map(item => (
-        <MenuItem key={item.id} {...item} />
+      {data.map((item, index, arr) => (
+        <MenuItem
+          key={item.id}
+          isLastChild={arr.length - 1 === index}
+          {...item}
+        />
       ))}
     </View>
   );
 };
 
+const Main = () => {
+  const dispatch = useDispatch();
+  const handleToggle = () =>
+    dispatch(
+      actionToggleModal({
+        visible: false,
+        data: null,
+      }),
+    );
+  return (
+    <View style={styled.container}>
+      <TouchableOpacity onPress={handleToggle}>
+        <View style={styled.btnCloseContainer}>
+          <Image source={srcClose} style={styled.btnClose} />
+        </View>
+      </TouchableOpacity>
+      <Menu />
+      <View style={styled.btmLine} />
+    </View>
+  );
+};
+
 const AccountOptionMenu = props => {
-  const [visible, toggleModal] = React.useState(false);
-  const handleToggle = () => toggleModal(!visible);
+  const dispatch = useDispatch();
+  const {visible} = useSelector(modalSelector);
+  const handleToggle = () =>
+    dispatch(
+      actionToggleModal({
+        visible: true,
+        data: <Main />,
+      }),
+    );
   if (!visible) {
     return (
       <TouchableWithoutFeedback onPress={handleToggle}>
@@ -136,18 +147,7 @@ const AccountOptionMenu = props => {
       </TouchableWithoutFeedback>
     );
   }
-  return (
-    <Modal animationType="slide" transparent visible={visible}>
-      <View style={styled.modalContent}>
-        <View style={styled.container}>
-          <TouchableWithoutFeedback onPress={handleToggle}>
-            <Image source={srcClose} />
-          </TouchableWithoutFeedback>
-          <Menu />
-        </View>
-      </View>
-    </Modal>
-  );
+  return <Modal />;
 };
 
 AccountOptionMenu.propTypes = {};
