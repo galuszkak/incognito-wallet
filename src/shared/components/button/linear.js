@@ -21,7 +21,6 @@ const styled = StyleSheet.create({
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
     marginTop: 20,
     marginBottom: 30,
     height: 60,
@@ -32,7 +31,7 @@ const BtnLinear = props => {
   const {title, ...rest} = props;
   return (
     <TouchableOpacity {...rest}>
-      <View style={styled.container}>
+      <View style={[styled.container, rest.style ? rest.style : null]}>
         <Text style={styled.title}>{title}</Text>
         <Image source={srcBtnLinear} style={styled.bg} />
       </View>

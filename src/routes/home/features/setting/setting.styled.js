@@ -3,15 +3,15 @@ import {BACKGROUND_GRAY} from '@src/shared/stylesheet';
 import {FONT} from '@src/styles';
 
 export const styled = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_GRAY,
-    padding: 20,
-    flex: 1,
+  extra: {
+    marginTop: -20,
+    position: 'relative',
+    zIndex: 1,
   },
   hookContainer: {
     borderRadius: 8,
     backgroundColor: '#fff',
-    marginTop: 20,
+    marginBottom: 20,
   },
   heading: {
     padding: 20,

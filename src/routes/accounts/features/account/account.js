@@ -8,7 +8,9 @@ import srcKey from '@src/assets/images/icons/account_key_.png';
 import srcKeyActived from '@src/assets/images/icons/account_key_actived.png';
 import {removeAccount, switchAccount} from '@src/redux/actions/account';
 import {Toast} from '@src/components/core';
-import { ExHandler } from '@src/services/exception';
+import {ExHandler} from '@src/services/exception';
+import {useNavigation} from 'react-navigation-hooks';
+import routeNames from '@src/router/routeNames';
 
 const styled = StyleSheet.create({
   container: {
@@ -34,11 +36,13 @@ const styled = StyleSheet.create({
   },
 });
 
-const Account = ({name, isLastChild}) => {
+const Account = ({account, isLastChild}) => {
   const dispatch = useDispatch();
+  const {name} = account;
   const defaultAccount = useSelector(accountSeleclor.defaultAccount) || {
     name: '',
   };
+  const navigation = useNavigation();
   const isActived = name === defaultAccount.name;
   const handleSwitchAccount = async () => {
     try {
@@ -54,24 +58,31 @@ const Account = ({name, isLastChild}) => {
       ).showErrorToast();
     }
   };
+  const handleExportKeys = () => {
+    isActived
+      ? navigation.navigate(routeNames.ExportAccount, {
+          account,
+        })
+      : false;
+  };
   return (
-    <TouchableOpacity onPress={handleSwitchAccount}>
-      <View style={[styled.container, isLastChild ? styled.lastChild : {}]}>
+    <View style={[styled.container, isLastChild ? styled.lastChild : {}]}>
+      <TouchableOpacity onPress={handleSwitchAccount}>
         <Text style={[styled.name, isActived ? styled.actived : {}]}>
           {name}
         </Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleExportKeys}>
         <Image source={isActived ? srcKeyActived : srcKey} />
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
-Account.defaultProps = {
-  name: '',
-};
+Account.defaultProps = {};
 
 Account.propTypes = {
-  name: PropTypes.string,
+  account: PropTypes.object.isRequired,
   isLastChild: PropTypes.bool.isRequired,
 };
 

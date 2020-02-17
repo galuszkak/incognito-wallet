@@ -18,7 +18,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import Modal from '@src/shared/components/modal/modal';
 import {modalSelector} from '@src/shared/components/modal/modal.selector';
 import {actionToggleModal} from '@src/shared/components/modal/modal.actions';
-import {styledOptionMenu as styled} from './accounts.styled';
+import {styled} from './optionMenu.styled';
 
 const MenuItem = ({
   srcIcon,

@@ -25,6 +25,7 @@ export const bannerStyled = StyleSheet.create({
     left: 20,
     top: 20,
     zIndex: 2,
+    padding: 10
   },
   title: {
     textAlign: 'center',

@@ -1,18 +1,19 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
-import Accounts from '@src/routes/home/features/accounts';
+import Accounts from '@src/routes/accounts';
 import Networks from '@src/routes/home/features/networks';
 import Security from '@src/routes/home/features/security';
 import Decimal from '@src/routes/home/features/decimal';
-import OptionMenu from '@src/routes/home/features/accounts/accounts.optionMenu';
+import OptionMenu from '@src/routes/accounts/features/optionMenu';
 import srcMore from '@src/assets/images/icons/more.png';
+import {HeaderDefault as Header} from '@src/shared/components/header';
 import withSetting from './setting.enhance';
 import {styled} from './setting.styled';
 
 const Hook = ({label = '', children, rightLabel = null}) => {
   return (
-    <View style={styled.hookContainer}>
+    <View style={[styled.hookContainer]}>
       <View style={styled.heading}>
         <Text style={styled.label}>{label}</Text>
         {rightLabel}
@@ -43,15 +44,13 @@ const Setting = props => {
     },
   ];
   return (
-    <View style={styled.container}>
-      <ScrollView>
-        {hookFactories.map((item, key) => (
-          <Hook key={key} {...item}>
-            {item.children}
-          </Hook>
-        ))}
-      </ScrollView>
-    </View>
+    <ScrollView style={styled.extra}>
+      {hookFactories.map((item, key, arr) => (
+        <Hook key={key} {...item}>
+          {item.children}
+        </Hook>
+      ))}
+    </ScrollView>
   );
 };
 

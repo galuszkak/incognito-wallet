@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {FONT} from '@src/styles';
 
-export const styledOptionMenu = StyleSheet.create({
+export const styled = StyleSheet.create({
   container: {
     position: 'absolute',
     width: '100%',

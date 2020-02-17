@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, StyleSheet, Switch, Text} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {
   getDecimalSeparator,
   setDecimalSeparator as saveDecimalSeparator,
 } from '@src/resources/separator';
+import Switch from '@src/shared/components/switch';
 
 const styled = StyleSheet.create({
   container: {

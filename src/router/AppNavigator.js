@@ -1,11 +1,8 @@
 import {THEME} from '@src/styles';
 import {createStackNavigator} from 'react-navigation-stack';
-import CreateAccount from '@src/screens/CreateAccount';
-import ExportAccount from '@src/screens/ExportAccount';
 import FollowToken from '@src/screens/FollowToken';
 import CreateToken from '@src/screens/CreateToken';
 import AddToken from '@src/screens/AddToken';
-import ImportAccount from '@src/screens/ImportAccount';
 import NetworkSetting from '@src/screens/NetworkSetting';
 import ReceiveCrypto from '@src/screens/ReceiveCrypto';
 import SendCrypto from '@src/screens/SendCrypto';
@@ -21,6 +18,9 @@ import {navigationOptionsHandler} from '@src/utils/router';
 import WalletDetail from '@src/routes/wallet/features/detail';
 import TxHistoryDetail from '@src/routes/wallet/features/txHistory';
 import Setting from '@src/routes/home/features/setting';
+import ExportAccount from '@src/routes/accounts/features/export';
+import ImportAccount from '@src/routes/accounts/features/import';
+import CreateAccount from '@src/routes/accounts/features/create';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
@@ -29,6 +29,9 @@ import TabNavigator from './TabNavigator';
 // import TxHistoryDetail from '@src/screens/TxHistoryDetail';
 
 // import Setting from '@src/screens/Setting';
+// import ExportAccount from '@src/screens/ExportAccount';
+// import ImportAccount from '@src/screens/ImportAccount';
+// import CreateAccount from '@src/screens/CreateAccount';
 
 const AppNavigator = createStackNavigator(
   {
@@ -36,13 +39,7 @@ const AppNavigator = createStackNavigator(
     [ROUTE_NAMES.NetworkSetting]: navigationOptionsHandler(NetworkSetting, {
       title: 'Network',
     }),
-    [ROUTE_NAMES.CreateAccount]: navigationOptionsHandler(CreateAccount, {
-      title: 'Create Account',
-    }),
-    [ROUTE_NAMES.ImportAccount]: navigationOptionsHandler(ImportAccount, {
-      title: 'Import Account',
-    }),
-    [ROUTE_NAMES.ExportAccount]: navigationOptionsHandler(ExportAccount),
+
     [ROUTE_NAMES.FollowToken]: navigationOptionsHandler(FollowToken, {
       header: () => null,
     }),
@@ -84,9 +81,15 @@ const AppNavigator = createStackNavigator(
     [ROUTE_NAMES.TxHistoryDetail]: navigationOptionsHandler(TxHistoryDetail, {
       header: () => null,
     }),
-    // [ROUTE_NAMES.Wallet]: navigationOptionsHandler(Wallet, {
-    //   header: () => null
-    // }),
+    [ROUTE_NAMES.ExportAccount]: navigationOptionsHandler(ExportAccount, {
+      header: () => null,
+    }),
+    [ROUTE_NAMES.ImportAccount]: navigationOptionsHandler(ImportAccount, {
+      header: () => null,
+    }),
+    [ROUTE_NAMES.CreateAccount]: navigationOptionsHandler(CreateAccount, {
+      header: () => null,
+    }),
   },
   {
     initialRouteName: ROUTE_NAMES.RootTab,
