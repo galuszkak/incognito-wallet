@@ -1,6 +1,6 @@
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import Setting from '@src/routes/home/features/setting';
 import CreateAccount from '@src/routes/accounts/features/create';
+import BackupKeys from '@src/routes/accounts/features/backup';
 import AppNavigator from './AppNavigator';
 import ROUTE_NAMES from './routeNames';
 import SplashNavigator from './SplashNavigator';
@@ -10,12 +10,11 @@ export default createAppContainer(
     {
       [ROUTE_NAMES.RootApp]: AppNavigator,
       [ROUTE_NAMES.RootSplash]: SplashNavigator,
-      [ROUTE_NAMES.CreateAccount]: CreateAccount,
+      [ROUTE_NAMES.BackupKeys]: BackupKeys,
     },
     {
       initialRouteName: ROUTE_NAMES.RootSplash,
-      // initialRouteName: ROUTE_NAMES.Setting,
-      // initialRouteName: ROUTE_NAMES.CreateAccount,
+      // initialRouteName: ROUTE_NAMES.BackupKeys,
     },
   ),
 );

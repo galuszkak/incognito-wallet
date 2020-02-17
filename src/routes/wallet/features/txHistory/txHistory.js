@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableWithoutFeedback,
-  Image,
-  ScrollView,
-} from 'react-native';
-import {useNavigation, useNavigationParam} from 'react-navigation-hooks';
-import {CONSTANT_CONFIGS} from '@src/constants';
+import {View, Text, Image, ScrollView} from 'react-native';
+import {useNavigationParam} from 'react-navigation-hooks';
 import srcOpenNewTab from '@src/assets/images/icons/openNewTab.png';
-import srcCopy from '@src/assets/images/icons/copy.png';
 import linkingService from '@src/services/linking';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import QrCodeAddress from '@src/components/QrCodeAddress';

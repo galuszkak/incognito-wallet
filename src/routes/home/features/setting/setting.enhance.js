@@ -5,9 +5,12 @@ import LoadingContainer from '@src/components/LoadingContainer';
 import {compose} from 'recompose';
 import {withHeader} from '@src/shared/components/header';
 import {Button} from '@src/shared/components/button';
+import {useNavigation} from 'react-navigation-hooks';
+import routeNames from '@src/router/routeNames';
 import {styled} from './setting.styled';
 
 const enhance = WrappedComp => props => {
+  const navigation = useNavigation();
   const [state, setState] = React.useState({
     devices: [],
     isFetching: true,
@@ -42,7 +45,13 @@ const enhance = WrappedComp => props => {
       props={props}
       data={state}
       headerTitle="YOU"
-      rightCol={<Button title="Backup" style={styled.btnBackup} />}
+      rightCol={(
+        <Button
+          title="Backup"
+          onPress={() => navigation.navigate(routeNames.BackupKeys)}
+          style={styled.btnBackup}
+        />
+      )}
     />
   );
 };

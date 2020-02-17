@@ -13,7 +13,6 @@ import DexHistoryDetail from '@screens/DexHistoryDetail';
 import HeaderBar from '@src/components/HeaderBar';
 import pApp from '@src/screens/PappView';
 import AddPIN from '@src/screens/AddPIN';
-import BackupKeys from '@src/screens/BackupKeys';
 import {navigationOptionsHandler} from '@src/utils/router';
 import WalletDetail from '@src/routes/wallet/features/detail';
 import TxHistoryDetail from '@src/routes/wallet/features/txHistory';
@@ -21,6 +20,7 @@ import Setting from '@src/routes/home/features/setting';
 import ExportAccount from '@src/routes/accounts/features/export';
 import ImportAccount from '@src/routes/accounts/features/import';
 import CreateAccount from '@src/routes/accounts/features/create';
+import BackupKeys from '@src/routes/accounts/features/backup';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
@@ -32,6 +32,7 @@ import TabNavigator from './TabNavigator';
 // import ExportAccount from '@src/screens/ExportAccount';
 // import ImportAccount from '@src/screens/ImportAccount';
 // import CreateAccount from '@src/screens/CreateAccount';
+// import BackupKeys from '@src/screens/BackupKeys';
 
 const AppNavigator = createStackNavigator(
   {
@@ -69,9 +70,6 @@ const AppNavigator = createStackNavigator(
     [ROUTE_NAMES.AddPin]: navigationOptionsHandler(AddPIN, {
       header: () => null,
     }),
-    [ROUTE_NAMES.BackupKeys]: navigationOptionsHandler(BackupKeys, {
-      title: 'Back up private keys',
-    }),
     [ROUTE_NAMES.Setting]: navigationOptionsHandler(Setting, {
       header: () => null,
     }),
@@ -88,6 +86,9 @@ const AppNavigator = createStackNavigator(
       header: () => null,
     }),
     [ROUTE_NAMES.CreateAccount]: navigationOptionsHandler(CreateAccount, {
+      header: () => null,
+    }),
+    [ROUTE_NAMES.BackupKeys]: navigationOptionsHandler(BackupKeys, {
       header: () => null,
     }),
   },
