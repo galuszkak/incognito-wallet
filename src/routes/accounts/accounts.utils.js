@@ -1,9 +1,16 @@
+const fieldRequired = {
+  error: true,
+  message: 'Required',
+};
+
+const noError = {
+  error: false,
+  message: '',
+};
+
 export const validateAccount = value => {
   if (!value) {
-    return {
-      error: true,
-      message: 'Required',
-    };
+    return fieldRequired;
   }
   if (/\s/.test(value)) {
     return {
@@ -11,10 +18,14 @@ export const validateAccount = value => {
       message: 'Please use a valid account name (Ex: "Cat, Account-1,..").',
     };
   }
-  return {
-    error: false,
-    message: '',
-  };
+  return noError;
+};
+
+export const validatePrivateKey = value => {
+  if (!value) {
+    return fieldRequired;
+  }
+  return noError;
 };
 
 export const isExist = (accountName = '', listAccount = []) =>

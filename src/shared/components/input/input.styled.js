@@ -3,7 +3,8 @@ import {FONT} from '@src/styles';
 import {MAIN_COLOR} from '@src/shared/stylesheet';
 
 export const commonStyled = StyleSheet.create({
-  container: {},
+  container: {
+  },
   label: {
     textTransform: 'uppercase',
     fontFamily: FONT.NAME.regular,
@@ -16,7 +17,7 @@ export const commonStyled = StyleSheet.create({
     fontSize: FONT.SIZE.regular,
     lineHeight: FONT.SIZE.regular + 6,
     color: '#000',
-    padding: 0
+    padding: 0,
   },
   labelFocused: {
     color: MAIN_COLOR,

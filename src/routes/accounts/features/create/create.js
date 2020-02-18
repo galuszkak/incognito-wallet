@@ -13,7 +13,7 @@ import {followDefaultTokens} from '@src/redux/actions/account';
 import {reloadAccountList} from '@src/redux/actions/wallet';
 import {useNavigation} from 'react-navigation-hooks';
 import AccountModel from '@src/models/account';
-import {validateAccount, isExist} from './create.utils';
+import {validateAccount, isExist} from '@src/routes/accounts/accounts.utils';
 
 const styled = StyleSheet.create({
   container: {},
@@ -51,14 +51,17 @@ const Create = props => {
   const handleCreateAccount = async () => {
     if (!isFetching && !isFetched) {
       try {
-        await setState({...state, isFetching: true});
         const validate = validateAccount(value);
         if (validate.error) {
-          return await setState({...state, validated: {...validate}});
+          return await setState({
+            ...state,
+            validated: {...validate},
+          });
         }
         if (isExist(value, accountList)) {
           throw new CustomError(ErrorCode.createAccount_existed_name);
         }
+        await setState({...state, isFetching: true});
         const account = await accountService.createAccount(value, wallet);
         if (!account) {
           throw new CustomError(ErrorCode.createAccount_failed);
@@ -99,15 +102,9 @@ const Create = props => {
         />
       </View>
       <BtnLinear
+        disabled={isFetching}
         title={isFetching ? 'Creating...' : 'Create account'}
         onPress={handleCreateAccount}
-        style={
-          isFetching
-            ? {
-                opacity: 0.5,
-              }
-            : null
-        }
       />
     </View>
   );

@@ -28,10 +28,16 @@ const styled = StyleSheet.create({
 });
 
 const BtnLinear = props => {
-  const {title, ...rest} = props;
+  const {title, disabled = false, ...rest} = props;
   return (
-    <TouchableOpacity {...rest}>
-      <View style={[styled.container, rest.style ? rest.style : null]}>
+    <TouchableOpacity {...{...rest, disabled}}>
+      <View
+        style={[
+          styled.container,
+          disabled ? {opacity: 0.5} : null,
+          rest.style ? rest.style : null,
+        ]}
+      >
         <Text style={styled.title}>{title}</Text>
         <Image source={srcBtnLinear} style={styled.bg} />
       </View>

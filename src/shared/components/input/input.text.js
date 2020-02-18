@@ -3,14 +3,9 @@ import {View, Text, TextInput} from 'react-native';
 import PropTypes from 'prop-types';
 import {commonStyled as styled} from './input.styled';
 
-const Input = ({
-  label = '',
-  validated = {
-    error: false,
-    message: '',
-  },
-  ...rest
-}) => {
+const Input = React.forwardRef((props, ref) => {
+  const {label, validated, ...rest} = props;
+
   const [state, setState] = React.useState({
     isFocused: false,
   });
@@ -30,12 +25,15 @@ const Input = ({
   };
   return (
     <View style={styled.container}>
-      <Text style={[styled.label, isFocused ? styled.labelFocused : null]}>
-        {label}
-      </Text>
+      {!!label && (
+        <Text style={[styled.label, isFocused ? styled.labelFocused : null]}>
+          {label}
+        </Text>
+      )}
       <TextInput
         {...rest}
-        style={[styled.input, !rest.style ? rest.style : null]}
+        ref={ref}
+        style={[styled.input, rest.style ? rest.style : null]}
         onFocus={onFocus}
         onBlur={onBlur}
       />
@@ -44,7 +42,7 @@ const Input = ({
       )}
     </View>
   );
-};
+});
 
 Input.propTypes = {
   label: PropTypes.string,
