@@ -10,28 +10,17 @@ import {
 import {FONT} from '@src/styles';
 import srcInfo from '@src/assets/images/icons/info.png';
 import srcMore from '@src/assets/images/icons/more.png';
-import srcArrowLeft from '@src/assets/images/icons/arrowLeft.png';
 import VerifiedText from '@src/components/VerifiedText';
 import formatUtil from '@src/utils/format';
 
 const styled = StyleSheet.create({
   container: {
-    backgroundColor: '#000',
-    height: '30%',
-    minHeight: 250,
+    borderColor: '#fff',
+    flex: 1,
   },
   headingContainer: {
     flexDirection: 'row',
-    padding: 20,
-    marginTop: 20,
-  },
-  arrowContainer: {
-    paddingTop: 5,
-  },
-  // headerContainer: {},
-  introContainer: {
-    paddingLeft: '5%',
-    marginRight: 'auto',
+    justifyContent: 'space-between',
   },
   displayName: {
     color: '#fff',
@@ -99,9 +88,6 @@ const Header = props => {
   return (
     <View style={styled.container}>
       <View style={styled.headingContainer}>
-        <View style={styled.arrowContainer}>
-          <Image source={srcArrowLeft} />
-        </View>
         <View style={styled.introContainer}>
           <VerifiedText
             text={displayName}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableWithoutFeedback} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 import CryptoIcon from '@src/components/CryptoIcon';
 import VerifiedText from '@src/components/VerifiedText';
@@ -12,7 +12,8 @@ import routeNames from '@src/router/routeNames';
 import {styled} from './token.styled';
 import withToken from './token.enhance';
 
-const AmountToken = ({isGettingBalance, amount, pDecimals, symbol}) => {
+const AmountToken = props => {
+  const {isGettingBalance, amount, pDecimals, symbol} = props;
   if (isGettingBalance) {
     return <ActivityIndicator size="small" />;
   }
@@ -36,7 +37,7 @@ const Token = props => {
     await navigation.navigate(routeNames.WalletDetail);
   };
   return (
-    <TouchableWithoutFeedback onPress={handleOnPress}>
+    <TouchableOpacity onPress={handleOnPress}>
       <View style={styled.container}>
         <View style={styled.logoContainer}>
           <CryptoIcon uri={iconUrl} tokenId={tokenId} />
@@ -61,7 +62,7 @@ const Token = props => {
           <AmountToken {...props} />
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </TouchableOpacity>
   );
 };
 

@@ -3,7 +3,6 @@ import formatUtil from '@src/utils/format';
 import {COLORS} from '@src/styles';
 import tokenService from '@src/services/wallet/tokenService';
 import {getpTokenHistory} from '@src/services/api/history';
-import {ExHandler} from '@src/services/exception';
 import {
   ConfirmedTx,
   FailedTx,
@@ -90,7 +89,6 @@ export const combineHistory = ({
   externalSymbol,
   decimals,
   pDecimals,
-  ...rest
 }) => {
   const data = [];
   historiesFromApi.forEach(h => {
@@ -178,7 +176,7 @@ export const getHistoryFromApi = async tokenSelected => {
   }
 };
 
-const standarlizeHistoryItem = data => {
+const normalizeHistoryItem = data => {
   for (const key in defaultHistoryItem) {
     if (!data.hasOwnProperty(key)) {
       data[key] = defaultHistoryItem[key];
@@ -189,7 +187,7 @@ const standarlizeHistoryItem = data => {
 
 export const mappingData = data => {
   try {
-    const dataStandarlize = standarlizeHistoryItem(data);
+    const dataNormalize = normalizeHistoryItem(data);
     const {
       status,
       statusCode,
@@ -205,7 +203,7 @@ export const mappingData = data => {
       outchainTx,
       toAddress,
       depositAddress,
-    } = dataStandarlize;
+    } = dataNormalize;
     const statusData = getStatusData(status, statusCode);
     const typeData = getTypeData(type);
     const amountData =
@@ -213,7 +211,7 @@ export const mappingData = data => {
       formatUtil.number(requestedAmount);
     const timeFormat = formatUtil.formatDateTime(time);
     const result = {
-      ...dataStandarlize,
+      ...dataNormalize,
       ...statusData,
       ...typeData,
       time: timeFormat,
@@ -231,7 +229,6 @@ export const mappingData = data => {
     };
     return result;
   } catch (error) {
-    console.log('error', error);
     return {...defaultHistoryItem};
   }
 };
@@ -259,3 +256,20 @@ export const defaultHistoryItem = {
   inchainTx: '',
   outchainTx: '',
 };
+
+export const normalizeHistoriesCrypto = (histories, decimals, pDecimals) =>
+  histories.map(h => ({
+    id: h?.txID,
+    incognitoTxID: h?.txID,
+    time: h?.time,
+    type: h?.isIn
+      ? CONSTANT_COMMONS.HISTORY.TYPE.RECEIVE
+      : CONSTANT_COMMONS.HISTORY.TYPE.SEND,
+    toAddress: h?.receivers?.length && h?.receivers[0],
+    amount: h?.amountNativeToken,
+    symbol: CONSTANT_COMMONS.CRYPTO_SYMBOL.PRV,
+    status: h?.status,
+    fee: h?.feeNativeToken,
+    decimals,
+    pDecimals,
+  }));

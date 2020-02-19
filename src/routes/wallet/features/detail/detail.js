@@ -1,12 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import PropTypes from 'prop-types';
 import shieldSrc from '@src/assets/images/home/shield.png';
 import sendSrc from '@src/assets/images/home/send.png';
 import receiveSrc from '@src/assets/images/home/receive.png';
-import {BtnActionToken, BtnLinear} from '@src/shared/components/button';
+import {BtnActionToken} from '@src/shared/components/button';
 import History from '@src/routes/wallet/features/history';
-import Header from './detail.header';
 import {styled, actionsStyled} from './detail.styled';
 import withDetail from './detail.enhance';
 
@@ -16,23 +15,26 @@ const Actions = () => {
       title: 'Shield',
       desc: 'your crypto',
       src: shieldSrc,
+      id: 1,
     },
     {
       title: 'Send',
       desc: 'anonymously',
       src: sendSrc,
+      id: 2,
     },
     {
       title: 'Receive',
       desc: 'anonymously',
       src: receiveSrc,
+      id: 3,
     },
   ];
   return (
     <View style={actionsStyled.container}>
       {actionFactories.map((item, key) => (
         <BtnActionToken
-          item={item}
+          item={item.id}
           key={key}
           styledContainer={actionsStyled.styledContainer}
           hasDesc={false}
@@ -42,43 +44,17 @@ const Actions = () => {
   );
 };
 
-const Detail = props => {
+const Detail = () => {
   return (
-    <View style={styled.container}>
-      <Header {...props} />
+    <ScrollView style={styled.container}>
       <Actions />
       <History />
-      {/* <BtnLinear title="Shield your crypto" style={styled.btnLinear} /> */}
-    </View>
+    </ScrollView>
   );
 };
 
-Detail.defaultProps = {
-  displayName: 'Sample name',
-  networkName: 'Name',
-  amount: 0,
-  symbol: null,
-  isGettingBalance: false,
-  style: null,
-  pDecimals: null,
-  tokenId: null,
-  rightComponent: null,
-  isVerified: false,
-  iconUrl: null,
-};
+Detail.defaultProps = {};
 
-Detail.propTypes = {
-  pDecimals: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  displayName: PropTypes.string,
-  networkName: PropTypes.string,
-  amount: PropTypes.number,
-  symbol: PropTypes.string,
-  isGettingBalance: PropTypes.bool,
-  style: PropTypes.object,
-  tokenId: PropTypes.string,
-  rightComponent: PropTypes.node,
-  isVerified: PropTypes.bool,
-  iconUrl: PropTypes.string,
-};
+Detail.propTypes = {};
 
 export default withDetail(Detail);

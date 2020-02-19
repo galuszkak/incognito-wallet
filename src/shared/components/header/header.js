@@ -2,10 +2,12 @@ import React from 'react';
 import {View, TouchableOpacity, Image, Text} from 'react-native';
 import {useNavigation} from 'react-navigation-hooks';
 import srcArrowLeft from '@src/assets/images/icons/arrowLeft.png';
+import PropTypes from 'prop-types';
 import {headerStyled as styled} from './header.styled';
 
-const Header = ({title, rightCol, isFirstRoute = false}) => {
+const Header = props => {
   const navigation = useNavigation();
+  const {title, rightCol, isFirstRoute} = props;
   return (
     <View style={styled.container}>
       <View style={styled.leftCol}>
@@ -16,13 +18,23 @@ const Header = ({title, rightCol, isFirstRoute = false}) => {
             </View>
           </TouchableOpacity>
         )}
-        <Text style={styled.title}>{title}</Text>
+        {!!title && <Text style={styled.title}>{title}</Text>}
       </View>
       {!!rightCol && rightCol}
     </View>
   );
 };
 
-Header.propTypes = {};
+Header.defaultProps = {
+  headerTitle: '',
+  rightCol: null,
+  isFirstRoute: false,
+};
+
+Header.propTypes = {
+  headerTitle: PropTypes.string,
+  rightCol: PropTypes.any,
+  isFirstRoute: PropTypes.bool,
+};
 
 export default Header;

@@ -3,7 +3,7 @@ import {FONT} from '@src/styles';
 
 export const styled = StyleSheet.create({
   container: {
-    margin: 20,
+    marginBottom: 20,
     borderRadius: 8,
     backgroundColor: '#fff',
     flex: 1,

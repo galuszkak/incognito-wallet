@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Image,
-  // Modal,
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -13,22 +12,23 @@ import srcImport from '@src/assets/images/icons/import.png';
 import srcCreate from '@src/assets/images/icons/create.png';
 import srcBackup from '@src/assets/images/icons/backup.png';
 import srcThreeDots from '@src/assets/images/icons/three_dots.png';
-import srcClose from '@src/assets/images/icons/close.png';
 import {useSelector, useDispatch} from 'react-redux';
 import Modal from '@src/shared/components/modal/modal';
 import {modalSelector} from '@src/shared/components/modal/modal.selector';
 import {actionToggleModal} from '@src/shared/components/modal/modal.actions';
+import {BtnClose} from '@src/shared/components/button';
 import {styled} from './optionMenu.styled';
 
-const MenuItem = ({
-  srcIcon,
-  label,
-  desc,
-  isLastChild = false,
-  onPress = null,
-  ...rest
-}) => {
+const MenuItem = props => {
   const dispatch = useDispatch();
+  const {
+    srcIcon,
+    label,
+    desc,
+    isLastChild = false,
+    onPress = null,
+    ...rest
+  } = props;
   const handleOnPress = () => {
     if (typeof onPress === 'function') {
       onPress();
@@ -117,11 +117,7 @@ const Main = () => {
     );
   return (
     <View style={styled.container}>
-      <TouchableOpacity onPress={handleToggle}>
-        <View style={styled.btnCloseContainer}>
-          <Image source={srcClose} style={styled.btnClose} />
-        </View>
-      </TouchableOpacity>
+      <BtnClose onPress={handleToggle} style={styled.btnCloseContainer} />
       <Menu />
       <View style={styled.btmLine} />
     </View>

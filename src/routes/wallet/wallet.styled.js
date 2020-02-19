@@ -1,27 +1,13 @@
 import {StyleSheet} from 'react-native';
 import {FONT} from '@src/styles';
-import { BACKGROUND_GRAY } from '@src/shared/stylesheet';
-
-export const styled = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_GRAY,
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
-});
 
 export const headingStyled = StyleSheet.create({
   container: {
-    backgroundColor: '#000',
     flexDirection: 'row',
     justifyContent: 'space-between',
     position: 'relative',
-    paddingTop: 50,
-    paddingBottom: 50,
-    paddingLeft: 10,
-    paddingRight: 10,
-
+    width: '100%',
+    alignItems: 'flex-start',
   },
   title: {
     fontFamily: FONT.NAME.bold,
@@ -43,14 +29,4 @@ export const headingStyled = StyleSheet.create({
     fontSize: FONT.SIZE.regular,
     lineHeight: FONT.SIZE.regular + 6,
   },
-  rightCol: {
-    // backgroundColor: `red`
-  },
-  leftCol: {
-    // backgroundColor: `blue`
-  },
-});
-
-export const tokensStyled = StyleSheet.create({
-  container: {},
 });

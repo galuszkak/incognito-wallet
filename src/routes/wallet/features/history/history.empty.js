@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import srcNoTx from '@src/assets/images/icons/no_tx_yet.png';
 import {FONT} from '@src/styles';
+import { BtnLinear } from '@src/shared/components/button';
 
 const styled = StyleSheet.create({
   emptyContainer: {
@@ -21,13 +22,16 @@ const styled = StyleSheet.create({
 
 const EmptyHistory = () => {
   return (
-    <View style={styled.emptyContainer}>
-      <View style={styled.noTx}>
-        <Image source={srcNoTx} />
+    <View>
+      <View style={styled.emptyContainer}>
+        <View style={styled.noTx}>
+          <Image source={srcNoTx} />
+        </View>
+        <Text style={styled.noTxDesc}>
+          {'Shield a public coin to start \n transacting privately'}
+        </Text>
       </View>
-      <Text style={styled.noTxDesc}>
-        {'Shield a public coin to start \n transacting privately'}
-      </Text>
+      <BtnLinear title="Shield your crypto" style={styled.btnLinear} />
     </View>
   );
 };

@@ -17,6 +17,7 @@ const HistoryItem = props => {
     typeText,
     amount,
     time,
+    balanceColor
   } = dataMapping;
   const handleOnPress = () => {
     navigation.navigate(routeNames.TxHistoryDetail, {data: dataMapping});
@@ -32,14 +33,7 @@ const HistoryItem = props => {
           <Text style={styled.time}>{time}</Text>
         </View>
         <View style={styled.row}>
-          <Text
-            style={[
-              styled.amount,
-              //  {color: balanceColor}
-            ]}
-          >
-            {amount}
-          </Text>
+          <Text style={[styled.amount, {color: balanceColor}]}>{amount}</Text>
           <Text style={[styled.statusText, {color: statusColor}]}>
             {statusText}
             {!!statusNumber || statusNumber === 0 ? `[${statusNumber}]` : null}

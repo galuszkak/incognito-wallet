@@ -6,8 +6,7 @@ export const styled = StyleSheet.create({
     borderRadius: 8,
     position: 'relative',
     marginTop: -25,
-    marginHorizontal: 20,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
   },
 });
 
@@ -32,7 +31,7 @@ export const styledBtn = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     marginTop: 20,
-    marginBottom: 30
+    marginBottom: 30,
   },
 });
 
@@ -44,7 +43,7 @@ export const styledExtra = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     marginTop: 10,
-    marginBottom: 50
+    marginBottom: 50,
   },
   title: {
     textAlign: 'center',

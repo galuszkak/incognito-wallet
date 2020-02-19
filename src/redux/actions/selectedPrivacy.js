@@ -1,8 +1,10 @@
 import type from '@src/redux/types/selectedPrivacy';
 
-export const setSelectedPrivacy = (privacyTokenId = throw new Error('Privacy coin ID is required')) => ({
+export const setSelectedPrivacy = (
+  privacyTokenId = new Error('Privacy coin ID is required'),
+) => ({
   type: type.SET,
-  data: privacyTokenId
+  data: privacyTokenId,
 });
 
 export const clearSelectedPrivacy = () => ({

@@ -4,3 +4,4 @@ export {default as Button} from './button';
 export {default as BtnCopy} from './btnCopy';
 export {default as BtnScan} from './btnScan';
 export {default as BtnBack} from './btnBack';
+export {default as BtnClose} from './btnClose';

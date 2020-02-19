@@ -243,28 +243,19 @@ export const followDefaultTokens = (
 export const switchAccount = accountName => async (dispatch, getState) => {
   try {
     if (!accountName) throw new Error('accountName is required');
-
     const state = getState();
     const wallet = state?.wallet;
-
     if (!wallet) {
       throw new Error('Wallet is not exist');
     }
-
     const account = getBasicAccountObjectByName(state)(accountName);
     const defaultAccount = accountSeleclor.defaultAccount(state);
-
     if (defaultAccount?.name === account?.name) {
       return;
     }
-
-    dispatch(setDefaultAccount(account));
-    await getBalance(account)(dispatch, getState).catch(() => null);
-    await reloadAccountFollowingToken(account)(dispatch, getState).catch(
-      () => null,
-    );
-
-    return accountSeleclor.defaultAccount(state);
+    await dispatch(getBalance(account));
+    await dispatch(reloadAccountFollowingToken(account));
+    await dispatch(setDefaultAccount(account));
   } catch (e) {
     throw e;
   }
