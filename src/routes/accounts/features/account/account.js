@@ -87,7 +87,6 @@ const Account = ({account, isLastChild, disabled}) => {
           onPress: async () => {
             try {
               await dispatch(removeAccount(account));
-              Toast.showSuccess('Account removed.');
             } catch (e) {
               new ExHandler(
                 e,

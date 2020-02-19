@@ -48,25 +48,29 @@ export const removeAccount = (
 ) => async (dispatch, getState) => {
   try {
     const wallet = getState()?.wallet;
-
     if (!wallet) {
       throw new Error(
         'Wallet is not existed, can not remove account right now',
       );
     }
-
     const {PrivateKey, name} = account;
     const passphrase = await getPassphrase();
     await accountService.removeAccount(PrivateKey, passphrase, wallet);
-
-    dispatch({
+    await dispatch({
       type: type.REMOVE_BY_NAME,
       data: name,
     });
-
-    return true;
-  } catch (e) {
-    throw e;
+    const listAccount = await loadListAccount(wallet);
+    await dispatch(setListAccount(listAccount));
+    const defaultAccount = listAccount[0];
+    await dispatch(setDefaultAccount(defaultAccount));
+    await dispatch(followDefaultTokens(defaultAccount));
+    Toast.showSuccess('Account removed.');
+  } catch (error) {
+    new ExHandler(
+      error,
+      'Remove account failed, please try again',
+    ).showErrorToast();
   }
 };
 
