@@ -30,7 +30,7 @@ const enhance = WrappedComp => props => {
     isReceivedPRV: false,
     appState: '',
   });
-  const {isReloading, isReceivedPRV, appState} = state;
+  const {isReloading, appState} = state;
   const handleGetTokens = async () => {
     try {
       await dispatch(getPTokenList());
@@ -97,7 +97,7 @@ const enhance = WrappedComp => props => {
 
   const reload = async () => {
     try {
-      setState({isReloading: true});
+      setState({...state, isReloading: true});
       const tasks = [
         handleGetTokens(),
         handleGetAccountBalance(),
@@ -107,7 +107,7 @@ const enhance = WrappedComp => props => {
     } catch (e) {
       new ExHandler(e).showErrorToast();
     } finally {
-      setState({isReloading: false});
+      setState({...state, isReloading: false});
     }
   };
 

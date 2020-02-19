@@ -3,10 +3,9 @@ import {View, StyleSheet, Text, Alert} from 'react-native';
 import storageService from '@src/services/storage';
 import {CONSTANT_KEYS} from '@src/constants';
 import routeNames from '@src/router/routeNames';
-import {withNavigation} from 'react-navigation';
 import {useSelector} from 'react-redux';
-import linkingService from '@src/services/linking';
 import Switch from '@src/shared/components/switch';
+import {useNavigation, useFocusEffect} from 'react-navigation-hooks';
 
 const styled = StyleSheet.create({
   container: {
@@ -17,8 +16,9 @@ const styled = StyleSheet.create({
   },
 });
 
-const Security = ({navigation}) => {
+const Security = () => {
   const pin = !!useSelector(state => state.pin.pin);
+  const navigation = useNavigation();
   const [isBackedUpAccount, setBackupAccount] = React.useState(false);
   const showToast = () => {
     Alert.alert(
@@ -51,23 +51,35 @@ const Security = ({navigation}) => {
   const handleOnValueChange = () => {
     isBackedUpAccount ? togglePin() : showToast();
   };
-  navigation.addListener('willFocus', () => {
+
+  const getItem = () => {
     storageService
       .getItem(CONSTANT_KEYS.IS_BACKEDUP_ACCOUNT)
-      .then(isBackedUp => setBackupAccount(!!JSON.parse(isBackedUp)))
-      .catch(() => setBackupAccount(false));
-  });
+      .then(isBackedUp => {
+        setBackupAccount(!!JSON.parse(isBackedUp));
+      })
+      .catch(() => {
+        setBackupAccount(false);
+      });
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getItem();
+      return () => {
+        getItem();
+      };
+    }, []),
+  );
+
   return (
     <View style={styled.container}>
       <Text>Passcode</Text>
-      <Switch
-        onValueChange={handleOnValueChange}
-        value={pin}
-      />
+      <Switch onValueChange={handleOnValueChange} value={pin} />
     </View>
   );
 };
 
 Security.propTypes = {};
 
-export default withNavigation(Security);
+export default Security;

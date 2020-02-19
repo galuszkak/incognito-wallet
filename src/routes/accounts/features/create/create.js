@@ -7,13 +7,10 @@ import {TextInput} from '@src/shared/components/input';
 import {useSelector, useDispatch} from 'react-redux';
 import {accountSeleclor} from '@src/redux/selectors';
 import {ErrorCode, CustomError, ExHandler} from '@src/services/exception';
-import accountService from '@src/services/wallet/accountService';
-import {Toast} from '@src/components/core';
-import {followDefaultTokens} from '@src/redux/actions/account';
-import {reloadAccountList} from '@src/redux/actions/wallet';
+import {actionCreateAccount} from '@src/redux/actions/account';
 import {useNavigation} from 'react-navigation-hooks';
-import AccountModel from '@src/models/account';
 import {validateAccount, isExist} from '@src/routes/accounts/accounts.utils';
+import {createAccountSelector} from '@src/routes/accounts/accounts.selector';
 
 const styled = StyleSheet.create({
   container: {},
@@ -25,7 +22,7 @@ const styled = StyleSheet.create({
   },
 });
 
-const Create = props => {
+const Create = () => {
   const initState = {
     value: '',
     validated: true,
@@ -33,15 +30,13 @@ const Create = props => {
   };
   const navigation = useNavigation();
   const [state, setState] = React.useState(initState);
-  const {value, validated, isFetching, isFetched} = state;
+  const {isFetching} = useSelector(createAccountSelector);
+  const {value, validated} = state;
   const accountList = useSelector(accountSeleclor.listAccount);
-  const wallet = useSelector(state => state.wallet);
   const dispatch = useDispatch();
   const onChangeText = value =>
     setState({
       ...state,
-      isFetching: false,
-      isFetched: false,
       value,
       validated: {
         error: false,
@@ -49,7 +44,7 @@ const Create = props => {
       },
     });
   const handleCreateAccount = async () => {
-    if (!isFetching && !isFetched) {
+    if (!isFetching) {
       try {
         const validate = validateAccount(value);
         if (validate.error) {
@@ -61,29 +56,12 @@ const Create = props => {
         if (isExist(value, accountList)) {
           throw new CustomError(ErrorCode.createAccount_existed_name);
         }
-        await setState({...state, isFetching: true});
-        const account = await accountService.createAccount(value, wallet);
-        if (!account) {
-          throw new CustomError(ErrorCode.createAccount_failed);
-        }
-        await dispatch(reloadAccountList());
-        const serializedAccount = new AccountModel(
-          accountService.toSerializedAccountObj(account),
-        );
-        await dispatch(followDefaultTokens(serializedAccount));
-        Toast.showInfo('Success! Account created.');
-        await setState({
-          ...state,
-          isFetched: true,
-          isFetching: false,
-        });
-        navigation.goBack();
+        await dispatch(actionCreateAccount({accountName: value, navigation}));
       } catch (e) {
         new ExHandler(
           e,
           'Account was not created! Please try again.',
         ).showErrorToast();
-        await setState({...state, isFetching: false, isFetched: false});
       }
     }
   };

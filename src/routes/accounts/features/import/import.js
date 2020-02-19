@@ -12,19 +12,20 @@ import {
   validatePrivateKey,
 } from '@src/routes/accounts/accounts.utils';
 import {CustomError, ErrorCode, ExHandler} from '@src/services/exception';
-import {getPassphrase} from '@src/services/wallet/passwordService';
-import accountService from '@src/services/wallet/accountService';
-import {reloadAccountList} from '@src/redux/actions/wallet';
-import {followDefaultTokens} from '@src/redux/actions/account';
-import {randomAccountNameSelector} from '@src/routes/accounts/accounts.selector';
+import {actionImportAccount} from '@src/redux/actions/account';
+import {
+  randomAccountNameSelector,
+  importAccountSelector,
+} from '@src/routes/accounts/accounts.selector';
 import Modal from '@src/shared/components/modal';
 import {actionToggleModal} from '@src/shared/components/modal/modal.actions';
 import QRCodeScanner from '@src/shared/components/QRCodeScanner';
-import {Toast} from '@src/components/core';
+import {useNavigation} from 'react-navigation-hooks';
 import {styled} from './import.styled';
 import {ACCOUNT_NAME_INPUT, PRIVATE_KEY_INPUT} from './import.constant';
 
-const Import = props => {
+const Import = () => {
+  const navigation = useNavigation();
   const [form, setFormDt] = React.useState({
     privateKey: {
       value: '',
@@ -41,21 +42,16 @@ const Import = props => {
       },
     },
     editable: false,
-    isFetching: false,
-    isFetched: false,
     scan: false,
   });
   const {
     editable,
-    isFetching,
-    isFetched,
     [ACCOUNT_NAME_INPUT]: account,
     [PRIVATE_KEY_INPUT]: privateKey,
     scan,
   } = form;
-  const accountList = useSelector(accountSeleclor.nameAccountList);
-  const wallet = useSelector(state => state.wallet);
-  const getAccountByName = useSelector(accountSeleclor.getAccountByName);
+  const nameAccountList = useSelector(accountSeleclor.nameAccountList);
+  const {isFetching} = useSelector(importAccountSelector);
   const dispatch = useDispatch();
   let refAccountInput = React.createRef();
   let refPrivateKey = React.createRef();
@@ -80,7 +76,7 @@ const Import = props => {
       },
     });
   const handleImportAccount = async () => {
-    if (!isFetching && !isFetched) {
+    if (!isFetching) {
       try {
         const validatedAcc = validateAccount(account.value);
         const validatedPrvKey = validatePrivateKey(privateKey.value);
@@ -102,29 +98,21 @@ const Import = props => {
             },
           });
         }
-        if (isExist(account.value, accountList)) {
+        if (isExist(account.value, nameAccountList)) {
           throw new CustomError(ErrorCode.createAccount_existed_name);
         }
-        await setFormDt({...form, isFetching: true});
-        const passphrase = await getPassphrase();
-        const isImported = await accountService.importAccount(
-          privateKey.value,
-          account.value,
-          passphrase,
-          wallet,
+        await dispatch(
+          actionImportAccount({
+            privateKey: privateKey.value,
+            accountName: account.value,
+            navigation,
+          }),
         );
-        if (!isImported) throw new CustomError(ErrorCode.importAccount_failed);
-        await dispatch(reloadAccountList());
-        const accountFollow = getAccountByName(account.value);
-        await dispatch(followDefaultTokens(accountFollow));
-        await setFormDt({...form, isFetching: false, isFetched: true});
-        Toast.showSuccess('Import successful!');
       } catch (error) {
         new ExHandler(
           error,
           'Import account failed, please try again.',
         ).showErrorToast();
-        await setFormDt({...form, isFetching: false, isFetched: false});
       }
     }
   };
@@ -137,15 +125,17 @@ const Import = props => {
       }),
     );
   };
-  const onRead = e => {
+  const onRead = async e => {
     try {
-      setFormDt({
+      await setFormDt({
         ...form,
         privateKey: {
           ...privateKey,
           value: e.data,
         },
+        scan: false,
       });
+      await dispatch(actionToggleModal({visible: false, data: null}));
     } catch (error) {
       console.log(error);
     }
@@ -180,7 +170,6 @@ const Import = props => {
             ref={ref => (refPrivateKey = ref)}
             value={form[PRIVATE_KEY_INPUT].value}
             onChangeText={text => onChangeText(PRIVATE_KEY_INPUT)(text)}
-            maxLength={50}
             validated={form[PRIVATE_KEY_INPUT].validated}
             placeholder="Enter Private Key"
             style={styled.input}

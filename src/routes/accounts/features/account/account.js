@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {FONT} from '@src/styles';
 import {useSelector, useDispatch} from 'react-redux';
@@ -11,6 +18,7 @@ import {Toast} from '@src/components/core';
 import {ExHandler} from '@src/services/exception';
 import {useNavigation} from 'react-navigation-hooks';
 import routeNames from '@src/router/routeNames';
+import Swipeout from 'react-native-swipeout';
 
 const styled = StyleSheet.create({
   container: {
@@ -36,7 +44,7 @@ const styled = StyleSheet.create({
   },
 });
 
-const Account = ({account, isLastChild}) => {
+const Account = ({account, isLastChild, disabled}) => {
   const dispatch = useDispatch();
   const {name} = account;
   const defaultAccount = useSelector(accountSeleclor.defaultAccount) || {
@@ -65,17 +73,59 @@ const Account = ({account, isLastChild}) => {
         })
       : false;
   };
+  const handleDelete = () => {
+    Alert.alert(
+      `Delete account "${account.name}"?`,
+      'Do you want to delete this account?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK, delete it',
+          onPress: async () => {
+            try {
+              await dispatch(removeAccount(account));
+              Toast.showSuccess('Account removed.');
+            } catch (e) {
+              new ExHandler(
+                e,
+                `Can not delete account ${account.name}, please try again.`,
+              ).showErrorToast();
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
   return (
-    <View style={[styled.container, isLastChild ? styled.lastChild : {}]}>
-      <TouchableOpacity onPress={handleSwitchAccount}>
-        <Text style={[styled.name, isActived ? styled.actived : {}]}>
-          {name}
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleExportKeys}>
-        <Image source={isActived ? srcKeyActived : srcKey} />
-      </TouchableOpacity>
-    </View>
+    <Swipeout
+      style={{
+        backgroundColor: 'transparent',
+      }}
+      disabled={disabled}
+      right={[
+        {
+          text: 'Delete',
+          color: '#fff',
+          backgroundColor: '#f40000',
+          onPress: handleDelete,
+        },
+      ]}
+    >
+      <View style={[styled.container, isLastChild ? styled.lastChild : {}]}>
+        <TouchableOpacity onPress={handleSwitchAccount}>
+          <Text style={[styled.name, isActived ? styled.actived : {}]}>
+            {name}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleExportKeys}>
+          <Image source={isActived ? srcKeyActived : srcKey} />
+        </TouchableOpacity>
+      </View>
+    </Swipeout>
   );
 };
 
@@ -84,6 +134,7 @@ Account.defaultProps = {};
 Account.propTypes = {
   account: PropTypes.object.isRequired,
   isLastChild: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default Account;

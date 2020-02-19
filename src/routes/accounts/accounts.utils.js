@@ -33,3 +33,7 @@ export const isExist = (accountName = '', listAccount = []) =>
     item =>
       String(item.name).toLowerCase() === String(accountName).toLowerCase(),
   );
+
+export function isNodeAccount(name, devices) {
+  return devices.find(device => device.IsPNode && device.AccountName === name);
+}

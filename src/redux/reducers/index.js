@@ -3,6 +3,7 @@ import reduceReducers from 'reduce-reducers';
 import {reducer as formReducer} from 'redux-form';
 import tokenState from '@src/routes/wallet/features/token/token.reducer';
 import modal from '@src/shared/components/modal/modal.reducer';
+import devices from '@src/routes/accounts/features/devices/devices.reducer';
 import wallet from './wallet';
 import account from './account';
 import server from './server';
@@ -26,6 +27,7 @@ const rootReducer = reduceReducers(
     form: formReducer,
     tokenState,
     modal,
+    devices,
   }),
   globalReducer,
 );
