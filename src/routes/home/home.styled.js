@@ -25,7 +25,7 @@ export const bannerStyled = StyleSheet.create({
     left: 20,
     top: 20,
     zIndex: 2,
-    padding: 10
+    padding: 10,
   },
   title: {
     textAlign: 'center',
@@ -33,7 +33,7 @@ export const bannerStyled = StyleSheet.create({
     fontFamily: FONT.NAME.bold,
     fontSize: FONT.SIZE.superLarge,
     lineHeight: FONT.SIZE.superLarge + 10,
-    marginBottom: 2
+    marginBottom: 2,
   },
   desc: {
     marginTop: 2,

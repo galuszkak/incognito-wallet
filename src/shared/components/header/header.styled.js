@@ -24,6 +24,7 @@ export const headerStyled = StyleSheet.create({
   },
   arrowContainer: {
     marginRight: 20,
+    padding: 5
   },
   title: {
     textTransform: 'uppercase',

@@ -121,7 +121,7 @@ const Account = ({account, isLastChild, disabled}) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleExportKeys}>
-          <Image source={isActived ? srcKeyActived : srcKey} />
+          <Image style={{width: 16, height: 16}} source={isActived ? srcKeyActived : srcKey} />
         </TouchableOpacity>
       </View>
     </Swipeout>

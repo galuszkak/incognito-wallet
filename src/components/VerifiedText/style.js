@@ -10,12 +10,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   verifiedFlagContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    width: FLAG_SIZE,
-    height: FLAG_SIZE,
-    borderRadius: FLAG_SIZE,
+    width: 17,
+    height: 18,
     marginLeft: 10,
   },
   verifiedFlag: {

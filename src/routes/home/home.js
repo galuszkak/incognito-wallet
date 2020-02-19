@@ -5,11 +5,11 @@ import routeNames from '@src/router/routeNames';
 //Assets
 import bannerSrc from '@src/assets/images/home/banner.png';
 import settingsSrc from '@src/assets/images/icons/settings.png';
-import shieldSrc from '@src/assets/images/home/shield.png';
-import sendSrc from '@src/assets/images/home/send.png';
-import receiveSrc from '@src/assets/images/home/receive.png';
-import tradeSrc from '@src/assets/images/home/trade.png';
-import inventSrc from '@src/assets/images/home/invent.png';
+import shieldSrc from '@src/assets/images/icons/shield.png';
+import sendSrc from '@src/assets/images/icons/send.png';
+import receiveSrc from '@src/assets/images/icons/receive.png';
+import tradeSrc from '@src/assets/images/icons/trade.png';
+import inventSrc from '@src/assets/images/icons/invent.png';
 import {BtnActionToken} from '@src/shared/components/button';
 import {styled, bannerStyled, navsStyled} from './home.styled';
 
@@ -22,7 +22,7 @@ const Banner = () => {
         style={bannerStyled.settingsIcon}
         onPress={() => navigate(routeNames.Setting, {isPrivacy: true})}
       >
-        <Image source={settingsSrc} />
+        <Image source={settingsSrc} style={{width: 24, height: 24}} />
       </TouchableOpacity>
       <View style={bannerStyled.introContainer}>
         <Text style={bannerStyled.title}>Go Incognito</Text>

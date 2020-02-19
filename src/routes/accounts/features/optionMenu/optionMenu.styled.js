@@ -23,6 +23,8 @@ export const styled = StyleSheet.create({
   infoContainer: {},
   icon: {
     marginRight: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   label: {
     fontFamily: FONT.NAME.bold,
@@ -55,11 +57,10 @@ export const styled = StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
-  btnClose: {
-  },
+  btnClose: {},
   btnCloseContainer: {
     alignSelf: 'flex-end',
     margin: 20,
-    padding: 5
+    padding: 5,
   },
 });

@@ -45,7 +45,7 @@ const MenuItem = props => {
       <View
         style={[styled.itemContainer, isLastChild ? styled.lastItem : null]}
       >
-        <Image source={srcIcon} style={styled.icon} />
+        {srcIcon}
         <View style={styled.infoContainer}>
           <Text style={styled.label}>{label}</Text>
           <Text style={styled.desc}>{desc}</Text>
@@ -72,21 +72,36 @@ const Menu = () => {
   const data = [
     {
       id: 'import',
-      srcIcon: srcImport,
+      srcIcon: (
+        <Image
+          source={srcImport}
+          style={[{width: 24, height: 26}, styled.icon]}
+        />
+      ),
       desc: 'Import an existing account',
       label: 'Import',
       onPress: handleImport,
     },
     {
       id: 'create',
-      srcIcon: srcCreate,
+      srcIcon: (
+        <Image
+          source={srcCreate}
+          style={[{width: 24, height: 24}, styled.icon]}
+        />
+      ),
       desc: 'Create a new account',
       label: 'Create',
       onPress: handleCreate,
     },
     {
       id: 'backup',
-      srcIcon: srcBackup,
+      srcIcon: (
+        <Image
+          source={srcBackup}
+          style={[{width: 32, height: 26}, styled.icon]}
+        />
+      ),
       desc: 'Backup your account keys',
       label: 'Backup',
       onPress: handleBackup,

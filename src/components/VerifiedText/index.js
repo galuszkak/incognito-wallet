@@ -1,8 +1,7 @@
 import {View, Text, Image} from '@src/components/core';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-// import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
-import srcChecked from '@src/assets/images/icons/checked.png';
+import srcChecked from '@src/assets/images/icons/checked_green.png';
 import styleSheet from './style';
 
 class VerifiedText extends Component {
@@ -20,10 +19,7 @@ class VerifiedText extends Component {
           {text}
         </Text>
         {isVerified && (
-          <View style={styleSheet.verifiedFlagContainer}>
-            <Image source={srcChecked} />
-            {/* <Icons style={styleSheet.verifiedFlag} name='check-circle' size={14} /> */}
-          </View>
+          <Image source={srcChecked} style={styleSheet.verifiedFlagContainer} />
         )}
       </View>
     );
