@@ -6,8 +6,6 @@ export const styled = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     padding: 20,
-    // borderBottomWidth: 1,
-    // borderBottomColor: `rgba(0,0,0,0.1)`
   },
   logoContainer: {},
   cryptoNameContainer: {

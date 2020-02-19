@@ -1,15 +1,15 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Image} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ImageBackground,
+} from 'react-native';
 import PropTypes from 'prop-types';
 import {FONT} from '@src/styles';
 import srcBtnLinear from '@src/assets/images/icons/linearBtn.png';
 
 const styled = StyleSheet.create({
-  bg: {
-    backgroundColor: 'transparent',
-    width: '100%',
-    height: 50,
-  },
   title: {
     color: '#000',
     fontFamily: FONT.NAME.regular,
@@ -18,12 +18,11 @@ const styled = StyleSheet.create({
     zIndex: 1,
   },
   container: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
+    width: '100%',
     height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
   },
 });
 
@@ -31,7 +30,8 @@ const BtnLinear = props => {
   const {title, disabled = false, ...rest} = props;
   return (
     <TouchableOpacity {...{...rest, disabled}}>
-      <View
+      <ImageBackground
+        source={srcBtnLinear}
         style={[
           styled.container,
           disabled ? {opacity: 0.5} : null,
@@ -39,8 +39,7 @@ const BtnLinear = props => {
         ]}
       >
         <Text style={styled.title}>{title}</Text>
-        <Image source={srcBtnLinear} style={styled.bg} />
-      </View>
+      </ImageBackground>
     </TouchableOpacity>
   );
 };

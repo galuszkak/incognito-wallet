@@ -2,14 +2,15 @@ import React from 'react';
 import {View, StyleSheet, Image, Text} from 'react-native';
 import srcNoTx from '@src/assets/images/icons/no_tx_yet.png';
 import {FONT} from '@src/styles';
-import { BtnLinear } from '@src/shared/components/button';
+import {BtnLinear} from '@src/shared/components/button';
 
 const styled = StyleSheet.create({
-  emptyContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 20,
   },
   noTxDesc: {
     marginTop: 10,
@@ -18,14 +19,22 @@ const styled = StyleSheet.create({
     lineHeight: FONT.SIZE.regular + 4,
     textAlign: 'center',
   },
+  noTx: {},
+  btnLinear: {
+    width: '100%',
+  },
+  hook: {
+    width: '100%',
+    alignItems: 'center',
+  },
 });
 
 const EmptyHistory = () => {
   return (
-    <View>
-      <View style={styled.emptyContainer}>
+    <View style={styled.container}>
+      <View style={styled.hook}>
         <View style={styled.noTx}>
-          <Image source={srcNoTx} />
+          <Image source={srcNoTx} style={{height: 164, width: 144}} />
         </View>
         <Text style={styled.noTxDesc}>
           {'Shield a public coin to start \n transacting privately'}

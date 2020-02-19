@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
 import PropTypes from 'prop-types';
-import shieldSrc from '@src/assets/images/home/shield.png';
-import sendSrc from '@src/assets/images/home/send.png';
-import receiveSrc from '@src/assets/images/home/receive.png';
+import shieldSrc from '@src/assets/images/icons/shield.png';
+import sendSrc from '@src/assets/images/icons/send.png';
+import receiveSrc from '@src/assets/images/icons/receive.png';
 import {BtnActionToken} from '@src/shared/components/button';
 import History from '@src/routes/wallet/features/history';
 import {styled, actionsStyled} from './detail.styled';
@@ -34,8 +34,8 @@ const Actions = () => {
     <View style={actionsStyled.container}>
       {actionFactories.map((item, key) => (
         <BtnActionToken
-          item={item.id}
-          key={key}
+          item={item}
+          key={item.id}
           styledContainer={actionsStyled.styledContainer}
           hasDesc={false}
         />
@@ -46,10 +46,10 @@ const Actions = () => {
 
 const Detail = () => {
   return (
-    <ScrollView style={styled.container}>
+    <View style={styled.container}>
       <Actions />
       <History />
-    </ScrollView>
+    </View>
   );
 };
 

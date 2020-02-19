@@ -5,7 +5,7 @@ import srcClose from '@src/assets/images/icons/close.png';
 const BtnClose = props => {
   return (
     <TouchableOpacity {...props}>
-      <Image source={srcClose} style={{width: 24, height: 24}} />
+      <Image source={srcClose} style={{width: 20, height: 20}} />
     </TouchableOpacity>
   );
 };

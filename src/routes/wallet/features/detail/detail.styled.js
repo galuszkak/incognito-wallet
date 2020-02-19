@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 export const styled = StyleSheet.create({
   container: {
     marginTop: -20,
+    flex: 1
   },
   btnLinear: {
     marginTop: 20
