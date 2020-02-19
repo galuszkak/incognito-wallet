@@ -10,7 +10,6 @@ import {Toast} from '@src/components/core';
 import AccountModel from '@src/models/account';
 import {ErrorCode, ExHandler} from '@src/services/exception';
 import {loadListAccount} from '@src/services/wallet/WalletService';
-// import {reloadAccountList} from '@src/redux/actions/wallet';
 import {tokenSeleclor, accountSeleclor} from '@src/redux/selectors';
 import {
   getBalance as getTokenBalance,
@@ -346,7 +345,6 @@ export const actionCreateAccount = ({accountName, navigation}) => async (
     if (!account) {
       throw new Error(ErrorCode.createAccount_failed);
     }
-    // await dispatch(reloadAccountList());
     const listAccount = await loadListAccount(wallet);
     dispatch(setListAccount(listAccount));
     const serializedAccount = new AccountModel(
