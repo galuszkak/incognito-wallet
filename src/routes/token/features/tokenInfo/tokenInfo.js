@@ -14,9 +14,9 @@ const Hook = props => {
     Clipboard.setString(value);
     Toast.showInfo(`${label} was copied!`);
   };
-  if (!value) {
-    return null;
-  }
+  // if (!value) {
+  //   return null;
+  // }
   return (
     <View
       style={[hookStyled.container, isLastChild ? hookStyled.lastChild : null]}

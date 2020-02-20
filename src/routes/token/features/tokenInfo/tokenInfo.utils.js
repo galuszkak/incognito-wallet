@@ -49,5 +49,5 @@ export const tokenFactories = (tokenInfo, selectedPrivacy) => {
       link: tokenInfo?.ownerWebsite,
       copyable: true,
     },
-  ];
+  ].filter(i => ![undefined, null, '', 'undefined'].includes(i.value));
 };
