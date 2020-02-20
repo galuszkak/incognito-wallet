@@ -1,11 +1,10 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
-import PropTypes from 'prop-types';
+import {View} from 'react-native';
 import shieldSrc from '@src/assets/images/icons/shield.png';
 import sendSrc from '@src/assets/images/icons/send.png';
 import receiveSrc from '@src/assets/images/icons/receive.png';
 import {BtnActionToken} from '@src/shared/components/button';
-import History from '@src/routes/wallet/features/history';
+import History from '@src/routes/history';
 import {styled, actionsStyled} from './detail.styled';
 import withDetail from './detail.enhance';
 
@@ -52,9 +51,5 @@ const Detail = () => {
     </View>
   );
 };
-
-Detail.defaultProps = {};
-
-Detail.propTypes = {};
 
 export default withDetail(Detail);

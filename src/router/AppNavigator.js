@@ -15,13 +15,13 @@ import pApp from '@src/screens/PappView';
 import AddPIN from '@src/screens/AddPIN';
 import {navigationOptionsHandler} from '@src/utils/router';
 import WalletDetail from '@src/routes/wallet/features/detail';
-import TxHistoryDetail from '@src/routes/wallet/features/txHistory';
+import TxHistoryDetail from '@src/routes/history/features/txHistory';
 import Setting from '@src/routes/home/features/setting';
 import ExportAccount from '@src/routes/accounts/features/export';
 import CreateAccount from '@src/routes/accounts/features/create';
 import BackupKeys from '@src/routes/accounts/features/backup';
 import ImportAccount from '@src/routes/accounts/features/import';
-import TokenInfo from '@src/routes/wallet/features/tokenInfo';
+import TokenInfo from '@src/routes/token/features/tokenInfo';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 

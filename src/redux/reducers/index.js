@@ -1,7 +1,6 @@
 import {combineReducers} from 'redux';
 import reduceReducers from 'reduce-reducers';
 import {reducer as formReducer} from 'redux-form';
-import tokenState from '@src/routes/wallet/features/token/token.reducer';
 import modal from '@src/shared/components/modal/modal.reducer';
 import devices from '@src/routes/accounts/features/devices/devices.reducer';
 import wallet from './wallet';
@@ -25,7 +24,6 @@ const rootReducer = reduceReducers(
     dex,
     pin,
     form: formReducer,
-    tokenState,
     modal,
     devices,
   }),

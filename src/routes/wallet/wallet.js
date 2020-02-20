@@ -5,9 +5,9 @@ import {withHeader} from '@src/shared/components/header/';
 import {compose} from 'recompose';
 import Modal, {modalSelector} from '@src/shared/components/modal';
 import {actionToggleModal} from '@src/shared/components/modal/modal.actions';
+import ChangeAccount from '@src/routes/accounts/features/changeAccount';
 import {headingStyled} from './wallet.styled';
 import Tokens from './features/tokens';
-import ChangeAccount from './features/changeAccount';
 
 const Heading = () => {
   const account = useSelector(state => state.account);

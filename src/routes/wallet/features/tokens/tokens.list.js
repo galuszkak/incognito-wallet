@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useSelector} from 'react-redux';
 import {tokenSeleclor} from '@src/redux/selectors';
-import Token from '@src/routes/wallet/features/token';
+import Token from '@src/routes/token/features/token';
 import {CONSTANT_COMMONS} from '@src/constants';
 
 const styled = StyleSheet.create({
