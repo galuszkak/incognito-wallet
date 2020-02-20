@@ -11,7 +11,6 @@ export default createAppContainer(
     },
     {
       initialRouteName: ROUTE_NAMES.RootSplash,
-      // initialRouteName: ROUTE_NAMES.Wallet,
     },
   ),
 );

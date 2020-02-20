@@ -44,5 +44,6 @@ export default {
   BackupKeys: 'BackupKeys',
   Wallet: 'Wallet',
   WalletDetail: 'WalletDetail',
-  RootModal: 'RootModal'
+  RootModal: 'RootModal',
+  TokenInfo: 'TokenInfo'
 };

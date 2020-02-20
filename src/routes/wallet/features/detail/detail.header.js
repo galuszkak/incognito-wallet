@@ -4,14 +4,16 @@ import {
   StyleSheet,
   Text,
   Image,
-  TouchableWithoutFeedback,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import {FONT} from '@src/styles';
 import srcInfo from '@src/assets/images/icons/info.png';
 import srcMore from '@src/assets/images/icons/more.png';
 import VerifiedText from '@src/components/VerifiedText';
 import formatUtil from '@src/utils/format';
+import {useNavigation} from 'react-navigation-hooks';
+import routeNames from '@src/router/routeNames';
 
 const styled = StyleSheet.create({
   container: {
@@ -85,6 +87,10 @@ const AmountToken = ({isGettingBalance, amount, pDecimals, symbol}) => {
 
 const Header = props => {
   const {displayName, isVerified, networkName} = props;
+  const navigation = useNavigation();
+  const onPressTokenInfo = () => {
+    navigation.navigate(routeNames.TokenInfo);
+  };
   return (
     <View style={styled.container}>
       <View style={styled.headingContainer}>
@@ -105,16 +111,16 @@ const Header = props => {
           </Text>
         </View>
         <View style={styled.hookContainer}>
-          <TouchableWithoutFeedback>
+          <TouchableOpacity onPress={onPressTokenInfo}>
             <View style={styled.infoContainer}>
-              <Image source={srcInfo} />
+              <Image source={srcInfo} style={{width: 24, height: 24}} />
             </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
+          </TouchableOpacity>
+          <TouchableOpacity>
             <View style={styled.actionContainer}>
               <Image source={srcMore} />
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
       </View>
       <AmountToken {...props} />

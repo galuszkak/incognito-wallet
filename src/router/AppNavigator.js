@@ -21,6 +21,7 @@ import ExportAccount from '@src/routes/accounts/features/export';
 import CreateAccount from '@src/routes/accounts/features/create';
 import BackupKeys from '@src/routes/accounts/features/backup';
 import ImportAccount from '@src/routes/accounts/features/import';
+import TokenInfo from '@src/routes/wallet/features/tokenInfo';
 import ROUTE_NAMES from './routeNames';
 import TabNavigator from './TabNavigator';
 
@@ -90,6 +91,9 @@ const AppNavigator = createStackNavigator(
       header: () => null,
     }),
     [ROUTE_NAMES.BackupKeys]: navigationOptionsHandler(BackupKeys, {
+      header: () => null,
+    }),
+    [ROUTE_NAMES.TokenInfo]: navigationOptionsHandler(TokenInfo, {
       header: () => null,
     }),
   },
