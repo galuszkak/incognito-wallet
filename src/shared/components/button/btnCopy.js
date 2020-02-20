@@ -7,7 +7,7 @@ const BtnCopy = props => {
   const {btnStyle} = props;
   return (
     <TouchableOpacity {...props}>
-      <Image source={srcCopy} style={[{width: 16, height: 20}, btnStyle]} />
+      <Image source={srcCopy} style={[{width: 18, height: 20}, btnStyle]} />
     </TouchableOpacity>
   );
 };

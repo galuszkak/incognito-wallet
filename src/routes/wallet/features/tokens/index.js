@@ -54,6 +54,7 @@ const Tokens = props => {
   return (
     <ScrollView
       style={styled.container}
+      showsVerticalScrollIndicator={false}
       refreshControl={
         <RefreshControl refreshing={isReloading} onRefresh={reload} />
       }

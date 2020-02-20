@@ -46,7 +46,7 @@ const Setting = () => {
     },
   ];
   return (
-    <ScrollView style={styled.extra}>
+    <ScrollView style={styled.extra} showsVerticalScrollIndicator={false}>
       {hookFactories.map(item => (
         <Hook key={item.id} {...item}>
           {item.children}

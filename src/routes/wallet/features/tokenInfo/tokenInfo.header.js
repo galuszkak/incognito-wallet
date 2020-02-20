@@ -2,6 +2,7 @@ import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {BtnClose} from '@src/shared/components/button';
 import {FONT} from '@src/styles';
+import {useNavigation} from 'react-navigation-hooks';
 
 const styled = StyleSheet.create({
   container: {
@@ -19,9 +20,10 @@ const styled = StyleSheet.create({
 });
 
 const Header = props => {
+  const navigation = useNavigation();
   return (
     <View style={styled.container}>
-      <BtnClose whiteColor />
+      <BtnClose whiteColor onPress={() => navigation.goBack()} />
       <Text style={styled.label}>COIN INFO</Text>
     </View>
   );

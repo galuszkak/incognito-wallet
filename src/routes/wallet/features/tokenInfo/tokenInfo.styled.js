@@ -64,5 +64,11 @@ export const hookStyled = StyleSheet.create({
     lineHeight: FONT.SIZE.regular + 6,
     color: '#000',
     marginTop: 10,
+    flex: 1,
+    paddingRight: 20,
+  },
+  valueContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
   },
 });

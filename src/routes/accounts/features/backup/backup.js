@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Clipboard, ScrollView, Share} from 'react-native';
+import {View, Text, Clipboard, Share} from 'react-native';
 import {compose} from 'recompose';
 import {withHeader} from '@src/shared/components/header';
 import {useSelector} from 'react-redux';
@@ -9,6 +9,7 @@ import {Toast} from '@src/components/core';
 import storageService from '@src/services/storage';
 import {CONSTANT_KEYS} from '@src/constants';
 import PropTypes from 'prop-types';
+import ScrollView from '@src/shared/components/scrollview';
 import {styled} from './backup.styled';
 import {allPrivateKeysSelector} from './backup.selector';
 
